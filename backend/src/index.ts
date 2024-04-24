@@ -1,24 +1,41 @@
-import "reflect-metadata";
-import db from "./db";
 import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from '@apollo/server/standalone';
-import { buildSchema } from "type-graphql";
-import { UserResolver } from './resolvers/UserResolver';
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import express from "express";
+import http from "http";
+import schema from "./schema";
+import cors from "cors";
+import db from "./db";
 
+const app = express();
+const httpServer = http.createServer(app);
 
 const main = async () => {
-    await db.initialize();
-    console.log("Database initialized");
-    const schema = await buildSchema({
-      resolvers: [UserResolver],
-    });
-    const server = new ApolloServer({schema})
-    const { url } = await startStandaloneServer(server, {
-        listen: { port: 4001 },
-      });
-      
-      console.log(`🚀  Server ready at: ${url}`);
-    
+  const server = new ApolloServer({
+    schema,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  });
+
+  await db.initialize();
+
+  await server.start();
+
+  app.use(
+    "/graphql",
+    cors<cors.CorsRequest>({
+      origin: [
+        "https://www.your-app.example/",
+        "https://studio.apollographql.com/",
+      ],
+    }),
+    express.json(),
+    expressMiddleware(server)
+  );
+
+  await new Promise<void>((resolve) =>
+    httpServer.listen({ port: 4000 }, resolve)
+  );
+  console.log('🚀 Server ready at http://localhost:4000/graphql');
 };
 
 main();
