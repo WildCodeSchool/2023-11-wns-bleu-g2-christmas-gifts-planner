@@ -6,9 +6,9 @@ import http from "http";
 import schema from "./schema";
 import cors from "cors";
 import db from "./db";
+import env from "./env";
 
 const { SERVER_PORT: port } = env;
-import env from "./env";
 
 
 const app = express();

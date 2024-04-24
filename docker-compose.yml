@@ -13,3 +13,13 @@ services:
     ports: 
     - 5432:5432
 
+  backend:
+    depends_on:
+      db:
+        condition: service_healthy
+    build: backend
+    ports:
+      - 4001:4001
+    volumes:
+      - ./backend/src:/app/src
+
