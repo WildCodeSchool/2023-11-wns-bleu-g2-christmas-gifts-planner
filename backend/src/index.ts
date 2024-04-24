@@ -7,6 +7,10 @@ import schema from "./schema";
 import cors from "cors";
 import db from "./db";
 
+const { SERVER_PORT: port } = env;
+import env from "./env";
+
+
 const app = express();
 const httpServer = http.createServer(app);
 
@@ -33,9 +37,9 @@ const main = async () => {
   );
 
   await new Promise<void>((resolve) =>
-    httpServer.listen({ port: 4000 }, resolve)
+    httpServer.listen({ port }, resolve)
   );
-  console.log('🚀 Server ready at http://localhost:4000/graphql');
+  console.log('🚀 Server ready at http://localhost:4001/graphql');
 };
 
 main();
