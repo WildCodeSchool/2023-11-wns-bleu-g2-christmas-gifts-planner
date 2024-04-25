@@ -3,14 +3,14 @@
  <img width=200px height=200px src="https://i.imgur.com/6wj0hh6.jpg" alt="Project logo"></a>
 </p>
 
-<h3 align="center">Project Title</h3>
+<h3 align="center">The Christmas Gifts Planner</h3>
 
 <div align="center">
 
-  [![Status](https://img.shields.io/badge/status-active-success.svg)]() 
-  [![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/issues)
-  [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/pulls)
-  [![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
+[![Status](https://img.shields.io/badge/status-active-success.svg)]()
+[![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/pulls)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
 
 </div>
 
@@ -21,6 +21,7 @@
 </p>
 
 ## 📝 Table of Contents
+
 - [About](#about)
 - [Getting Started](#getting_started)
 - [Deployment](#deployment)
@@ -32,39 +33,58 @@
 - [Acknowledgments](#acknowledgement)
 
 ## 🧐 About <a name = "about"></a>
-Write about 1-2 paragraphs describing the purpose of your project.
+
+Our project, The Christmas Gifts Planner, is a collaborative effort by a team of 4 individuals undergoing training as web developer designers. The project aims to facilitate members of a family or group of friends to discuss gift ideas without seeing what others are preparing for them. A dedicated discussion thread would be allocated to each member, enabling other members to exchange individual or collective gift ideas.
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
+
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
 
 ### Prerequisites
-What things you need to install the software and how to install them.
+
+Before you begin, ensure you have met the following requirements:
 
 ```
-Give examples
+Docker installed
+Node.js installed
+PostgreSQL installed
 ```
 
 ### Installing
-A step by step series of examples that tell you how to get a development env running.
 
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
+1. Clone the repository:
 
 ```
-until finished
+git clone https://github.com/votre-utilisateur/nom-du-projet.git
 ```
 
-End with an example of getting some data out of the system or using it for a little demo.
+2.Navigate to the project directory:
+
+```
+cd backend
+```
+
+3. Create a .env file in the root directory and fill it with necessary environment variables:
+
+```
+# Example .env file
+DATABASE_URL=postgres://username:password@localhost:5432/database_name
+```
+
+4.Start the development server with Docker Compose:
+
+```
+docker-compose up --build
+```
+
+5.Open your browser and navigate to http://localhost:3000 to view the application.
 
 ## 🔧 Running the tests <a name = "tests"></a>
+
 Explain how to run the automated tests for this system.
 
 ### Break down into end to end tests
+
 Explain what these tests test and why
 
 ```
@@ -72,6 +92,7 @@ Give an example
 ```
 
 ### And coding style tests
+
 Explain what these tests test and why
 
 ```
@@ -79,23 +100,36 @@ Give an example
 ```
 
 ## 🎈 Usage <a name="usage"></a>
+
 Add notes about how to use the system.
 
 ## 🚀 Deployment <a name = "deployment"></a>
+
 Add additional notes about how to deploy this on a live system.
 
 ## ⛏️ Built Using <a name = "built_using"></a>
-- [MongoDB](https://www.mongodb.com/) - Database
-- [Express](https://expressjs.com/) - Server Framework
-- [VueJs](https://vuejs.org/) - Web Framework
+
+- [GraphQL](https://graphql.org/) - Query Language
+- [Apollo Server](https://www.apollographql.com/docs/apollo-server/) - GraphQL Server
 - [NodeJs](https://nodejs.org/en/) - Server Environment
+- [PostgreSQL](https://www.postgresql.org/) - Database
+- [TypeORM](https://typeorm.io/) - ORM for TypeScript
+- [Next.js](https://nextjs.org/) - React Framework
+- [React](https://vuejs.org/) - JavaScript Library
+- [Apollo Client](https://www.apollographql.com/docs/react/) - GraphQL Client
+- [Docker](https://www.docker.com/) - Containerization Platform
 
 ## ✍️ Authors <a name = "authors"></a>
-- [@kylelobo](https://github.com/kylelobo) - Idea & Initial work
+
+- [@AlexandreRichert](https://github.com/AlexandreRichert) - Idea & Initial work
+- [@alon-bendavid](https://github.com/alon-bendavid) - Idea & Initial work
+- [@Fangornito](https://github.com/Fangornito) - Idea & Initial work
+- [@Jasminegrz](https://github.com/Jasminegrz) - Idea & Initial work
 
 See also the list of [contributors](https://github.com/kylelobo/The-Documentation-Compendium/contributors) who participated in this project.
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
+
 - Hat tip to anyone whose code was used
 - Inspiration
 - References
