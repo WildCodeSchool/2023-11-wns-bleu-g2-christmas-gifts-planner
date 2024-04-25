@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:15-alpine
+    stop_grace_period: 0s
+    environment:
+      POSTGRES_PASSWORD: postgres
+      PGUSER: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 2s
+      timeout: 2s
+      retries: 10
+    ports:
+      - 5432:5432
+
+  backend:
+    depends_on:
+      db:
+        condition: service_healthy
+    build: backend
+    ports:
+      - 4001:4001
+    volumes:
+      - ./backend/src:/app/src
+    environment:
+      - WDS_SOCKET_HOST=127.0.0.1
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - DB_HOST=db
