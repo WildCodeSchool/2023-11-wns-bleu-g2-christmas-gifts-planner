@@ -10,7 +10,6 @@ import env from "./env";
 
 const { SERVER_PORT: port } = env;
 
-
 const app = express();
 const httpServer = http.createServer(app);
 
@@ -27,19 +26,16 @@ const main = async () => {
   app.use(
     "/graphql",
     cors<cors.CorsRequest>({
-      origin: [
-        "https://www.your-app.example/",
-        "https://studio.apollographql.com/",
-      ],
+      credentials: true,
+      origin: env.CORS_ALLOWED_ORIGINS.split(","),
     }),
     express.json(),
     expressMiddleware(server)
   );
 
-  await new Promise<void>((resolve) =>
-    httpServer.listen({ port }, resolve)
-  );
-  console.log('🚀 Server ready at http://localhost:4001/graphql');
+  await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
+  console.log("🚀 Server ready at http://localhost:4001/graphql");
+  console.log("hello");
 };
 
 main();

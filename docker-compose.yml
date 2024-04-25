@@ -10,8 +10,8 @@ services:
       interval: 2s
       timeout: 2s
       retries: 10
-    ports: 
-    - 5432:5432
+    ports:
+      - 5432:5432
 
   backend:
     depends_on:
@@ -22,4 +22,8 @@ services:
       - 4001:4001
     volumes:
       - ./backend/src:/app/src
-
+    environment:
+      - WDS_SOCKET_HOST=127.0.0.1
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - DB_HOST=db
