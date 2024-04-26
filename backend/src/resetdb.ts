@@ -28,7 +28,9 @@ export async function clearDB() {
         email: "admin@app.com",
         hashedPassword: await hashPassword("adminadmin"),
     });
-  
+    await admin.save();
+
+    
     await db.destroy();
     console.log("done !");
   }
