@@ -16,7 +16,7 @@
 
 ---
 
-<p align="center"> Few lines describing your project.
+<p align="center"> Christmas gift planner is a collaborative platform designed to facilitate the sharing of gift ideas among family members or groups of friends while maintaining the element of surprise.
     <br> 
 </p>
 
@@ -55,7 +55,7 @@ PostgreSQL installed
 1. Clone the repository:
 
 ```
-git clone https://github.com/votre-utilisateur/nom-du-projet.git
+git clone https://github.com/WildCodeSchool/2023-11-wns-bleu-g2.git
 ```
 
 2.Navigate to the project directory:
