@@ -16,39 +16,22 @@
 
 ---
 
-<p align="center"> Few lines describing your project.
-    <br> 
-</p>
 
-## 📝 Table of Contents
-- [About](#about)
-- [Getting Started](#getting_started)
-- [Deployment](#deployment)
-- [Usage](#usage)
-- [Built Using](#built_using)
-- [TODO](../TODO.md)
-- [Contributing](../CONTRIBUTING.md)
-- [Authors](#authors)
-- [Acknowledgments](#acknowledgement)
 
 ## 🧐 About <a name = "about"></a>
 Christmas gift planner is a collaborative platform designed to facilitate the sharing of gift ideas among family members or groups of friends while maintaining the element of surprise.
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
-run with Docker:
-clone the project
+run the project with Docker-
+1) Clone the project
 ```
 https://github.com/WildCodeSchool/2023-11-wns-bleu-g2.git
 ```
-run this command in the terminal-
+2) Type command in the terminal-
 ```
 docker compose -f docker-compose.yml up --build
 ```
 
-
-
-## 🚀 Deployment <a name = "deployment"></a>
-Add additional notes about how to deploy this on a live system.
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 - [postgres](https://www.postgresql.org/docs/current/tutorial-sql.html) - Database
