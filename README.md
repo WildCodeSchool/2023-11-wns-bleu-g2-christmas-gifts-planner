@@ -3,7 +3,7 @@
  <img width=200px height=200px src="https://i.imgur.com/6wj0hh6.jpg" alt="Project logo"></a>
 </p>
 
-<h3 align="center">The Christmas Gifts Planner</h3>
+<h3 align="center">Christmas Gifts Planner</h3>
 
 <div align="center">
 
@@ -34,7 +34,7 @@
 
 ## 🧐 About <a name = "about"></a>
 
-Our project, The Christmas Gifts Planner, is a collaborative effort by a team of 4 individuals undergoing training as web developer designers. The project aims to facilitate members of a family or group of friends to discuss gift ideas without seeing what others are preparing for them. A dedicated discussion thread would be allocated to each member, enabling other members to exchange individual or collective gift ideas.
+Our project, Christmas Gifts Planner, is a collaborative effort by a team of 4 individuals undergoing training as web developer designers. The project aims to facilitate members of a family or group of friends to discuss gift ideas without seeing what others are preparing for them. A dedicated discussion thread would be allocated to each member, enabling other members to exchange individual or collective gift ideas.
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
