@@ -29,7 +29,6 @@ export async function clearDB() {
         hashedPassword: await hashPassword("adminadmin"),
     });
     await admin.save();
-
     
     await db.destroy();
     console.log("done !");

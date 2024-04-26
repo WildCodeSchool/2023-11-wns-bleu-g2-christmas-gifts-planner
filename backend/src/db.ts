@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
 import env from "./env";
-import UserResolver from "./resolvers/UserResolver";
+import User from "./entities/User";
 
 export default new DataSource({
   type: "postgres",
@@ -9,6 +9,6 @@ export default new DataSource({
   username: env.DB_USER,
   password: env.DB_PASS,
   database: env.DB_NAME,
-  entities: [UserResolver],
+  entities: [User],
   synchronize: true,
 });
