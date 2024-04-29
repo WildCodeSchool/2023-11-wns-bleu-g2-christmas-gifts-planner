@@ -1,23 +1,31 @@
+import { useUsersQuery } from "@/graphql/generated/schema";
 import { gql, useQuery } from "@apollo/client";
 
 export default function Home() {
-  const GET_USERS = gql`
-    query Users {
-      users {
-        id
-        firstName
-        lastName
-        email
-      }
-    }
-  `;
-
-  const { data, loading, error } = useQuery(GET_USERS);
-  console.log(data);
+  const { data, loading, error } = useUsersQuery();
+  const usersList = data?.users || [];
 
   return (
     <main>
       <h1>Welcome to my app Christmas Gifts Planner !</h1>
+      <h2>My list of users :</h2>
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p>Error: {error.message}</p>
+      ) : (
+        usersList?.map((user) => {
+          return (
+            <div key={user.id}>
+              <p>
+                {user.firstName} {user.lastName}
+              </p>
+              <p>{user.email}</p>
+              <p>#{user.id}</p>
+            </div>
+          );
+        })
+      )}
     </main>
   );
 }
