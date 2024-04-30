@@ -1,5 +1,6 @@
 import { execute } from "../jest.setup";
 import User from "../src/entities/User";
+import addUser from "./operations/addUser";
 import getUsers from "./operations/getUsers";
 
 describe("Users Resolver", () => {
@@ -32,6 +33,29 @@ describe("Users Resolver", () => {
         "lastName": "userName2",
       },
     ],
+  },
+}
+`);
+  });
+
+  it("should create a user", async () => {
+    const res = await execute(addUser, {
+      data: {
+        email: "emailtest2",
+        firstName: "firstname test2",
+        lastName: "lastname test2",
+        password: "paswordtest2",
+      },
+    });
+    expect(res).toMatchInlineSnapshot(`
+{
+  "data": {
+    "createUser": {
+      "email": "emailtest2",
+      "firstName": "firstname test2",
+      "id": "1",
+      "lastName": "lastname test2",
+    },
   },
 }
 `);

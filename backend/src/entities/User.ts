@@ -22,8 +22,8 @@ export default class User extends BaseEntity {
   @Field()
   email: string;
 
-  // @Column()
-  // hashedPassword: string;
+  //   @Column()
+  //   hashedPassword: string;
 }
 
 @InputType()
@@ -39,7 +39,11 @@ export class UserInput {
 
   @Field()
   @MinLength(3)
-  nickname: string;
+  firstName: string;
+
+  @Field()
+  @MinLength(3)
+  lastName: string;
 }
 const hashingOptions = {
   memoryCost: 2 ** 16,

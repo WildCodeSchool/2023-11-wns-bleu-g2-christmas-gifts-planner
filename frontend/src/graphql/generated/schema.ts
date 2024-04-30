@@ -40,7 +40,8 @@ export type User = {
 
 export type UserInput = {
   email: Scalars['String'];
-  nickname: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
   password: Scalars['String'];
 };
 
