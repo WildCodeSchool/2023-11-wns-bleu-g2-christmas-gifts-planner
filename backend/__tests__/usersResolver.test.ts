@@ -41,23 +41,23 @@ describe("Users Resolver", () => {
   it("should create a user", async () => {
     const res = await execute(addUser, {
       data: {
-        email: "emailtest2",
+        email: "emailtest2@mail.com",
         firstName: "firstname test2",
         lastName: "lastname test2",
-        password: "paswordtest2",
+        password: "Paswordtest/2",
       },
     });
-    expect(res).toMatchInlineSnapshot(`
-{
+    expect(JSON.stringify(res, null, 2)).toMatchInlineSnapshot(`
+"{
   "data": {
     "createUser": {
-      "email": "emailtest2",
-      "firstName": "firstname test2",
       "id": "1",
+      "firstName": "firstname test2",
       "lastName": "lastname test2",
-    },
-  },
-}
+      "email": "emailtest2@mail.com"
+    }
+  }
+}"
 `);
   });
 });
