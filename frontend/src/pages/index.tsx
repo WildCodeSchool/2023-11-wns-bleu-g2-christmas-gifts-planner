@@ -1,5 +1,7 @@
 import { useUsersQuery } from "@/graphql/generated/schema";
 import { gql, useQuery } from "@apollo/client";
+import Test from "@/components/Test";
+import React from "react";
 
 export default function Home() {
   const { data, loading, error } = useUsersQuery();
