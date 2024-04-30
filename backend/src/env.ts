@@ -8,4 +8,5 @@ export default load({
   DB_NAME: String,
   SERVER_PORT: Number,
   CORS_ALLOWED_ORIGINS: String,
+  NODE_ENV: String,
 });
