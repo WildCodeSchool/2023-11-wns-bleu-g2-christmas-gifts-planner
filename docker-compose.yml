@@ -27,3 +27,11 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
       - DB_HOST=db
+
+  frontend:
+    stop_grace_period: 0s
+    build: frontend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend/src:/app/src
