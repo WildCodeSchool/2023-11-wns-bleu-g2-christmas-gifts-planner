@@ -1,0 +1,8 @@
+mutation Signup($data: NewUserInputType!) {
+  createUser(data: $data) {
+    id
+    firstName
+    lastName
+    email
+  }
+}
