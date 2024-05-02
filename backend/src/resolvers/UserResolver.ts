@@ -3,6 +3,10 @@ import datasource from "../db";
 import User, { hashPassword } from "../entities/User";
 import { NewUserInputType } from "../types/NewUserInputType";
 import { GraphQLError } from "graphql";
+import { LoginInputType } from "../types/LoginInputType";
+import { verify } from "argon2";
+import jwt from "jsonwebtoken";
+import env from "../env";
 
 @Resolver(User)
 export default class UserResolver {
@@ -20,6 +24,26 @@ export default class UserResolver {
     return await datasource
       .getRepository(User)
       .save({ ...data, hashedPassword });
+  }
+  @Mutation(() => String)
+  async login(@Arg("data") data: LoginInputType) {
+    const existingUser = await User.findOneBy({ email: data.email });
+    if (existingUser === null) throw new GraphQLError("Invalid Credentials");
+    const passwordVerified = await verify(
+      existingUser.hashedPassword,
+      data.password
+    );
+    if (!passwordVerified) throw new GraphQLError("Invalid Credentials");
+
+    const token = jwt.sign(
+      {
+        userId: existingUser.id,
+      },
+      env.JWT_PRIVATE_KEY,
+      { expiresIn: "30d" }
+    );
+
+    return token;
   }
 
   @Query(() => [User])
