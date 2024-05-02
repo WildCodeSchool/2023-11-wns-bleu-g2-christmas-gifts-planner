@@ -3,9 +3,9 @@ import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import express from "express";
 import http from "http";
-import schema from "./schema";
+import schema from "./config/schema";
 import cors from "cors";
-import db from "./db";
+import db from "./config/db";
 import env from "./env";
 import { Context } from "./types";
 

@@ -1,5 +1,5 @@
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
-import datasource from "../db";
+import datasource from "../config/db";
 import User, { hashPassword } from "../entities/User";
 import { NewUserInputType } from "../types/NewUserInputType";
 import { GraphQLError } from "graphql";

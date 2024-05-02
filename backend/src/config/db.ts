@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
-import env from "./env";
-import User from "./entities/User";
+import env from "../env";
+import User from "../entities/User";
 
 export default new DataSource({
   type: "postgres",
