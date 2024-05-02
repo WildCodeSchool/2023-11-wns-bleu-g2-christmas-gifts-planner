@@ -1,4 +1,5 @@
 import { useSignupMutation } from "@/graphql/generated/schema";
+import { Button, Card, Center, FormControl, FormLabel, Input, InputGroup, InputRightElement, Text } from '@chakra-ui/react';
 import { FormEvent, useState } from "react";
 
 function validatePassword(p: string) {
@@ -41,71 +42,71 @@ export default function Signup() {
       else setError("une erreur est survenue");
     }
   };
+  const [show, setShow] = useState(false)
+  const handleClick = () => setShow(!show)
 
   return (
     <>
-      <h1>Creer un compte</h1>
+      <Text fontSize={16} fontWeight="bold">Crée un compte</Text>
+      <Center>
+      <Card mx="24px" mt="8px" p={4} maxW="500px" w="90%" >
+<form onSubmit={handleSubmit}>
+      <FormControl>
+        <FormLabel>Email address</FormLabel>
+        <Input type='email' isRequired autoComplete="" id="email" name="email"/>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">
-            <span>Email</span>
-          </label>
-          <input
-            required
-            type="email"
-            name="email"
-            id="email"
-            autoComplete=""
-          />
-        </div>
-        <div>
-          <label htmlFor="firstName">
-            <span>Nom</span>
-          </label>
-          <input
-            type="text"
+        <FormLabel>First Name</FormLabel>
+        <Input type="text"
             name="firstName"
             id="firstName"
             minLength={2}
             maxLength={30}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="lastName">
-            <span>Prénom</span>
-          </label>
-          <input
-            type="text"
+            isRequired/>
+
+        <FormLabel>Last Name</FormLabel>
+        <Input type="text"
             name="lastName"
             id="lastName"
             minLength={2}
             maxLength={30}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">
-            <span>Mot de passe</span>
-          </label>
+            isRequired />
 
-          <input type="password" name="password" id="password" required />
-        </div>
-        <div>
-          <label htmlFor="passwordConfirmation">
-            <span>Confirmation</span>
-          </label>
-          <input
-            type="password"
-            name="passwordConfirmation"
-            id="passwordConfirmation"
-            required
-          />
-        </div>
-        {error !== "" && <pre>{error}</pre>}
-        <button>Envoyer</button>
+        <FormLabel>Password</FormLabel>
+        <InputGroup size='md'>
+      <Input
+         name="password" id="password" required
+        type={show ? 'text' : 'password'}
+        placeholder='Enter password'
+      />
+      <InputRightElement width='4.5rem'>
+        <Button h='1.75rem' size='sm' onClick={handleClick}>
+          {show ? 'Hide' : 'Show'}
+        </Button>
+      </InputRightElement>
+    </InputGroup>
+
+        <FormLabel>Confirm Password</FormLabel>
+        <InputGroup size='md'>
+      <Input
+         name="passwordConfirmation" id="passwordConfirmation" isRequired
+        type={show ? 'text' : 'password'}
+        placeholder='Confirm password'
+      />
+      <InputRightElement width='4.5rem'>
+        <Button h='1.75rem' size='sm' onClick={handleClick}>
+          {show ? 'Hide' : 'Show'}
+        </Button>
+      </InputRightElement>
+    </InputGroup>
+      <Button type="submit" mt={6}>
+      S&apos;inscrire
+    </Button>
+      </FormControl>
       </form>
-    </>
+      </Card>
+      </Center>
+
+        {error !== "" && <pre>{error}</pre>}
+        </>
   );
 }
