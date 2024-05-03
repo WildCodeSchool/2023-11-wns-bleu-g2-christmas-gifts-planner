@@ -78,9 +78,7 @@ export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'Us
 
 export const LoginDocument = gql`
     mutation Login($data: LoginInputType!) {
-  login(data: $data){
-    email
-  }
+  login(data: $data)
 }
     `;
 export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;

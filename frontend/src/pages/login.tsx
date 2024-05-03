@@ -7,19 +7,17 @@ const Login = () => {
   const [show, setShow] = useState(false)
   const handleClick = () => setShow(!show)
   const [error, setError] = useState("");
-  const [loginUser]= useLoginMutation();
+  const [login]= useLoginMutation();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    console.log("handleSubmit triggered")
     setError("");
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
     try {
-      const res = await loginUser({ variables: { data: formJSON } });
+      const res = await login({ variables: { data: formJSON } });
       console.log({ res });
     } catch (e: any) {
-      alert(`ERROR ${e}`)
      setError(`une erreur est survenue: ${e}`);
     }
   };
@@ -31,12 +29,12 @@ const Login = () => {
           <form onSubmit={handleSubmit}>
             <FormControl>
               <FormLabel>Adresse email</FormLabel>
-              <Input isRequired placeholder="Enter your email"/>
+              <Input isRequired placeholder="Enter your email" autoComplete="" type="email" id="email" name="email"/>
 
               <FormLabel>Mot de passe</FormLabel>
                <InputGroup size='md'>
                 <Input
-                  name="password" id="password" required
+                  name="password" id="password" isRequired
                   type={show ? 'text' : 'password'}
                   placeholder='Enter password'
                 />
@@ -46,10 +44,10 @@ const Login = () => {
                   </Button>
                 </InputRightElement>
               </InputGroup>
-            </FormControl>
             <Button type="submit">
               Se connecter
             </Button>
+            </FormControl>
           </form>
         </Card>
       </Center>
