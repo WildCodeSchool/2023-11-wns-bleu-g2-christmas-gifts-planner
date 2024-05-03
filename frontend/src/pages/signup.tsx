@@ -98,7 +98,7 @@ export default function Signup() {
         </Button>
       </InputRightElement>
     </InputGroup>
-      <Button type="submit" mt={6} }>
+      <Button type="submit" mt={6}>
       S&apos;inscrire
     </Button>
       </FormControl>
