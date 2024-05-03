@@ -1,6 +1,6 @@
 import { InputType, Field, Int } from "type-graphql";
 import express from "express";
-import User from "./entities/User";
+import User from "../entities/User";
 
 @InputType()
 export class ObjectId {
@@ -8,7 +8,7 @@ export class ObjectId {
   id!: number;
 }
 
-export interface Context {
+export interface ContextType {
   req: express.Request;
   res: express.Response;
   currentUser?: User;
