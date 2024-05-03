@@ -1,5 +1,6 @@
 import { useLoginMutation } from "@/graphql/generated/schema";
 import { Button, Card, Center, FormControl, FormLabel, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
+
 import { FormEvent, useState } from "react";
 
 const Login = () => {
@@ -9,6 +10,7 @@ const Login = () => {
   const [loginUser]= useLoginMutation();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    console.log("handleSubmit triggered")
     setError("");
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -17,6 +19,7 @@ const Login = () => {
       const res = await loginUser({ variables: { data: formJSON } });
       console.log({ res });
     } catch (e: any) {
+      alert(`ERROR ${e}`)
      setError(`une erreur est survenue: ${e}`);
     }
   };

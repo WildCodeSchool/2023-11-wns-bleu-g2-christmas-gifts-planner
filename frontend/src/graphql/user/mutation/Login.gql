@@ -1,3 +1,5 @@
 mutation Login($data: LoginInputType!) {
-  login(data: $data)
+  login(data: $data) {
+    email
+  }
 }
