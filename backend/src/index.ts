@@ -7,7 +7,7 @@ import schema from "./config/schema";
 import cors from "cors";
 import db from "./config/db";
 import env from "./env";
-import { Context } from "./types";
+import { ContextType } from "./types/ContextType";
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -15,7 +15,7 @@ const httpServer = http.createServer(app);
 const { SERVER_PORT: port } = env;
 const main = async () => {
   await db.initialize();
-  const server = new ApolloServer<Context>({
+  const server = new ApolloServer<ContextType>({
     schema,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
