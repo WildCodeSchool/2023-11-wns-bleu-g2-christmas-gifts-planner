@@ -1,4 +1,4 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import datasource from "../config/db";
 import User, { hashPassword } from "../entities/User";
 import { NewUserInputType } from "../types/NewUserInputType";
@@ -7,6 +7,7 @@ import { LoginInputType } from "../types/LoginInputType";
 import { verify } from "argon2";
 import jwt from "jsonwebtoken";
 import env from "../env";
+import { ContextType } from "../types/ContextType";
 
 @Resolver(User)
 export default class UserResolver {
@@ -26,15 +27,16 @@ export default class UserResolver {
       .save({ ...data, hashedPassword });
   }
   @Mutation(() => String)
-  async login(@Arg("data") data: LoginInputType) {
+  async login(@Arg("data") data: LoginInputType, @Ctx() ctx: ContextType) {
     const existingUser = await User.findOneBy({ email: data.email });
+
     if (existingUser === null) throw new GraphQLError("Invalid Credentials");
     const passwordVerified = await verify(
       existingUser.hashedPassword,
       data.password
     );
+  
     if (!passwordVerified) throw new GraphQLError("Invalid Credentials");
-
     const token = jwt.sign(
       {
         userId: existingUser.id,
