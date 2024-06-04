@@ -1,3 +1,6 @@
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import datasource from "../db";
+import User, { UserInput, hashPassword } from "../entities/User";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import datasource from "../config/db";
 import User, { hashPassword } from "../entities/User";
@@ -26,6 +29,7 @@ export default class UserResolver {
       .getRepository(User)
       .save({ ...data, hashedPassword });
   }
+
   @Mutation(() => String)
   async login(@Arg("data") data: LoginInputType, @Ctx() ctx: ContextType) {
     const existingUser = await User.findOneBy({ email: data.email });
@@ -35,7 +39,7 @@ export default class UserResolver {
       existingUser.hashedPassword,
       data.password
     );
-  
+
     if (!passwordVerified) throw new GraphQLError("Invalid Credentials");
     const token = jwt.sign(
       {
