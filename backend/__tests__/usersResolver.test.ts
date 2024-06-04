@@ -9,11 +9,13 @@ describe("Users Resolver", () => {
       firstName: "user1",
       lastName: "userName1",
       email: "userEmail1",
+      password: "Paswordtest/1",
     }).save();
     await User.create({
       firstName: "user2",
       lastName: "userName2",
       email: "userEmail2",
+      password: "Paswordtest/2",
     }).save();
     const res = await execute(getUsers);
     expect(res).toMatchInlineSnapshot(`
