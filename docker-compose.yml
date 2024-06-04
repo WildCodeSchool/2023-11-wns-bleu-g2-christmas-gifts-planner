@@ -22,11 +22,11 @@ services:
       - 4001:4001
     volumes:
       - ./backend/src:/app/src
+    env_file:
+      - backend/.env
     environment:
-      - WDS_SOCKET_HOST=127.0.0.1
-      - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true
       - DB_HOST=db
+      
 
   frontend:
     stop_grace_period: 0s
@@ -35,3 +35,5 @@ services:
       - 3000:3000
     volumes:
       - ./frontend/src:/app/src
+    env_file:
+      - frontend/.env

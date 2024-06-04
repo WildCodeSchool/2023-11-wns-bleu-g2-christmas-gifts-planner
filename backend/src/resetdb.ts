@@ -1,4 +1,4 @@
-import db from "./db";
+import db from "./config/db";
 import User, { hashPassword } from "./entities/User";
 
 export async function clearDB() {
@@ -26,7 +26,7 @@ export default async function main() {
     firstName: "John",
     lastName: "Doe",
     email: "admin@app.com",
-    // hashedPassword: await hashPassword("adminadmin"),
+    hashedPassword: await hashPassword("adminadmin"),
   });
   await admin.save();
 
