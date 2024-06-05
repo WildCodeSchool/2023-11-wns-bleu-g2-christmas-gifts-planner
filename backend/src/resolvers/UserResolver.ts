@@ -1,4 +1,4 @@
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import datasource from "../config/db";
 import User, { hashPassword } from "../entities/User";
 import { NewUserInputType } from "../types/NewUserInputType";
@@ -26,7 +26,6 @@ export default class UserResolver {
       .getRepository(User)
       .save({ ...data, hashedPassword });
   }
-
   @Mutation(() => String)
   async login(@Arg("data") data: LoginInputType, @Ctx() ctx: ContextType) {
     const existingUser = await User.findOneBy({ email: data.email });
@@ -45,7 +44,12 @@ export default class UserResolver {
       env.JWT_PRIVATE_KEY,
       { expiresIn: "30d" }
     );
-
+    ctx.res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      secure: env.NODE_ENV === "production",
+    });
+    
     return token;
   }
 
@@ -53,4 +57,18 @@ export default class UserResolver {
   async users(): Promise<User[]> {
     return User.find();
   }
+
+
+  @Authorized()
+  @Query(()=> User)
+  async profile(@Ctx() ctx: ContextType) {
+    if (!ctx.currentUser) throw new GraphQLError("you need to be logged in!");
+    return User.findOneOrFail({
+      where: { id: ctx.currentUser.id },
+      
+    });
+  
+    
+  } 
+
 }
