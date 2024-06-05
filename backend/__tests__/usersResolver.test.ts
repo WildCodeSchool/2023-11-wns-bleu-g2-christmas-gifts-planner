@@ -1,5 +1,5 @@
 import { execute } from "../jest.setup";
-import User from "../src/entities/User";
+import User, { UserRole } from "../src/entities/User";
 import addUser from "./operations/addUser";
 import getUsers from "./operations/getUsers";
 
@@ -40,6 +40,8 @@ describe("Users Resolver", () => {
         firstName: "firstname test2",
         lastName: "lastname test2",
         password: "Paswordtest/2",
+        role: UserRole.Admin,
+
       },
     });
     expect(JSON.stringify(res, null, 2)).toMatchInlineSnapshot(`
