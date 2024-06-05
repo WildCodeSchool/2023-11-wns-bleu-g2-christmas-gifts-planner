@@ -8,6 +8,11 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 
+export enum UserRole {
+  Admin = "admin",
+  Visitor = "visitor",
+}
+
 @Entity()
 @ObjectType()
 export default class User extends BaseEntity {
@@ -36,6 +41,10 @@ export default class User extends BaseEntity {
 
   @Column()
   hashedPassword: string;
+
+  @Field()
+  @Column({ enum: UserRole, default: UserRole.Visitor })
+  role: UserRole;
 }
 
 const hashingOptions = {
