@@ -1,7 +1,7 @@
 import { ASTNode, graphql, GraphQLSchema, print } from "graphql";
 
-import db, { clearDB } from "./src/db";
-import getSchema from "./src/schema";
+import db, { clearDB } from "./src/config/db";
+import getSchema from "./src/config/schema";
 import { Maybe } from "type-graphql";
 
 export let schema: GraphQLSchema;

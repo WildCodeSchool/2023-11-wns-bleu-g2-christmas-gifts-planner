@@ -1,6 +1,3 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
-import datasource from "../db";
-import User, { UserInput, hashPassword } from "../entities/User";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import datasource from "../config/db";
 import User, { hashPassword } from "../entities/User";
