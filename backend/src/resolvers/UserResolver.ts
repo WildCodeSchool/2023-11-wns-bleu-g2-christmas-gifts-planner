@@ -49,7 +49,7 @@ export default class UserResolver {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       secure: env.NODE_ENV === "production",
     });
-    
+
     return token;
   }
 
@@ -65,10 +65,12 @@ export default class UserResolver {
     if (!ctx.currentUser) throw new GraphQLError("you need to be logged in!");
     return User.findOneOrFail({
       where: { id: ctx.currentUser.id },
-      
-    });
-  
     
+    });
   } 
-
+  @Mutation(()=>String)
+  async logout(@Ctx() ctx: ContextType){
+    ctx.res.clearCookie("token");
+    return "ok";
+  }
 }
