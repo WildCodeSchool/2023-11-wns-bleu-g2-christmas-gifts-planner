@@ -26,6 +26,7 @@ export default class UserResolver {
       .getRepository(User)
       .save({ ...data, hashedPassword });
   }
+
   @Mutation(() => String)
   async login(@Arg("data") data: LoginInputType, @Ctx() ctx: ContextType) {
     const existingUser = await User.findOneBy({ email: data.email });
@@ -35,7 +36,7 @@ export default class UserResolver {
       existingUser.hashedPassword,
       data.password
     );
-  
+
     if (!passwordVerified) throw new GraphQLError("Invalid Credentials");
     const token = jwt.sign(
       {
