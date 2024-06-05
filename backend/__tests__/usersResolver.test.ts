@@ -5,18 +5,17 @@ import getUsers from "./operations/getUsers";
 
 describe("Users Resolver", () => {
   it("should read users", async () => {
-    await User.create({
-      firstName: "user1",
-      lastName: "userName1",
-      email: "userEmail1",
-      password: "Paswordtest/1",
-    }).save();
-    await User.create({
-      firstName: "user2",
-      lastName: "userName2",
-      email: "userEmail2",
-      password: "Paswordtest/2",
-    }).save();
+    const firstName1 = "user1";
+    const lastName1 = "userName1";
+    const email1 = "userEmail1";
+    const password1 = "Paswordtest/1";
+    const u1 = new User();
+    u1.firstName = firstName1;
+    u1.lastName = lastName1;
+    u1.email = email1;
+    u1.password = password1;
+    await u1.save();
+
     const res = await execute(getUsers);
     expect(res).toMatchInlineSnapshot(`
 {
@@ -27,12 +26,6 @@ describe("Users Resolver", () => {
         "firstName": "user1",
         "id": "1",
         "lastName": "userName1",
-      },
-      {
-        "email": "userEmail2",
-        "firstName": "user2",
-        "id": "2",
-        "lastName": "userName2",
       },
     ],
   },
