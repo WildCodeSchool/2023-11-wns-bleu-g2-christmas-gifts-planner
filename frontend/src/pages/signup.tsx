@@ -49,10 +49,10 @@ export default function Signup() {
     <>
       <Heading fontSize='6xl' fontWeight="bold">Crée un compte</Heading>
       <Center>
-      <Card mx="24px" mt="8px" p={4} maxW="500px" w="90%" >
+      <Card mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" >
 <form onSubmit={handleSubmit}>
       <FormControl>
-        <FormLabel>Email address</FormLabel>
+        <FormLabel data-testid = 'label-email'>Email address</FormLabel>
         <Input type='email' isRequired autoComplete="" id="email" name="email"/>
 
         <FormLabel>First Name</FormLabel>

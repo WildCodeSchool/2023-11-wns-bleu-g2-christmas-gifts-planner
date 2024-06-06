@@ -22,13 +22,15 @@ export default async function main() {
   await db.initialize();
   await clearDB();
 
-  const admin = User.create({
-    firstName: "John",
-    lastName: "Doe",
+  const admin = new User();
+  Object.assign(admin, {
+    firstName: "admin",
+    lastName:"admin", 
     email: "admin@app.com",
-    hashedPassword: await hashPassword("adminadmin"),
+    password: "4dminAdmin@!",
   });
   await admin.save();
+
 
   await db.destroy();
   console.log("done !");

@@ -2,11 +2,17 @@
 import React from "react";
 import { Box, Button, Card, CardBody, CardHeader, Center, Flex, Heading, Link, Text } from '@chakra-ui/react';
 import { Gift, Group, UsersRound } from 'lucide-react';
-
+import { useProfileQuery } from "@/graphql/generated/schema";
+import { useRouter } from "next/router";
 
 export default function Home() {
- 
+  const router = useRouter();
+  const { data: currentUser, client } = useProfileQuery({
+    errorPolicy: "ignore",
+  });
+ console.log(currentUser);
   return (
+   <>
 
 <Center height="100vh">
 
@@ -109,6 +115,8 @@ Pas de compte ?
 </Center>
 
 </Box>
+  
 </Center>
+   </> 
   );
 }
