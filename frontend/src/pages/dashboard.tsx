@@ -23,7 +23,7 @@ export default function Dashboard() {
     <>
       <Card
         align="center"
-        width={{ base: "95%", md: "500px" }}
+        width={{ base: "95%", md: "48rem" }}
         m="auto"
         h="100dvh"
         paddingBlock="1rem"

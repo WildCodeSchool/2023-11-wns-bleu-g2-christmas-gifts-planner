@@ -3,7 +3,7 @@ import React from "react";
 
 export default function DashboardWhithoutGroup() {
   return (
-    <CardBody alignContent="center" w={{ base: "70%", md: "100%" }} gap="1rem">
+    <CardBody alignContent="center" w="70%" gap="1rem">
       <Text>
         Il semble que vous n&apos;appartenez à aucun groupe de discussion
       </Text>
