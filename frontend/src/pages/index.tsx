@@ -7,7 +7,8 @@ import { Gift, Group, UsersRound } from 'lucide-react';
 export default function Home() {
  
   return (
-<Center bg="yellow.50" height="100vh">
+
+<Center height="100vh">
 
 <Box flexDirection="column"   >
 <Center>
