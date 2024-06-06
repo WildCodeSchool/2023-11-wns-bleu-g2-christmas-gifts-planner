@@ -4,12 +4,16 @@ import {
   Card,
   CardFooter,
   CardHeader,
+  Flex,
   Heading,
-  Text,
 } from "@chakra-ui/react";
 import React from "react";
+import DashboardWhithoutGroup from "@/components/dashboard/DashbordWithoutGroup";
+import { useProfileQuery } from "@/graphql/generated/schema";
 
-export default function dashboard() {
+export default function Dashboard() {
+  const { data } = useProfileQuery({});
+  console.log("data: ", data);
   return (
     <>
       <Card align="center" width={{ base: "95%", md: "500px" }} m="auto">
@@ -22,18 +26,13 @@ export default function dashboard() {
         <CardHeader>
           <Avatar size="xl" bg="#003B1E" />
         </CardHeader>
-
         <Heading size="md">Bienvenue</Heading>
-        <Text>
-          Il semble que vous n&apos;appartenez à aucun groupe de discussion
-        </Text>
-        <Text>
-          Regoignez un groupe existant ou créez en un nouveau pour commencer à
-          échangeer des idées cadeaux avec vos amis !
-        </Text>
+        <DashboardWhithoutGroup />
         <CardFooter>
-          <Button variant="greenButton">Créer un groupe</Button>
-          <Button variant="greenButton">Rejoindre un groupe</Button>
+          <Flex direction="column" gap="1rem">
+            <Button variant="greenButton">Créer un groupe</Button>
+            <Button variant="greenButton">Rejoindre un groupe</Button>
+          </Flex>
         </CardFooter>
       </Card>
     </>

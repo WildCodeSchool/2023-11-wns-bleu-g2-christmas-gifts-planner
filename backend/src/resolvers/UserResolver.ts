@@ -58,18 +58,16 @@ export default class UserResolver {
     return User.find();
   }
 
-
   @Authorized()
-  @Query(()=> User)
+  @Query(() => User)
   async profile(@Ctx() ctx: ContextType) {
     if (!ctx.currentUser) throw new GraphQLError("you need to be logged in!");
     return User.findOneOrFail({
       where: { id: ctx.currentUser.id },
-    
     });
-  } 
-  @Mutation(()=>String)
-  async logout(@Ctx() ctx: ContextType){
+  }
+  @Mutation(() => String)
+  async logout(@Ctx() ctx: ContextType) {
     ctx.res.clearCookie("token");
     return "ok";
   }
