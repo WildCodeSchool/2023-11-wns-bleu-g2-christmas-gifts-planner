@@ -12,8 +12,10 @@ import DashboardWhithoutGroup from "@/components/dashboard/DashbordWithoutGroup"
 import { useProfileQuery } from "@/graphql/generated/schema";
 
 export default function Dashboard() {
-  const { data } = useProfileQuery({});
-  console.log("data: ", data);
+  const { data: currentUser, client } = useProfileQuery({
+    errorPolicy: "ignore",
+  });
+  console.log(currentUser);
   return (
     <>
       <Card align="center" width={{ base: "95%", md: "500px" }} m="auto">

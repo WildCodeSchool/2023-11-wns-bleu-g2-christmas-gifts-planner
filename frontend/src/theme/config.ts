@@ -1,6 +1,5 @@
 import { extendTheme } from "@chakra-ui/react";
 import { buttonTheme } from "./components/Button";
-
 import "@fontsource/amatic-sc";
 import "@fontsource/open-sans";
 
