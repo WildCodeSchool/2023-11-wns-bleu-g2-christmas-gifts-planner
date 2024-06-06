@@ -13,7 +13,8 @@ export default function Home() {
  console.log(currentUser);
   return (
    <>
-<Center bg="yellow.50" height="100vh">
+
+<Center height="100vh">
 
 <Box flexDirection="column"   >
 <Center>
