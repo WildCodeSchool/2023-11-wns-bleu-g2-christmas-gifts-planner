@@ -47,7 +47,7 @@ export default function Signup() {
 
   return (
     <>
-      <Heading fontSize='6xl' fontWeight="bold">Crée un compte</Heading>
+      <Heading as="h1" fontSize='6xl' fontWeight="bold">Crée un compte</Heading>
       <Center>
       <Card mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" >
 <form onSubmit={handleSubmit}>
