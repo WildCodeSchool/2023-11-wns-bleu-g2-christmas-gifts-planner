@@ -15,6 +15,13 @@ export type Scalars = {
   Float: number;
 };
 
+export type Group = {
+  __typename?: 'Group';
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  owner: User;
+};
+
 export type LoginInputType = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -47,6 +54,7 @@ export type NewUserInputType = {
 
 export type Query = {
   __typename?: 'Query';
+  groups: Array<Group>;
   profile: User;
   users: Array<User>;
 };
@@ -55,6 +63,7 @@ export type User = {
   __typename?: 'User';
   email: Scalars['String'];
   firstName: Scalars['String'];
+  groups?: Maybe<Array<Group>>;
   id: Scalars['ID'];
   lastName: Scalars['String'];
   role: Scalars['String'];
@@ -77,7 +86,7 @@ export type SignupMutation = { __typename?: 'Mutation', createUser: { __typename
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, role: string } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, role: string, groups?: Array<{ __typename?: 'Group', id: number, name: string, owner: { __typename?: 'User', id: string } }> | null } };
 
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -160,6 +169,13 @@ export const ProfileDocument = gql`
     lastName
     email
     role
+    groups {
+      id
+      name
+      owner {
+        id
+      }
+    }
   }
 }
     `;

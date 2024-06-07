@@ -1,7 +1,7 @@
-import {extendTheme } from "@chakra-ui/react";
-
-import '@fontsource/amatic-sc';
-import '@fontsource/open-sans';
+import { extendTheme } from "@chakra-ui/react";
+import { buttonTheme } from "./components/Button";
+import "@fontsource/amatic-sc";
+import "@fontsource/open-sans";
 
 const colors = {
   primary: {
@@ -27,19 +27,20 @@ const colors = {
   },
 };
 
-
-
-export const theme = extendTheme( { 
-  colors, 
-  fonts: { 
+export const theme = extendTheme({
+  colors,
+  fonts: {
     heading: `'Amatic Sc', sans-serif`,
     body: `'Open Sans', sans-serif`,
   },
   styles: {
     global: {
       "html, body": {
-        backgroundColor: "background.default", 
+        backgroundColor: "background.default",
       },
     },
+  },
+  components: {
+    Button: buttonTheme,
   },
 });

@@ -5,5 +5,12 @@ query Profile {
     lastName
     email
     role
+    groups {
+      id
+      name
+      owner {
+        id
+      }
+    }
   }
 }
