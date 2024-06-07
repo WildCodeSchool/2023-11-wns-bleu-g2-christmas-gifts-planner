@@ -40,7 +40,6 @@ describe("Users Resolver", () => {
         firstName: "firstname test2",
         lastName: "lastname test2",
         password: "Paswordtest/2",
-        role: UserRole.Admin,
 
       },
     });

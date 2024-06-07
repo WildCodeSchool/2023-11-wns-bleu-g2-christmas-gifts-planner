@@ -21,5 +21,5 @@ export class NewUserInputType {
   @MinLength(3)
   firstName: string;
 
- 
+
 }
