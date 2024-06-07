@@ -1,6 +1,5 @@
 import {extendTheme } from "@chakra-ui/react";
 
-
 import '@fontsource/amatic-sc';
 import '@fontsource/open-sans';
 
