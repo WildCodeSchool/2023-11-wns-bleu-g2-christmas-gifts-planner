@@ -31,50 +31,50 @@ export default async function main() {
   });
   await admin.save();
 
-  // const userJonas = new User();
-  // Object.assign(userJonas, {
-  //   firstName: "Jonas",
-  //   lastName: "Brun",
-  //   email: "jonas.brun@example.com",
-  //   password: "JonasBrun1+",
-  // });
-  // await userJonas.save();
+  const userJonas = new User();
+  Object.assign(userJonas, {
+    firstName: "Jonas",
+    lastName: "Brun",
+    email: "jonas.brun@example.com",
+    password: "JonasBrun1+",
+  });
+  await userJonas.save();
 
-  // const userMateo = new User();
-  // Object.assign(userMateo, {
-  //   firstName: "Mateo",
-  //   lastName: "Gaillard",
-  //   email: "mateo.gaillard@example.com",
-  //   password: "MateoGaillard1+",
-  // });
-  // await userMateo.save();
+  const userMateo = new User();
+  Object.assign(userMateo, {
+    firstName: "Mateo",
+    lastName: "Gaillard",
+    email: "mateo.gaillard@example.com",
+    password: "MateoGaillard1+",
+  });
+  await userMateo.save();
 
-  // const userEnola = new User();
-  // Object.assign(userEnola, {
-  //   firstName: "Enola",
-  //   lastName: "Roger",
-  //   email: "enola.roger@example.com",
-  //   password: "EnolaRoger1+",
-  // });
-  // await userEnola.save();
+  const userEnola = new User();
+  Object.assign(userEnola, {
+    firstName: "Enola",
+    lastName: "Roger",
+    email: "enola.roger@example.com",
+    password: "EnolaRoger1+",
+  });
+  await userEnola.save();
 
-  // const userValentina = new User();
-  // Object.assign(userValentina, {
-  //   firstName: "Valentina",
-  //   lastName: "Pierre",
-  //   email: "valentina.pierre@example.com",
-  //   password: "ValentinaPierre1+",
-  // });
-  // await userValentina.save();
+  const userValentina = new User();
+  Object.assign(userValentina, {
+    firstName: "Valentina",
+    lastName: "Pierre",
+    email: "valentina.pierre@example.com",
+    password: "ValentinaPierre1+",
+  });
+  await userValentina.save();
 
-  // const userNina = new User();
-  // Object.assign(userNina, {
-  //   firstName: "Nina",
-  //   lastName: "Louis",
-  //   email: "nina.louis@example.com",
-  //   password: "NinaLouis1+",
-  // });
-  // await userNina.save();
+  const userNina = new User();
+  Object.assign(userNina, {
+    firstName: "Nina",
+    lastName: "Louis",
+    email: "nina.louis@example.com",
+    password: "NinaLouis1+",
+  });
+  await userNina.save();
 
   await db.destroy();
   console.log("done !");
