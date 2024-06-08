@@ -21,19 +21,21 @@ export default function Navbar() {
 
   return (
     <Box as="nav" bg="primary.hightest" color="white" padding="4">
-      <Flex justifyContent="space-between" alignItems="center">
-        <Link href="/" passHref>
-          <Image
-            src="/Gifty-logo-white.svg"
-            alt="Gifty Logo"
-            height="40px"
-            _hover={{
-              textDecoration: 'none',
-              color: 'secondary.medium',
-            }}
-          />
-        </Link>        
-        
+    <Flex justifyContent="space-between" alignItems="center">
+      <Link href="/" passHref>
+        <Image
+          src="/Gifty-logo-white.svg"
+          alt="Gifty Logo"
+          height="40px"
+          className="logo"
+          css={{
+            transition: 'filter 0.2s ease',
+            '&:hover': {
+              filter: 'invert(56%) sepia(39%) saturate(2143%) hue-rotate(2deg) brightness(93%) contrast(92%)',
+            },
+          }}
+        />
+      </Link>
         <Flex alignItems="center">
             <Menu>
                 <MenuButton as={Button} variant="outline" colorScheme="white" mr="4"
@@ -57,7 +59,7 @@ export default function Navbar() {
             mr="4"
           />
 
-          {currentRoute === "/login" || currentRoute === "/signup" ? (
+          {currentRoute === "/login" || currentRoute === "/signup" || currentRoute === "/" ? (
             <Button colorScheme="white" variant="outline"
               _hover={{
                 textDecoration: 'none',
@@ -68,14 +70,36 @@ export default function Navbar() {
               Se connecter
             </Button>
           ) : (
-            <Avatar 
-                name='Dan Abrahmov' 
-                src='https://bit.ly/dan-abramov' 
-              size="md" 
-              _hover={{
-                cursor: 'pointer',
-              }}
-            />
+            <Menu>
+              <MenuButton>
+                <Avatar 
+                  name='Dan Abrahmov' 
+                  src='https://bit.ly/dan-abramov' 
+                  size="md" 
+                  _hover={{
+                    cursor: 'pointer',
+                  }}
+                />
+              </MenuButton>
+              <MenuList >
+              <Box textAlign="center" p={4} >
+                  <Flex flexDirection='column'>
+                    <MenuItem color='primary.hightest' onClick={() => router.push('/profile')}>Mon profil</MenuItem>
+                    <MenuItem color='primary.hightest' onClick={() => router.push('/groups')}>Mes groupes</MenuItem>
+                    </Flex>
+                </Box>                
+                <Box textAlign="center" p={4} >
+                  <Flex flexDirection='column'>
+                    <Button mb={4} variant="goldenButton" onClick={() => router.push('/create-group')}>
+                      Créer un groupe
+                    </Button>
+                    <Button variant="transparentButton" onClick={() => router.push('/login')}>
+                    Se déconnecter
+                    </Button>
+                  </Flex>
+                </Box>                
+              </MenuList>
+            </Menu>
           )}
         </Flex>
       </Flex>

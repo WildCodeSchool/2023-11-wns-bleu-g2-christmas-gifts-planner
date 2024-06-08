@@ -18,7 +18,7 @@ export default function Dashboard() {
   });
   console.log(currentUser);
   const { data: users } = useUsersQuery();
-  console.log(users);
+  // console.log(users);
   return (
     <>
       <Card
@@ -50,8 +50,8 @@ export default function Dashboard() {
         )}
         <CardFooter>
           <Flex direction="column" gap="1rem">
-            <Button variant="greenButton">Créer un groupe</Button>
-            <Button variant="greenButton">Rejoindre un groupe</Button>
+            <Button variant="goldenButton">Créer un groupe</Button>
+            <Button variant="goldenButton">Rejoindre un groupe</Button>
           </Flex>
         </CardFooter>
       </Card>
