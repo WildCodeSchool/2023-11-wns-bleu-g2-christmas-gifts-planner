@@ -1,6 +1,6 @@
 import { useSignupMutation } from "@/graphql/generated/schema";
-import { Avatar, Box, Button, Center, FormControl, Grid, GridItem, Heading, IconButton, Input, InputGroup, InputRightElement, Link, Text } from '@chakra-ui/react';
-import { ArrowLeft } from "lucide-react";
+import { Avatar, Box, Button, Center, Flex, FormControl, Grid, GridItem, Heading, IconButton, Input, InputGroup, Link, Text, useToast } from '@chakra-ui/react';
+import { ArrowLeft, X } from "lucide-react";
 import { FormEvent, useState } from "react";
 
 function validatePassword(p: string) {
@@ -17,8 +17,46 @@ function validatePassword(p: string) {
 }
 
 export default function Signup() {
+	const defaultAvatar = "https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?w=300&ssl=1"
   const [error, setError] = useState("");
   const [createUser] = useSignupMutation();
+	const [avatar, setAvatar] = useState<string | null | undefined>(null);
+	const [avatarFile, setAvatarFile] = useState<string | null | undefined>(null);
+  const toast = useToast();
+
+	const handleAvatarClick = () => {
+    document.getElementById('avatarInput')?.click();
+  };
+
+  const handleAvatarChange = (event: any) => {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+			reader.onload = () => {
+        const dataURL = reader.result as string;
+        setAvatar(dataURL);
+      };
+      reader.readAsDataURL(file);
+      setAvatarFile(file);
+    } else {
+      toast({
+        title: "Invalid file type.",
+        description: "Cette image n'est pas au format .png",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
+	const handleRemoveAvatar = () => {
+    setAvatar(undefined);
+    setAvatarFile(null); // Clear the file object
+    const input = document.getElementById('avatarInput') as HTMLInputElement;
+    if (input) {
+      input.value = ''; // Clear the file input
+    }
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     setError("");
@@ -36,15 +74,13 @@ export default function Signup() {
     try {
       const res = await createUser({ variables: { data: formJSON } });
       console.log({ res });
-      alert("Vous etes bien enregistré.e. Merci !");
+      alert("Vous êtes bien enregistré.e, Merci !");
     } catch (e: any) {
       if (e.message === "EMAIL_ALREADY_TAKEN")
         setError("Cet e-mail est déjà pris");
       else setError("une erreur est survenue");
     }
   };
-  // const [show, setShow] = useState(false)
-  // const handleClick = () => setShow(!show)
 
   return (
     <>
@@ -72,9 +108,45 @@ export default function Signup() {
       >
 <form onSubmit={handleSubmit}>
       <FormControl bgColor="#FFFEF9">
-				<Center>
-					<Avatar size="xl" bg="green.800" />
-				</Center>
+			<Center>
+			<Flex align="center" position="relative">
+                {avatar ? (
+                  <Avatar
+                    size="xl"
+                    name="Avatar"
+                    src={avatar}
+                    cursor="pointer"
+                    onClick={handleAvatarClick}
+                  />
+                ) : (
+                  <Avatar
+                    size="xl"
+                    name="Avatar"
+                    src={defaultAvatar}
+                    cursor="pointer"
+                    onClick={handleAvatarClick}
+                  />
+                )}
+                {avatar && (
+                  <IconButton
+                    aria-label="Remove Avatar"
+                    icon={<X />}
+                    size="sm"
+                    position="absolute"
+                    top={0}
+                    right={0}
+                    onClick={handleRemoveAvatar}
+                  />
+                )}
+              </Flex>
+            </Center>
+            <Input
+              type="file"
+              id="avatarInput"
+              accept="image/png"
+              style={{ display: 'none' }}
+              onChange={handleAvatarChange}
+            />
       <Grid templateColumns="repeat(2, 1fr)" gap={4} mt={4}>
         <GridItem>
           <Input
@@ -116,11 +188,6 @@ export default function Signup() {
             borderRadius={15}
 						borderColor="green.600"
       />
-      {/* <InputRightElement width='4.5rem'>
-        <Button h='1.75rem' size='sm' onClick={handleClick}>
-          {show ? 'Hide' : 'Show'}
-        </Button>
-      </InputRightElement> */}
     </InputGroup>
         <InputGroup size='md' mt={4}>
       <Input
@@ -130,11 +197,6 @@ export default function Signup() {
             borderRadius={15}
 						borderColor="green.600"
       />
-      {/* <InputRightElement width='4.5rem'>
-        <Button h='1.75rem' size='sm' bg="none" boxShadow="none" onClick={handleClick}>
-          {show ? 'Hide' : 'Show'}
-        </Button>
-      </InputRightElement> */}
     </InputGroup>
 		<Center>
       <Button variant="goldenButton" type="submit" mt={4}>
