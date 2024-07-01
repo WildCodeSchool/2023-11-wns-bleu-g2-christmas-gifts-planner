@@ -1,5 +1,6 @@
 import { useSignupMutation } from "@/graphql/generated/schema";
-import { Avatar, Button, Card, Center, FormControl, FormLabel, Grid, GridItem, Heading, Input, InputGroup, InputRightElement, Text } from '@chakra-ui/react';
+import { Avatar, Box, Button, Center, FormControl, Grid, GridItem, Heading, IconButton, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
+import { ArrowLeft } from "lucide-react";
 import { FormEvent, useState } from "react";
 
 function validatePassword(p: string) {
@@ -47,10 +48,28 @@ export default function Signup() {
 
   return (
     <>
-      <Heading as="h1" fontSize='6xl' fontWeight="bold">Crée un compte</Heading>
+
+        <IconButton
+          aria-label="Back"
+					bg="transparent"
+					boxShadow="none"
+          icon={<ArrowLeft color="#22543D"/>}
+        />
+      <Heading as="h1" fontSize='6xl' fontWeight="bold" mt={8} textAlign="center" color="green.800">Créer un compte</Heading>
+
       <Center>
 
-      <Card mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="transparent">
+      <Box
+        mx="24px"
+        mt="8px"
+        p={4}
+        maxW="500px"
+        w="90%"
+        data-testid="card"
+        bgColor="transparent"
+        border="none"
+        boxShadow="none"
+      >
 <form onSubmit={handleSubmit}>
       <FormControl>
 				<Center>
@@ -118,7 +137,7 @@ export default function Signup() {
     </Button>
       </FormControl>
       </form>
-      </Card>
+      </Box>
       </Center>
 
         {error !== "" && <pre>{error}</pre>}
