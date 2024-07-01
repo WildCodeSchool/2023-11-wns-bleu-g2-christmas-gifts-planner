@@ -1,5 +1,5 @@
 import { useSignupMutation } from "@/graphql/generated/schema";
-import { Avatar, Box, Button, Center, FormControl, Grid, GridItem, Heading, IconButton, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
+import { Avatar, Box, Button, Center, FormControl, Grid, GridItem, Heading, IconButton, Input, InputGroup, InputRightElement, Link, Text } from '@chakra-ui/react';
 import { ArrowLeft } from "lucide-react";
 import { FormEvent, useState } from "react";
 
@@ -43,8 +43,8 @@ export default function Signup() {
       else setError("une erreur est survenue");
     }
   };
-  const [show, setShow] = useState(false)
-  const handleClick = () => setShow(!show)
+  // const [show, setShow] = useState(false)
+  // const handleClick = () => setShow(!show)
 
   return (
     <>
@@ -71,7 +71,7 @@ export default function Signup() {
         boxShadow="none"
       >
 <form onSubmit={handleSubmit}>
-      <FormControl>
+      <FormControl bgColor="#FFFEF9">
 				<Center>
 					<Avatar size="xl" bg="green.800" />
 				</Center>
@@ -87,6 +87,7 @@ export default function Signup() {
             placeholder="Nom"
             width="100%"
             borderRadius={15}
+						borderColor="green.600"
           />
         </GridItem>
         <GridItem>
@@ -100,46 +101,51 @@ export default function Signup() {
             placeholder="Prénom"
             width="100%"
             borderRadius={15}
+						borderColor="green.600"
           />
         </GridItem>
       </Grid>
         <Input type='email' isRequired autoComplete="" id="email" name="email" placeholder="Adresse mail" my={4} 
-            borderRadius={15}/>
+            borderRadius={15}
+						borderColor="green.600"/>
         <InputGroup size='md'>
       <Input
          name="password" id="password" required
-        type={show ? 'text' : 'password'}
-        placeholder='Enter password'
+        type='password'
+        placeholder='Mot de passe'
             borderRadius={15}
+						borderColor="green.600"
       />
-      <InputRightElement width='4.5rem'>
+      {/* <InputRightElement width='4.5rem'>
         <Button h='1.75rem' size='sm' onClick={handleClick}>
           {show ? 'Hide' : 'Show'}
         </Button>
-      </InputRightElement>
+      </InputRightElement> */}
     </InputGroup>
         <InputGroup size='md' mt={4}>
       <Input
          name="passwordConfirmation" id="passwordConfirmation" isRequired
-        type={show ? 'text' : 'password'}
-        placeholder='Confirm password'
+        type={'password'}
+        placeholder='Confirmer le mot de passe'
             borderRadius={15}
+						borderColor="green.600"
       />
-      <InputRightElement width='4.5rem'>
-        <Button h='1.75rem' size='sm' onClick={handleClick}>
+      {/* <InputRightElement width='4.5rem'>
+        <Button h='1.75rem' size='sm' bg="none" boxShadow="none" onClick={handleClick}>
           {show ? 'Hide' : 'Show'}
         </Button>
-      </InputRightElement>
+      </InputRightElement> */}
     </InputGroup>
-
-      <Button type="submit" mt={6}>
+		<Center>
+      <Button variant="goldenButton" type="submit" mt={4}>
       S&apos;inscrire
-    </Button>
+    	</Button>
+		</Center>
       </FormControl>
       </form>
       </Box>
       </Center>
-
+			<Text ml={16} mt={4} fontSize={12}>Déjà inscrit ? <Link color="gray">Se connecter</Link></Text>
         {error !== "" && <pre>{error}</pre>}
         </>
   );
