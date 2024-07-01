@@ -47,21 +47,14 @@ export default function Signup() {
 
   return (
     <>
-<<<<<<< HEAD
-      <Text fontSize={16} fontWeight="bold">Créer un compte</Text>
-=======
       <Heading as="h1" fontSize='6xl' fontWeight="bold">Crée un compte</Heading>
->>>>>>> 1fc4805a796a907806f6a8b51904eeaeb9f8d278
       <Center>
       <Card mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" >
 <form onSubmit={handleSubmit}>
       <FormControl>
-<<<<<<< HEAD
-=======
         <FormLabel data-testid = 'label-email'>Email address</FormLabel>
         <Input type='email' isRequired autoComplete="" id="email" name="email"/>
 
->>>>>>> 1fc4805a796a907806f6a8b51904eeaeb9f8d278
         <FormLabel>First Name</FormLabel>
         <Input type="text"
             name="firstName"
