@@ -5,8 +5,15 @@ import {
   BeforeInsert,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import Group from "./Group";
+
+export enum UserRole {
+  Admin = "admin",
+  Visitor = "visitor",
+}
 
 @Entity()
 @ObjectType()
@@ -36,6 +43,14 @@ export default class User extends BaseEntity {
 
   @Column()
   hashedPassword: string;
+
+  @Field()
+  @Column({ enum: UserRole, default: UserRole.Visitor })
+  role: UserRole;
+
+  @Field(() => [Group], { nullable: true })
+  @OneToMany(() => Group, (group) => group.owner)
+  groups: Group[];
 }
 
 const hashingOptions = {

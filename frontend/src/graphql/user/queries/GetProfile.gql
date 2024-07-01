@@ -1,0 +1,16 @@
+query Profile {
+  profile {
+    id
+    firstName
+    lastName
+    email
+    role
+    groups {
+      id
+      name
+      owner {
+        id
+      }
+    }
+  }
+}
