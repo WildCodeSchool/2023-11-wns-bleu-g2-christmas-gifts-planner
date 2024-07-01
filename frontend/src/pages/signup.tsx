@@ -47,14 +47,11 @@ export default function Signup() {
 
   return (
     <>
-      <Text fontSize={16} fontWeight="bold">Crée un compte</Text>
+      <Text fontSize={16} fontWeight="bold">Créer un compte</Text>
       <Center>
       <Card mx="24px" mt="8px" p={4} maxW="500px" w="90%" >
 <form onSubmit={handleSubmit}>
       <FormControl>
-        <FormLabel>Email address</FormLabel>
-        <Input type='email' isRequired autoComplete="" id="email" name="email"/>
-
         <FormLabel>First Name</FormLabel>
         <Input type="text"
             name="firstName"
@@ -70,6 +67,9 @@ export default function Signup() {
             minLength={2}
             maxLength={30}
             isRequired />
+        <FormLabel>Email address</FormLabel>
+        <Input type='email' isRequired autoComplete="" id="email" name="email"/>
+
 
         <FormLabel>Password</FormLabel>
         <InputGroup size='md'>
@@ -98,7 +98,7 @@ export default function Signup() {
         </Button>
       </InputRightElement>
     </InputGroup>
-      <Button type="submit" mt={6} }>
+      <Button type="submit" mt={6}>
       S&apos;inscrire
     </Button>
       </FormControl>
