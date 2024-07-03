@@ -179,7 +179,7 @@ export default function Signup() {
           />
         </GridItem>
       </Grid>
-        <Input type='email' isRequired autoComplete="" id="label-email" name="email" placeholder="Adresse mail" my={4} 
+        <Input type='email' isRequired autoComplete="" id="email" data-testid="label-email" name="email" placeholder="Adresse mail" my={4} 
             borderRadius={15}
 						borderColor="green.600"/>
         <InputGroup size='md'>
