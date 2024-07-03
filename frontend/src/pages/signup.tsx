@@ -206,7 +206,7 @@ export default function Signup() {
       </form>
       </Box>
       </Center>
-			<Text ml={16} mt={4} fontSize={12}>Déjà inscrit ? <Link color="gray">Se connecter</Link></Text>
+			<Text ml={16} mt={4} fontSize={12}>Déjà inscrit ? <Link href='/login' color="gray">Se connecter</Link></Text>
         {error !== "" && <pre>{error}</pre>}
         </>
   );
