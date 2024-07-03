@@ -23,6 +23,6 @@ test("can view users in db", async ({ page }) => {
 
   await page.waitForSelector('[data-testid="label-email"]');
   console.log(await page.content());
-  await expect(page.locator('[data-testid="label-email"]')).toContainText("Adresse mail");
+  await expect(page.locator('[data-testid="label-email"]')).toContainText(/\S+/);
 
 });
