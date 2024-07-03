@@ -1,6 +1,6 @@
 import db from "./config/db";
 import Message from "./entities/Message";
-import User, { hashPassword } from "./entities/User";
+import User, { UserRole, hashPassword } from "./entities/User";
 
 export async function clearDB() {
   const runner = db.createQueryRunner();
@@ -29,6 +29,7 @@ export default async function main() {
     lastName: "admin",
     email: "admin@app.com",
     password: "4dminAdmin@!",
+    role: UserRole.Admin,
   });
   await admin.save();
 
