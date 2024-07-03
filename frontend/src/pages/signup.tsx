@@ -19,7 +19,7 @@ function validatePassword(p: string) {
 export default function Signup() {
 	const defaultAvatar = "https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?w=300&ssl=1"
   const [error, setError] = useState("");
-  const [createUser] = useSignupMutation();
+  const [createUser, {data, loading}] = useSignupMutation();
 	const [avatar, setAvatar] = useState<string | null | undefined>(null);
 	const [avatarFile, setAvatarFile] = useState<string | null | undefined>(null);
   const toast = useToast();
@@ -51,10 +51,10 @@ export default function Signup() {
 
 	const handleRemoveAvatar = () => {
     setAvatar(undefined);
-    setAvatarFile(null); // Clear the file object
+    setAvatarFile(null);
     const input = document.getElementById('avatarInput') as HTMLInputElement;
     if (input) {
-      input.value = ''; // Clear the file input
+      input.value = '';
     }
   };
 
@@ -62,7 +62,9 @@ export default function Signup() {
     setError("");
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
+    console.log(e.target)
     const formJSON: any = Object.fromEntries(formData.entries());
+    console.log(formJSON)
     const errors = validatePassword(formJSON.password);
     if (errors.length > 0) return setError(errors.join("\n"));
     if (formJSON.password !== formJSON.passwordConfirmation)
@@ -72,10 +74,11 @@ export default function Signup() {
     delete formJSON.passwordConfirmation;
 
     try {
-      const res = await createUser({ variables: { data: formJSON } });
+      const res = await createUser({variables: {data: formJSON}})
       console.log({ res });
       alert("Vous êtes bien enregistré.e, Merci !");
     } catch (e: any) {
+      console.error(e)
       if (e.message === "EMAIL_ALREADY_TAKEN")
         setError("Cet e-mail est déjà pris");
       else setError("une erreur est survenue");
@@ -84,7 +87,6 @@ export default function Signup() {
 
   return (
     <>
-
         <IconButton
           aria-label="Back"
 					bg="transparent"
@@ -108,7 +110,7 @@ export default function Signup() {
       >
 <form onSubmit={handleSubmit}>
       <FormControl bgColor="#FFFEF9">
-			<Center>
+			{/* <Center>
 			<Flex align="center" position="relative">
                 {avatar ? (
                   <Avatar
@@ -146,7 +148,7 @@ export default function Signup() {
               accept="image/png"
               style={{ display: 'none' }}
               onChange={handleAvatarChange}
-            />
+            /> */}
       <Grid templateColumns="repeat(2, 1fr)" gap={4} mt={4}>
         <GridItem>
           <Input
