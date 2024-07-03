@@ -2,6 +2,7 @@ import { extendTheme } from "@chakra-ui/react";
 import { buttonTheme } from "./components/Button";
 import "@fontsource/amatic-sc";
 import "@fontsource/open-sans";
+import { inputTheme } from "./components/Input";
 
 const colors = {
   primary: {
@@ -42,5 +43,6 @@ export const theme = extendTheme({
   },
   components: {
     Button: buttonTheme,
+    Input: inputTheme,
   },
 });

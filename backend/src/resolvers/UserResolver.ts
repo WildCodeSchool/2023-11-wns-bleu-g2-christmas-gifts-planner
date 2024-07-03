@@ -55,7 +55,9 @@ export default class UserResolver {
 
   @Query(() => [User])
   async users(): Promise<User[]> {
-    return User.find();
+    return User.find({
+      relations: { groups: true },
+    });
   }
 
   @Authorized()
@@ -64,6 +66,7 @@ export default class UserResolver {
     if (!ctx.currentUser) throw new GraphQLError("you need to be logged in!");
     return User.findOneOrFail({
       where: { id: ctx.currentUser.id },
+      relations: { groups: true },
     });
   }
   @Mutation(() => String)

@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Button,
   Card,
   CardFooter,
   CardHeader,
@@ -9,16 +8,15 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import DashboardWhithoutGroup from "@/components/dashboard/DashboardWithoutGroup";
-import { useProfileQuery, useUsersQuery } from "@/graphql/generated/schema";
+import { useProfileQuery } from "@/graphql/generated/schema";
 import DashboardWhithGroup from "@/components/dashboard/DashboardWithGroup";
+import CreateGroupModal from "@/components/CreateGroupModal";
 
 export default function Dashboard() {
   const { data: currentUser } = useProfileQuery({
     errorPolicy: "ignore",
   });
-  console.log(currentUser);
-  const { data: users } = useUsersQuery();
-  console.log(users);
+  console.log("currentUser: ", currentUser);
   return (
     <>
       <Card
@@ -36,7 +34,11 @@ export default function Dashboard() {
           textColor="white"
         /> */}
         <CardHeader>
-          <Avatar size="xl" bg="#003B1E" />
+          <Avatar
+            size="xl"
+            bg="#003B1E"
+            name={currentUser?.profile.firstName}
+          />
         </CardHeader>
         <Heading size="md" marginBlock="1rem">
           Bonjour {currentUser?.profile.firstName}
@@ -50,8 +52,7 @@ export default function Dashboard() {
         )}
         <CardFooter>
           <Flex direction="column" gap="1rem">
-            <Button variant="greenButton">Créer un groupe</Button>
-            <Button variant="greenButton">Rejoindre un groupe</Button>
+            <CreateGroupModal />
           </Flex>
         </CardFooter>
       </Card>
