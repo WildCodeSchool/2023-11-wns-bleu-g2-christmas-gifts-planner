@@ -21,6 +21,8 @@ test("can view users in db", async ({ page }) => {
   await page.goto("/signup");
   await page.getByRole("heading", { name: "Créer un compte" });
 
-  await expect(page.getByTestId("label-email")).toContainText("Adresse mail");
+  await page.waitForSelector('[data-testid="label-email"]');
+  console.log(await page.content());
+  await expect(page.locator('[data-testid="label-email"]')).toContainText("Adresse mail");
 
 });
