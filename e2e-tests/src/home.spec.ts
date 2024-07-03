@@ -19,8 +19,8 @@ test("can view users in db", async ({ page }) => {
   await admin.save();
  
   await page.goto("/signup");
-  await page.getByRole("heading", { name: "Crée un compte" });
+  await page.getByRole("heading", { name: "Créer un compte" });
 
-  await expect(page.getByTestId("label-email")).toContainText("Email address");
+  await expect(page.getByTestId("label-email")).toContainText("Adresse mail");
 
 });
