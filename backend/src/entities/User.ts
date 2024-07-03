@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import Group from "./Group";
+import Message from "./Message";
 
 export enum UserRole {
   Admin = "admin",
@@ -51,6 +52,11 @@ export default class User extends BaseEntity {
   @Field(() => [Group], { nullable: true })
   @OneToMany(() => Group, (group) => group.owner)
   groups: Group[];
+
+  @OneToMany(() => Message, Message => Message.writtenBy)
+  messages: Message[];
+
+  
 }
 
 const hashingOptions = {
