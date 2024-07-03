@@ -84,12 +84,14 @@ export default function Signup() {
 
   return (
     <>
+    <Link href='/'>
         <IconButton
           aria-label="Back"
 					bg="transparent"
 					boxShadow="none"
           icon={<ArrowLeft color="#22543D"/>}
         />
+        </Link>
       <Heading as="h1" fontSize='6xl' fontWeight="bold" mt={8} textAlign="center" color="green.800">Créer un compte</Heading>
 
       <Center>
