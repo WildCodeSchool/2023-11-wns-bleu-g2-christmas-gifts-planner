@@ -180,8 +180,8 @@ export default function Signup() {
         </GridItem>
       </Grid>
       {/* Email */}
-        <Input type='email' isRequired 
-        autoComplete="" 
+        <Input type='email' 
+        isRequired
         id="email" 
         data-testid="label-email" 
         name="email" 
