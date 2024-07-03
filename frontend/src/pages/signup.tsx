@@ -94,9 +94,7 @@ export default function Signup() {
         />
         </Link>
       <Heading as="h1" fontSize='6xl' fontWeight="bold" mt={8} textAlign="center" color="green.800">Créer un compte</Heading>
-
       <Center>
-
       <Box
         mx="24px"
         mt="8px"
@@ -108,8 +106,9 @@ export default function Signup() {
         border="none"
         boxShadow="none"
       >
+
 <form onSubmit={handleSubmit}>
-      <FormControl bgColor="#FFFEF9">
+  <FormControl bgColor="#FFFEF9">
 			{/* <Center>
 			<Flex align="center" position="relative">
                 {avatar ? (
@@ -149,6 +148,7 @@ export default function Signup() {
               style={{ display: 'none' }}
               onChange={handleAvatarChange}
             /> */}
+      {/* Firstname and lastname */}
       <Grid templateColumns="repeat(2, 1fr)" gap={4} mt={4}>
         <GridItem>
           <Input
@@ -179,38 +179,51 @@ export default function Signup() {
           />
         </GridItem>
       </Grid>
-        <Input type='email' isRequired autoComplete="" id="email" data-testid="label-email" name="email" placeholder="Adresse mail" my={4} 
-            borderRadius={15}
-						borderColor="green.600"/>
+      {/* Email */}
+        <Input type='email' isRequired 
+        autoComplete="" 
+        id="email" 
+        data-testid="label-email" 
+        name="email" 
+        placeholder="Adresse mail" 
+        my={4} 
+        borderRadius={15}
+				borderColor="green.600"
+        />
+{/* Password and confirm Password */}
         <InputGroup size='md'>
-      <Input
-         name="password" id="password" required
-        type='password'
-        placeholder='Mot de passe'
-            borderRadius={15}
-						borderColor="green.600"
-      />
-    </InputGroup>
+          <Input
+          name="password" 
+          id="password" 
+          isRequired
+          type='password'
+          placeholder='Mot de passe'
+          borderRadius={15}
+					borderColor="green.600"
+          />
+        </InputGroup>
         <InputGroup size='md' mt={4}>
-      <Input
-         name="passwordConfirmation" id="passwordConfirmation" isRequired
-        type={'password'}
-        placeholder='Confirmer le mot de passe'
-            borderRadius={15}
-						borderColor="green.600"
-      />
-    </InputGroup>
-		<Center>
-      <Button variant="goldenButton" type="submit" mt={4}>
-      S&apos;inscrire
-    	</Button>
-		</Center>
+          <Input
+          name="passwordConfirmation" 
+          id="passwordConfirmation" 
+          isRequired
+          type={'password'}
+          placeholder='Confirmer le mot de passe'
+          borderRadius={15}
+					borderColor="green.600"
+          />
+        </InputGroup>
+		    <Center>
+          <Button variant="goldenButton" type="submit" mt={4}>
+            S&apos;inscrire
+          </Button>
+		    </Center>
       </FormControl>
-      </form>
-      </Box>
-      </Center>
+    </form>
+  </Box>
+  </Center>
 			<Text ml={16} mt={4} fontSize={12}>Déjà inscrit ? <Link href='/login'  _hover={{ bg: "gray.200" }}  p={1} borderRadius="md" color="gray">Se connecter</Link></Text>
         {error !== "" && <pre>{error}</pre>}
-        </>
+</>
   );
 }
