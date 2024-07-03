@@ -22,7 +22,6 @@ test("can view users in db", async ({ page }) => {
   await page.getByRole("heading", { name: "Créer un compte" });
 
   await page.waitForSelector('[data-testid="label-email"]');
-  console.log(await page.content());
   const inputElement = page.locator('[data-testid="label-email"]');
   await expect(inputElement).toHaveAttribute('placeholder', 'Adresse mail');
 
