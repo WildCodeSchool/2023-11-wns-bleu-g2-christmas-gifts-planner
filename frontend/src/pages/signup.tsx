@@ -62,9 +62,7 @@ export default function Signup() {
     setError("");
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    console.log(e.target)
     const formJSON: any = Object.fromEntries(formData.entries());
-    console.log(formJSON)
     const errors = validatePassword(formJSON.password);
     if (errors.length > 0) return setError(errors.join("\n"));
     if (formJSON.password !== formJSON.passwordConfirmation)
@@ -78,7 +76,6 @@ export default function Signup() {
       console.log({ res });
       alert("Vous êtes bien enregistré.e, Merci !");
     } catch (e: any) {
-      console.error(e)
       if (e.message === "EMAIL_ALREADY_TAKEN")
         setError("Cet e-mail est déjà pris");
       else setError("une erreur est survenue");
