@@ -89,6 +89,7 @@ export default function Signup() {
           aria-label="Back"
 					bg="transparent"
 					boxShadow="none"
+          _hover={{ bg: "gray.200" }}
           icon={<ArrowLeft color="#22543D"/>}
         />
         </Link>
@@ -208,7 +209,7 @@ export default function Signup() {
       </form>
       </Box>
       </Center>
-			<Text ml={16} mt={4} fontSize={12}>Déjà inscrit ? <Link href='/login' color="gray">Se connecter</Link></Text>
+			<Text ml={16} mt={4} fontSize={12}>Déjà inscrit ? <Link href='/login'  _hover={{ bg: "gray.200" }}  p={1} borderRadius="md" color="gray">Se connecter</Link></Text>
         {error !== "" && <pre>{error}</pre>}
         </>
   );
