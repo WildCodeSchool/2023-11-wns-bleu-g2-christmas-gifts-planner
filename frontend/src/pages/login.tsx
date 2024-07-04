@@ -58,7 +58,7 @@ const Login = () => {
                   type={show ? 'text' : 'password'}
                   borderRadius={15} borderColor="green.800"
                 />
-                <Flex justify="flex-end" mt={2}>
+                <Flex justify="flex-end">
                 <Link color="gray.400" fontSize={12}  _hover={{ bg: "gray.200" }} p={1} borderRadius="md">Mot de passe oublié ?</Link>
                 </Flex>
               <Center>
