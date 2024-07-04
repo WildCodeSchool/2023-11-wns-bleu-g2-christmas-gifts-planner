@@ -2,12 +2,22 @@ import { useLoginMutation } from "@/graphql/generated/schema";
 import { Box, Button, Center, Flex, FormControl, FormLabel, Heading, IconButton, Image, Input, Link, Text } from "@chakra-ui/react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/router";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 const Login = () => {
   const [error, setError] = useState<number | string>(0);
   const [login]= useLoginMutation();
   const router = useRouter();
+
+  useEffect(() => {
+    if (error !== 0) {
+      const timer = setTimeout(() => {
+        setError(0);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     setError(0);
@@ -56,17 +66,24 @@ const Login = () => {
       >
           <form onSubmit={handleSubmit}>
             <FormControl>
-              <FormLabel fontSize={14} fontWeight="bold" mb={1} color="green.800">Adresse mail</FormLabel>
+            <FormLabel fontSize={14} fontWeight="bold" mb={1} color="green.800">Adresse mail</FormLabel>
               <Input isRequired autoComplete="" type="email" id="email" name="email" borderRadius={15} borderColor="green.800" />
-              {error === 1 ? <Text fontSize={14} fontWeight="bold" color="red.700">Cette adresse mail est invalide !</Text> : ""}
+              {error === 1 && (
+                <Text position="absolute" mt={1} fontSize={14} fontWeight="bold" color="red.700">Cette adresse mail est invalide !</Text>
+              )}
               
-              <FormLabel mt={4} fontSize={14} fontWeight="bold" mb={1} color="green.800" >Mot de passe</FormLabel>
-                <Input
-                  name="password" id="password" isRequired
-                  type='password'
-                  borderRadius={15} borderColor="green.800"
-                />
-                 {error === 2 ? <Text fontSize={14} fontWeight="bold" color="red.700">Mot de passe incorrect</Text> : ""}
+              <FormLabel mt={6} fontSize={14} fontWeight="bold" mb={1} color="green.800">Mot de passe</FormLabel>
+              <Input
+                name="password"
+                id="password"
+                isRequired
+                type='password'
+                borderRadius={15}
+                borderColor="green.800"
+              />
+              {error === 2 && (
+                <Text position="absolute" mt={1} fontSize={14} fontWeight="bold" color="red.700">Mot de passe incorrect</Text>
+              )}
                 <Flex justify="flex-end">
                 <Link color="gray.400" fontSize={12}  _hover={{ bg: "gray.200" }} p={1} borderRadius="md">Mot de passe oublié ?</Link>
                 </Flex>
