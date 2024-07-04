@@ -25,7 +25,11 @@ export default class UserResolver {
     return await datasource
       .getRepository(User)
       .save({ ...data, hashedPassword });
+  } catch (error: string){
+    console.error('Error creating user:', error);
+    throw new GraphQLError("une erreur est survenue")
   }
+
   @Mutation(() => String)
   async login(@Arg("data") data: LoginInputType, @Ctx() ctx: ContextType) {
     const existingUser = await User.findOneBy({ email: data.email });
