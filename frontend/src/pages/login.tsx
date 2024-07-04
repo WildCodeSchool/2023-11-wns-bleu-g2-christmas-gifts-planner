@@ -1,24 +1,31 @@
 import { useLoginMutation } from "@/graphql/generated/schema";
-import { Box, Button, Card, Center, Flex, FormControl, FormLabel, Heading, IconButton, Image, Input, InputGroup, InputRightElement, Link, Text } from "@chakra-ui/react";
+import { Box, Button, Center, Flex, FormControl, FormLabel, Heading, IconButton, Image, Input, Link, Text } from "@chakra-ui/react";
 import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 
 const Login = () => {
-  const [show, setShow] = useState(false)
-  const handleClick = () => setShow(!show)
-  const [error, setError] = useState("");
+  const [error, setError] = useState<number | string>(0);
   const [login]= useLoginMutation();
+  const router = useRouter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    setError("");
+    setError(0);
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
     try {
       const res = await login({ variables: { data: formJSON } });
       console.log({ res });
+      router.push('/dashboard')
     } catch (e: any) {
-     setError(`une erreur est survenue: ${e}`);
+      if(e.message === "Invalid Credentials") {
+        setError(1)
+        console.error({e})
+      } else if(e.message === "Invalid Password") {
+        setError(2)
+        console.error({e})
+      } else setError(`Une erreur est survenue : ${e}`);
     }
   };
 
@@ -51,13 +58,15 @@ const Login = () => {
             <FormControl>
               <FormLabel fontSize={14} fontWeight="bold" mb={1} color="green.800">Adresse mail</FormLabel>
               <Input isRequired autoComplete="" type="email" id="email" name="email" borderRadius={15} borderColor="green.800" />
-
+              {error === 1 ? <Text fontSize={14} fontWeight="bold" color="red.700">Cette adresse mail est invalide !</Text> : ""}
+              
               <FormLabel mt={4} fontSize={14} fontWeight="bold" mb={1} color="green.800" >Mot de passe</FormLabel>
                 <Input
                   name="password" id="password" isRequired
-                  type={show ? 'text' : 'password'}
+                  type='password'
                   borderRadius={15} borderColor="green.800"
                 />
+                 {error === 2 ? <Text fontSize={14} fontWeight="bold" color="red.700">Mot de passe incorrect</Text> : ""}
                 <Flex justify="flex-end">
                 <Link color="gray.400" fontSize={12}  _hover={{ bg: "gray.200" }} p={1} borderRadius="md">Mot de passe oublié ?</Link>
                 </Flex>
