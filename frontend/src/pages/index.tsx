@@ -27,7 +27,7 @@ export default function Home() {
         <Box flexDirection="column">
           <Center>
             <Heading fontSize="m">
-              Organisez vos cadeaux de Noël en Groupe avec TEST UPDATE
+              Organisez vos cadeaux de Noël en Groupe avec ##TEST UPDATE##
             </Heading>
           </Center>
 
