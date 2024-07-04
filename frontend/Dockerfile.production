@@ -9,6 +9,7 @@ RUN npm i
 COPY src ./src
 COPY public ./public
 COPY tsconfig.json ./tsconfig.json
+COPY next-env.d.ts.dev ./next-env.d.ts
 COPY *.config.mjs ./
 COPY *.config.ts ./
 
