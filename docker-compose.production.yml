@@ -26,14 +26,14 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    image: jasminegrz/gifty-back
+    image: docky1921/Gifty-back
 
   frontend:
     environment:
       JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY:-changeme}
     stop_grace_period: 0s
     env_file: frontend/.env
-    image: jasminegrz/gifty-front
+    image: docky1921/Gifty-front
 
   gateway:
     restart: always
