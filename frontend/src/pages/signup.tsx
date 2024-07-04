@@ -1,6 +1,7 @@
 import { useSignupMutation } from "@/graphql/generated/schema";
 import { Avatar, Box, Button, Center, Flex, FormControl, Grid, GridItem, Heading, IconButton, Input, InputGroup, Link, Text, useToast } from '@chakra-ui/react';
 import { ArrowLeft, X } from "lucide-react";
+import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 
 function validatePassword(p: string) {
@@ -23,6 +24,7 @@ export default function Signup() {
 	const [avatar, setAvatar] = useState<string | null | undefined>(null);
 	const [avatarFile, setAvatarFile] = useState<string | null | undefined>(null);
   const toast = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     if (error !== 0) {
@@ -82,6 +84,7 @@ export default function Signup() {
     try {
       const res = await createUser({variables: {data: formJSON}})
       console.log({ res });
+      router.push("/dashboard")
       toast({
         title: "Vous êtes bien enregistré.e !",
         description: "Votre inscription a bien été prise en compte",
@@ -89,6 +92,7 @@ export default function Signup() {
         duration: 5000,
         isClosable: true,
       });
+      
     } catch (e: any) {
       if (e.message === "EMAIL_ALREADY_TAKEN")
         setError(2);
