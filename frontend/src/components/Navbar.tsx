@@ -1,4 +1,4 @@
-import { Box, Flex, Image, Button, IconButton, useColorMode, Avatar, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import { Box, Flex, Image, Button, IconButton, useColorMode, Avatar, Menu, MenuButton, MenuList, MenuItem, MenuDivider } from "@chakra-ui/react";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -74,7 +74,7 @@ export default function Navbar() {
               <MenuButton>
                 <Avatar 
                   name='Dan Abrahmov' 
-                  src='https://bit.ly/dan-abramov' 
+                  // src='https://bit.ly/dan-abramov' 
                   size="md" 
                   _hover={{
                     cursor: 'pointer',
@@ -82,18 +82,19 @@ export default function Navbar() {
                 />
               </MenuButton>
               <MenuList >
-              <Box textAlign="center" p={4} >
-                  <Flex flexDirection='column'>
-                    <MenuItem color='primary.hightest' onClick={() => router.push('/profile')}>Mon profil</MenuItem>
-                    <MenuItem color='primary.hightest' onClick={() => router.push('/groups')}>Mes groupes</MenuItem>
-                    </Flex>
-                </Box>                
+                <Box textAlign="center" p={2} >
+                    <Flex flexDirection='column'>
+                      <MenuItem variant='defaultMenuItem'  color='primary.hightest' onClick={() => router.push('/profile')}>Mon profil</MenuItem>
+                      <MenuItem color='primary.hightest' _hover={{ bg:'secondary.low'}} onClick={() => router.push('/dashboard')}>Mes groupes</MenuItem>
+                      </Flex>
+                </Box>
+                <MenuDivider />                
                 <Box textAlign="center" p={4} >
                   <Flex flexDirection='column'>
                     <Button mb={4} variant="goldenButton" onClick={() => router.push('/create-group')}>
                       Créer un groupe
                     </Button>
-                    <Button variant="transparentButton" onClick={() => router.push('/login')}>
+                    <Button variant="greenButton" onClick={() => router.push('/login')}>
                     Se déconnecter
                     </Button>
                   </Flex>

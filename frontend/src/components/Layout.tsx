@@ -13,10 +13,10 @@ export default function Layout({
   return (
     <>
       <Head>
-        <title>Gifty {pageTitle}</title>
+        <title>{pageTitle} - Gifty </title>
         <meta name="description" content="gift planner for family/friend group" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/gifty-logo.svg" />
       </Head>
         <Navbar />
       <main className="main-content">{children}</main>

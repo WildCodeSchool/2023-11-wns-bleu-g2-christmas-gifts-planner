@@ -7,12 +7,18 @@ import {
   Flex,
   Heading,
 } from "@chakra-ui/react";
-import React from "react";
+import React, {useEffect} from "react";
 import DashboardWhithoutGroup from "@/components/dashboard/DashboardWithoutGroup";
 import { useProfileQuery, useUsersQuery } from "@/graphql/generated/schema";
 import DashboardWhithGroup from "@/components/dashboard/DashboardWithGroup";
+import { GetServerSideProps } from "next";
 
-export default function Dashboard() {
+export default function Dashboard({pageTitle}: {pageTitle: string}) {
+
+  useEffect(() => {
+    document.title = pageTitle;
+  }, [pageTitle]);
+
   const { data: currentUser } = useProfileQuery({
     errorPolicy: "ignore",
   });
@@ -58,3 +64,11 @@ export default function Dashboard() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return {
+    props: {
+      pageTitle: "Mes groupes",
+    },
+  };
+};

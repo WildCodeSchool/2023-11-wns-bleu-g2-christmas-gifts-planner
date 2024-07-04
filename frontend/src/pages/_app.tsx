@@ -6,8 +6,14 @@ import { ChakraProvider } from "@chakra-ui/react";
 import {theme} from "@/theme/config";
 import Layout from "@/components/Layout";
 
+interface MyAppProps extends AppProps {
+  pageProps: {
+    pageTitle: string;
+    [key: string]: any;
+  };
+}
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: MyAppProps) {
   return (
       <ApolloProvider client={client}>
         <ChakraProvider theme={theme}>
