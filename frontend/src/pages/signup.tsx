@@ -47,10 +47,11 @@ export default function Signup() {
       setArrayOfErrors(errors); 
       err = 4
       setError(4)
-    } else if(error === 0) {
-      if (formJSON.password !== formJSON.passwordConfirmation)
+    } else if(err === 0) {
+      if (formJSON.password !== formJSON.passwordConfirmation){
         err = 1
         return setError(1);
+      }
     }
 
     // do not send confirmation since it's checked on the frontend
