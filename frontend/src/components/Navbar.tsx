@@ -3,6 +3,9 @@ import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useState } from "react";
+import { useProfileQuery, useLogoutMutation } from "@/graphql/generated/schema";
+
+
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -18,6 +21,20 @@ export default function Navbar() {
     setLanguage(lang);
   };
 
+  const { data: currentUser } = useProfileQuery({
+    errorPolicy: "ignore",
+  });
+
+  const [logout] = useLogoutMutation();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push("/login");
+    } catch (error) {
+      console.error("Failed to logout", error);
+    }
+  };
 
   return (
     <Box as="nav" bg="primary.hightest" color="white" padding="4">
@@ -47,8 +64,8 @@ export default function Navbar() {
                     {language}
                 </MenuButton>
                 <MenuList minWidth="50px">
-                    <MenuItem  color='primary.hightest' fontWeight='bold' onClick={() => handleLanguageChange('FR')}>FR</MenuItem>
-                    <MenuItem  color='primary.hightest' fontWeight='bold' onClick={() => handleLanguageChange('EN')}>EN</MenuItem>
+                    <MenuItem  color='primary.hightest' _hover={{ bg:'secondary.low'}} fontWeight='bold' onClick={() => handleLanguageChange('FR')}>FR</MenuItem>
+                    <MenuItem  color='primary.hightest' _hover={{ bg:'secondary.low'}} fontWeight='bold' onClick={() => handleLanguageChange('EN')}>EN</MenuItem>
                 </MenuList>
             </Menu>
 
@@ -73,7 +90,7 @@ export default function Navbar() {
             <Menu>
               <MenuButton>
                 <Avatar 
-                  name='Dan Abrahmov' 
+                  name={`${currentUser?.profile.firstName} ${currentUser?.profile.lastName}`}
                   // src='https://bit.ly/dan-abramov' 
                   size="md" 
                   _hover={{
@@ -84,7 +101,7 @@ export default function Navbar() {
               <MenuList >
                 <Box textAlign="center" p={2} >
                     <Flex flexDirection='column'>
-                      <MenuItem variant='defaultMenuItem'  color='primary.hightest' onClick={() => router.push('/profile')}>Mon profil</MenuItem>
+                      <MenuItem color='primary.hightest' _hover={{ bg:'secondary.low'}} onClick={() => router.push('/profile')}>Mon profil</MenuItem>
                       <MenuItem color='primary.hightest' _hover={{ bg:'secondary.low'}} onClick={() => router.push('/dashboard')}>Mes groupes</MenuItem>
                       </Flex>
                 </Box>
@@ -94,7 +111,7 @@ export default function Navbar() {
                     <Button mb={4} variant="goldenButton" onClick={() => router.push('/create-group')}>
                       Créer un groupe
                     </Button>
-                    <Button variant="greenButton" onClick={() => router.push('/login')}>
+                    <Button variant="greenButton" onClick={handleLogout}>
                     Se déconnecter
                     </Button>
                   </Flex>
