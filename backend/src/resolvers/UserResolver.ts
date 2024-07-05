@@ -40,7 +40,7 @@ export default class UserResolver {
       data.password
     );
 
-    if (!passwordVerified) throw new GraphQLError("Invalid Credentials");
+    if (!passwordVerified) throw new GraphQLError("Invalid Password");
     const token = jwt.sign(
       {
         userId: existingUser.id,
