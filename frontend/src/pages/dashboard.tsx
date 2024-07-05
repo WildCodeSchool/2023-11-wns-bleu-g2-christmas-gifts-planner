@@ -11,7 +11,6 @@ import React, {useEffect} from "react";
 import DashboardWhithoutGroup from "@/components/dashboard/DashboardWithoutGroup";
 import { useProfileQuery, useUsersQuery } from "@/graphql/generated/schema";
 import DashboardWhithGroup from "@/components/dashboard/DashboardWithGroup";
-import { GetServerSideProps } from "next";
 
 export default function Dashboard({pageTitle}: {pageTitle: string}) {
 
@@ -65,10 +64,3 @@ export default function Dashboard({pageTitle}: {pageTitle: string}) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  return {
-    props: {
-      pageTitle: "Mes groupes",
-    },
-  };
-};
