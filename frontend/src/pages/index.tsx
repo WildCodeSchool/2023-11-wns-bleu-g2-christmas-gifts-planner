@@ -10,7 +10,6 @@ export default function Home() {
   const { data: currentUser, client } = useProfileQuery({
     errorPolicy: "ignore",
   });
- console.log(currentUser);
   return (
    <>
 
