@@ -1,7 +1,8 @@
 import { useSignupMutation } from "@/graphql/generated/schema";
 import { Avatar, Box, Button, Center, Flex, FormControl, Grid, GridItem, Heading, IconButton, Input, InputGroup, Link, Text, useToast } from '@chakra-ui/react';
 import { ArrowLeft, X } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { useRouter } from "next/router";
+import { FormEvent, useEffect, useState } from "react";
 
 function validatePassword(p: string) {
   let errors = [];
@@ -18,11 +19,22 @@ function validatePassword(p: string) {
 
 export default function Signup() {
 	const defaultAvatar = "https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?w=300&ssl=1"
-  const [error, setError] = useState("");
+  const [error, setError] = useState<number | string>(0);
   const [createUser, {data, loading}] = useSignupMutation();
 	const [avatar, setAvatar] = useState<string | null | undefined>(null);
 	const [avatarFile, setAvatarFile] = useState<string | null | undefined>(null);
   const toast = useToast();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (error !== 0) {
+      const timer = setTimeout(() => {
+        setError(0);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
 
 	const handleAvatarClick = () => {
     document.getElementById('avatarInput')?.click();
@@ -59,26 +71,32 @@ export default function Signup() {
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    setError("");
+    setError(0);
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
     const errors = validatePassword(formJSON.password);
     if (errors.length > 0) return setError(errors.join("\n"));
     if (formJSON.password !== formJSON.passwordConfirmation)
-      return setError("les mots de passe ne coresspondent pas");
-
-    // do not send confirmation since it's checked on the frontend
+      return setError(1);
     delete formJSON.passwordConfirmation;
 
     try {
       const res = await createUser({variables: {data: formJSON}})
       console.log({ res });
-      alert("Vous êtes bien enregistré.e, Merci !");
+      router.push("/dashboard")
+      toast({
+        title: "Vous êtes bien enregistré.e !",
+        description: "Votre inscription a bien été prise en compte",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      
     } catch (e: any) {
       if (e.message === "EMAIL_ALREADY_TAKEN")
-        setError("Cet e-mail est déjà pris");
-      else setError("une erreur est survenue");
+        setError(2);
+      else setError(`une erreur est survenue : ${e}`);
     }
   };
 
@@ -186,10 +204,13 @@ export default function Signup() {
         data-testid="label-email" 
         name="email" 
         placeholder="Adresse mail" 
-        my={4} 
+        my={6}
         borderRadius={15}
-				borderColor="green.600"
+				borderColor={error === 2 ? "red.700" : "green.600"}
         />
+        {error === 2 && (
+                <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700">Cet e-mail est déjà pris</Text>
+              )}
 {/* Password and confirm Password */}
         <InputGroup size='md'>
           <Input
@@ -199,10 +220,10 @@ export default function Signup() {
           type='password'
           placeholder='Mot de passe'
           borderRadius={15}
-					borderColor="green.600"
+					borderColor={error === 1 ? "red.700" : "green.600"}
           />
         </InputGroup>
-        <InputGroup size='md' mt={4}>
+        <InputGroup size='md' mt={6}>
           <Input
           name="passwordConfirmation" 
           id="passwordConfirmation" 
@@ -210,11 +231,14 @@ export default function Signup() {
           type={'password'}
           placeholder='Confirmer le mot de passe'
           borderRadius={15}
-					borderColor="green.600"
+					borderColor={error === 1 ? "red.700" : "green.600"}
           />
         </InputGroup>
+        {error === 1 && (
+                <Text position="absolute" mt={1} fontSize={14} fontWeight="bold" color="red.700">Les mots de passe ne correspondent pas !</Text>
+              )}
 		    <Center>
-          <Button variant="goldenButton" type="submit" mt={4}>
+          <Button variant="goldenButton" type="submit" mt={8}>
             S&apos;inscrire
           </Button>
 		    </Center>
@@ -223,7 +247,6 @@ export default function Signup() {
   </Box>
   </Center>
 			<Text ml={16} mt={4} fontSize={12}>Déjà inscrit ? <Link href='/login'  _hover={{ bg: "gray.200" }}  p={1} borderRadius="md" color="gray">Se connecter</Link></Text>
-        {error !== "" && <pre>{error}</pre>}
 </>
   );
 }
