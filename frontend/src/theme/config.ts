@@ -1,5 +1,6 @@
-import { extendTheme } from "@chakra-ui/react";
+import { MenuItem, extendTheme } from "@chakra-ui/react";
 import { buttonTheme } from "./components/Button";
+import { menuItemTheme } from "./components/MenuItem";
 import "@fontsource/amatic-sc";
 import "@fontsource/open-sans";
 
@@ -42,5 +43,6 @@ export const theme = extendTheme({
   },
   components: {
     Button: buttonTheme,
+    MenuItem: menuItemTheme,
   },
 });
