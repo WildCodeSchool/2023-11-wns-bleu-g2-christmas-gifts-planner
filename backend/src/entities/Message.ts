@@ -16,8 +16,8 @@ export default class Message extends BaseEntity {
   @Field(() => Int)
   id: number;
 
-  @Column()
   @Length(1, undefined)
+  @Column()
   @Field()
   content: string;
 

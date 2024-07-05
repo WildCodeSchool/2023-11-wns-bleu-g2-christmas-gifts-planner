@@ -4,6 +4,7 @@ import { authChecker } from "../config/auth";
 import GroupResolver from "../resolvers/GroupResolver";
 import MessageResolver from "../resolvers/MessageResolver";
 
+
 export default buildSchemaSync({
   resolvers: [UserResolver, GroupResolver,MessageResolver],
   authChecker,

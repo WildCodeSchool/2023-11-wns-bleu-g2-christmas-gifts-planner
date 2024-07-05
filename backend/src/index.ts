@@ -13,6 +13,11 @@ import { createServer } from 'http';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { WebSocketServer } from 'ws';
 import { useServer } from 'graphql-ws/lib/use/ws';
+import { PubSub } from "graphql-subscriptions";
+// import { pubsub } from "./resolvers/MessageResolver";
+
+// const pubSub = new PubSub();
+
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -27,7 +32,7 @@ const wsServer = new WebSocketServer({
   server: httpServer,
   // Pass a different path here if app.use
   // serves expressMiddleware at a different path
-  path: '/subscriptions',
+  path: '/',
 });
 
 // Hand in the schema we just created and have the
