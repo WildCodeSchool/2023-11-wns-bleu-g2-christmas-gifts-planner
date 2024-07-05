@@ -49,7 +49,6 @@ export type NewUserInputType = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   password: Scalars['String'];
-  role: Scalars['String'];
 };
 
 export type Query = {
