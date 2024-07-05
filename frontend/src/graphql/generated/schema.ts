@@ -29,9 +29,15 @@ export type LoginInputType = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createGroup: Group;
   createUser: User;
   login: Scalars['String'];
   logout: Scalars['String'];
+};
+
+
+export type MutationCreateGroupArgs = {
+  data: NewGroupInputType;
 };
 
 
@@ -44,12 +50,15 @@ export type MutationLoginArgs = {
   data: LoginInputType;
 };
 
+export type NewGroupInputType = {
+  name: Scalars['String'];
+};
+
 export type NewUserInputType = {
   email: Scalars['String'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   password: Scalars['String'];
-  role: Scalars['String'];
 };
 
 export type Query = {
@@ -83,10 +92,10 @@ export type SignupMutationVariables = Exact<{
 
 export type SignupMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string } };
 
-export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
+export type QueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, role: string, groups?: Array<{ __typename?: 'Group', id: number, name: string, owner: { __typename?: 'User', id: string } }> | null } };
+export type QueryQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, role: string, groups?: Array<{ __typename?: 'Group', id: number, name: string }> | null } };
 
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -161,8 +170,8 @@ export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<Signu
 export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
 export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
 export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
-export const ProfileDocument = gql`
-    query Profile {
+export const QueryDocument = gql`
+    query Query {
   profile {
     id
     firstName
@@ -172,40 +181,37 @@ export const ProfileDocument = gql`
     groups {
       id
       name
-      owner {
-        id
-      }
     }
   }
 }
     `;
 
 /**
- * __useProfileQuery__
+ * __useQueryQuery__
  *
- * To run a query within a React component, call `useProfileQuery` and pass it any options that fit your needs.
- * When your component renders, `useProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useProfileQuery({
+ * const { data, loading, error } = useQueryQuery({
  *   variables: {
  *   },
  * });
  */
-export function useProfileQuery(baseOptions?: Apollo.QueryHookOptions<ProfileQuery, ProfileQueryVariables>) {
+export function useQueryQuery(baseOptions?: Apollo.QueryHookOptions<QueryQuery, QueryQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, options);
+        return Apollo.useQuery<QueryQuery, QueryQueryVariables>(QueryDocument, options);
       }
-export function useProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProfileQuery, ProfileQueryVariables>) {
+export function useQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<QueryQuery, QueryQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, options);
+          return Apollo.useLazyQuery<QueryQuery, QueryQueryVariables>(QueryDocument, options);
         }
-export type ProfileQueryHookResult = ReturnType<typeof useProfileQuery>;
-export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>;
-export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVariables>;
+export type QueryQueryHookResult = ReturnType<typeof useQueryQuery>;
+export type QueryLazyQueryHookResult = ReturnType<typeof useQueryLazyQuery>;
+export type QueryQueryResult = Apollo.QueryResult<QueryQuery, QueryQueryVariables>;
 export const UsersDocument = gql`
     query Users {
   users {
