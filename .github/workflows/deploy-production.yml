@@ -7,19 +7,19 @@ on:
 
 jobs:
   client-tests:
-    uses: WildCodeSchool/2023-11-wns-bleu-g2-Christmas-gift-planner/.github/workflows/tests-front.yml@main
+    uses: WildCodeSchool/2023-11-wns-bleu-g2-christmas-gifts-planner/.github/workflows/test-front.yml@main
 
   e2e-tests:
-    uses: WildCodeSchool/2023-11-wns-bleu-g2-Christmas-gift-planner/.github/workflows/e2e-tests.yml@main
+    uses: WildCodeSchool/2023-11-wns-bleu-g2-christmas-gifts-planner/.github/workflows/e2e-tests.yml@main
 
   integration-tests:
-    uses: WildCodeSchool/2023-11-wns-bleu-g2-Christmas-gift-planner/.github/workflows/integration-tests.yml@main
+    uses: WildCodeSchool/2023-11-wns-bleu-g2-christmas-gifts-planner/.github/workflows/integration-tests.yml@main
 
   build-and-push-server:
     needs:
       - integration-tests
       - e2e-tests
-    uses: WildCodeSchool/2023-11-wns-bleu-g2-Christmas-gift-planner/.github/workflows/build-backend.yml@main
+    uses: WildCodeSchool/2023-11-wns-bleu-g2-christmas-gifts-planner/.github/workflows/build-backend.yml@main
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -30,7 +30,7 @@ jobs:
     needs:
       - client-tests
       - e2e-tests
-    uses: WildCodeSchool/2023-11-wns-bleu-g2-Christmas-gift-planner/.github/workflows/build-frontend.yml@main
+    uses: WildCodeSchool/2023-11-wns-bleu-g2-christmas-gifts-planner/.github/workflows/build-frontend.yml@main
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
