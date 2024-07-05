@@ -5,6 +5,7 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import User from "./User";
@@ -27,6 +28,6 @@ export default class Group extends BaseEntity {
   owner: User;
 
   @Field(() => [Channel], { nullable: true })
-  @ManyToOne(() => Channel, (channel) => channel.group_id)
+  @OneToMany(() => Channel, (channel) => channel.group_id)
   channels: Channel[];
 }
