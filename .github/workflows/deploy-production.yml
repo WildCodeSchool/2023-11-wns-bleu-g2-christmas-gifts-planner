@@ -24,7 +24,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     with:
-      image_name: docky1921/Gifty-back
+      image_name: docky1921/gifty-back
 
   build-and-push-client:
     needs:
@@ -35,7 +35,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     with:
-      image_name: docky1921/Gifty-front
+      image_name: docky1921/gifty-front
 
   notify-vps:
     needs:
