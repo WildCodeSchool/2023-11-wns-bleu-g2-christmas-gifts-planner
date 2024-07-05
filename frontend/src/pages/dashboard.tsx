@@ -10,13 +10,12 @@ import React from "react";
 import DashboardWhithoutGroup from "@/components/dashboard/DashboardWithoutGroup";
 import { useProfileQuery } from "@/graphql/generated/schema";
 import DashboardWhithGroup from "@/components/dashboard/DashboardWithGroup";
-import CreateGroupModal from "@/components/CreateGroupModal";
+import CreateGroupModal from "@/components/group/CreateGroupModal";
 
 export default function Dashboard() {
   const { data: currentUser } = useProfileQuery({
     errorPolicy: "ignore",
   });
-  console.log("currentUser: ", currentUser);
   return (
     <>
       <Card

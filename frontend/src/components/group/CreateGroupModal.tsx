@@ -5,12 +5,10 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
-  ModalHeader,
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import FormCreateGroup from "./FormCreateGroup";
+import FormCreateGroup from "@/components/group/FormCreateGroup";
 
 export default function CreateGroupModal() {
   const { isOpen, onOpen, onClose } = useDisclosure();
