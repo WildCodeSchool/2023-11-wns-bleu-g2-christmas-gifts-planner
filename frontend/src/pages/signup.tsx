@@ -1,7 +1,8 @@
 import { useSignupMutation } from "@/graphql/generated/schema";
-import { Avatar, Box, Button, Center, Flex, FormControl, Grid, GridItem, Heading, IconButton, Input, InputGroup, Link, Text, useToast } from '@chakra-ui/react';
-import { ArrowLeft, X } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { Box, Button, Center, FormControl, Grid, GridItem, Heading, IconButton, Input, InputGroup, Link, Text, Tooltip, useToast } from '@chakra-ui/react';
+import { ArrowLeft, InfoIcon } from "lucide-react";
+import { useRouter } from "next/router";
+import { FormEvent, useEffect, useState } from "react";
 
 function validatePassword(p: string) {
   let errors = [];
@@ -17,67 +18,62 @@ function validatePassword(p: string) {
 }
 
 export default function Signup() {
-	const defaultAvatar = "https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?w=300&ssl=1"
-  const [error, setError] = useState("");
-  const [createUser, {data, loading}] = useSignupMutation();
-	const [avatar, setAvatar] = useState<string | null | undefined>(null);
-	const [avatarFile, setAvatarFile] = useState<string | null | undefined>(null);
+  const [arrayOfErrors, setArrayOfErrors] = useState<string[]>([])
+  const [error, setError] = useState<string | number>(0);
+  const [createUser] = useSignupMutation();
   const toast = useToast();
+  const router = useRouter();
+  
+  useEffect(() => {
+    if (error === 1 || error === 2) {
+      const timer = setTimeout(() => {
+        setError(0);
+      }, 4000);
 
-	const handleAvatarClick = () => {
-    document.getElementById('avatarInput')?.click();
-  };
-
-  const handleAvatarChange = (event: any) => {
-    const file = event.target.files[0];
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-			reader.onload = () => {
-        const dataURL = reader.result as string;
-        setAvatar(dataURL);
-      };
-      reader.readAsDataURL(file);
-      setAvatarFile(file);
-    } else {
-      toast({
-        title: "Invalid file type.",
-        description: "Cette image n'est pas au format .png",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      return () => clearTimeout(timer);
     }
-  };
-
-	const handleRemoveAvatar = () => {
-    setAvatar(undefined);
-    setAvatarFile(null);
-    const input = document.getElementById('avatarInput') as HTMLInputElement;
-    if (input) {
-      input.value = '';
-    }
-  };
+  }, [error]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    setError("");
+    setError(0);
+    setArrayOfErrors([]);
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
     const errors = validatePassword(formJSON.password);
-    if (errors.length > 0) return setError(errors.join("\n"));
-    if (formJSON.password !== formJSON.passwordConfirmation)
-      return setError("les mots de passe ne coresspondent pas");
+
+    let err = 0;
+    if (errors.length > 0) {
+      setArrayOfErrors(errors); 
+      err = 4
+      setError(4)
+    } else if(err === 0) {
+      if (formJSON.password !== formJSON.passwordConfirmation){
+        err = 1
+        return setError(1);
+      }
+    }
 
     // do not send confirmation since it's checked on the frontend
     delete formJSON.passwordConfirmation;
-
-    try {
+    
+  try {
+    if(err === 0){
       const res = await createUser({variables: {data: formJSON}})
       console.log({ res });
-      alert("Vous êtes bien enregistré.e, Merci !");
+      router.push('/dashboard')
+      toast({
+        title: "Vous êtes bien enregistré.e !",
+        description: "Votre inscription a bien été prise en compte",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
     } catch (e: any) {
-      if (e.message === "EMAIL_ALREADY_TAKEN")
-        setError("Cet e-mail est déjà pris");
+      if (e.message === "EMAIL_ALREADY_TAKEN"){
+        err = 2
+        setError(2);}
       else setError("une erreur est survenue");
     }
   };
@@ -109,45 +105,6 @@ export default function Signup() {
 
 <form onSubmit={handleSubmit}>
   <FormControl bgColor="#FFFEF9">
-			{/* <Center>
-			<Flex align="center" position="relative">
-                {avatar ? (
-                  <Avatar
-                    size="xl"
-                    name="Avatar"
-                    src={avatar}
-                    cursor="pointer"
-                    onClick={handleAvatarClick}
-                  />
-                ) : (
-                  <Avatar
-                    size="xl"
-                    name="Avatar"
-                    src={defaultAvatar}
-                    cursor="pointer"
-                    onClick={handleAvatarClick}
-                  />
-                )}
-                {avatar && (
-                  <IconButton
-                    aria-label="Remove Avatar"
-                    icon={<X />}
-                    size="sm"
-                    position="absolute"
-                    top={0}
-                    right={0}
-                    onClick={handleRemoveAvatar}
-                  />
-                )}
-              </Flex>
-            </Center>
-            <Input
-              type="file"
-              id="avatarInput"
-              accept="image/png"
-              style={{ display: 'none' }}
-              onChange={handleAvatarChange}
-            /> */}
       {/* Firstname and lastname */}
       <Grid templateColumns="repeat(2, 1fr)" gap={4} mt={4}>
         <GridItem>
@@ -180,18 +137,31 @@ export default function Signup() {
         </GridItem>
       </Grid>
       {/* Email */}
+      {error === 2 ? 
+                <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">Cet e-mail existe déjà</Text>
+              : ""}
         <Input type='email' 
         isRequired
         id="email" 
         data-testid="label-email" 
         name="email" 
         placeholder="Adresse mail" 
-        my={4} 
+        my={6}
         borderRadius={15}
-				borderColor="green.600"
+				borderColor={error === 2 ? "red.700" : "green.600"}
         />
 {/* Password and confirm Password */}
         <InputGroup size='md'>
+              {error === 1 &&
+                <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700">Les mots de passe ne correspondent pas !</Text>
+               }
+               {error === 4 && <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700" >
+                Ce mot de passe n&apos;est pas autorisé 
+                <Tooltip label={arrayOfErrors.map((error, index) => (<Text key={index} fontSize={12}>{error}</Text>))
+                }>
+                  <IconButton icon={<InfoIcon height={22}/>} aria-label="seeMore" h={4} variant="none" bgColor="transparent" boxShadow="none" /></Tooltip></Text> }
+
+
           <Input
           name="password" 
           id="password" 
@@ -199,22 +169,22 @@ export default function Signup() {
           type='password'
           placeholder='Mot de passe'
           borderRadius={15}
-					borderColor="green.600"
+					borderColor={error === 1 || error === 4 ? "red.700" : "green.600"}
           />
         </InputGroup>
-        <InputGroup size='md' mt={4}>
+        <InputGroup size='md' mt={6} zIndex={0}>
           <Input
-          name="passwordConfirmation" 
+          name="passwordConfirmation" zIndex={0}
           id="passwordConfirmation" 
           isRequired
           type={'password'}
           placeholder='Confirmer le mot de passe'
           borderRadius={15}
-					borderColor="green.600"
+					borderColor={error === 1 || error === 4 ? "red.700" : "green.600"}
           />
         </InputGroup>
 		    <Center>
-          <Button variant="goldenButton" type="submit" mt={4}>
+          <Button variant="goldenButton" type="submit" mt={8}>
             S&apos;inscrire
           </Button>
 		    </Center>
@@ -223,7 +193,6 @@ export default function Signup() {
   </Box>
   </Center>
 			<Text ml={16} mt={4} fontSize={12}>Déjà inscrit ? <Link href='/login'  _hover={{ bg: "gray.200" }}  p={1} borderRadius="md" color="gray">Se connecter</Link></Text>
-        {error !== "" && <pre>{error}</pre>}
 </>
   );
 }
