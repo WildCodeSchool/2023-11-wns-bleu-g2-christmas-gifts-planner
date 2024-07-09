@@ -10,7 +10,10 @@ import {
 } from "@chakra-ui/react";
 import FormCreateGroup from "@/components/group/FormCreateGroup";
 
-export default function CreateGroupModal() {
+type CreateGroupModalProps = {
+  refetch: () => void;
+};
+export default function CreateGroupModal({ refetch }: CreateGroupModalProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
@@ -24,10 +27,10 @@ export default function CreateGroupModal() {
         size={{ base: "full", md: "md" }}
       >
         <ModalOverlay />
-        <ModalContent bg="secondary.lowest">
+        <ModalContent bg="secondary.lowest" py={3}>
           <ModalCloseButton />
           <ModalBody display="flex" flexDirection="column">
-            <FormCreateGroup />
+            <FormCreateGroup onClose={onClose} refetch={refetch} />
           </ModalBody>
         </ModalContent>
       </Modal>

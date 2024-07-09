@@ -1,55 +1,66 @@
 import React from "react";
-import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-  Input,
-  Button,
-  Flex,
-  Box,
-  Avatar,
-  AvatarGroup,
-} from "@chakra-ui/react";
+import { FormControl, FormLabel, Input, Button, Flex } from "@chakra-ui/react";
+import { useCreateGroupMutation } from "@/graphql/generated/schema";
 
-export default function FormCreateGroup() {
+type FormCreateGroupProps = {
+  onClose: () => void;
+  refetch: () => void;
+};
+export default function FormCreateGroup({
+  onClose,
+  refetch,
+}: FormCreateGroupProps) {
+  /**
+   * Creates a new group using the useCreateGroupMutation hook.
+   */
+  const [createGroup] = useCreateGroupMutation();
+
+  /**
+   * Handles form submission, sends a mutation to create a new group
+   * and refreshes the list of groups using refetch.
+   * @param {React.FormEvent<HTMLFormElement>} e - The form event.
+   */
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const formJson: any = Object.fromEntries(formData.entries());
+    try {
+      await createGroup({ variables: { data: formJson } });
+      // Refresh the list of groups after creating the new group.
+      refetch();
+      onClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
-    <form action="submit">
-      <FormControl isRequired>
+    <form onSubmit={handleSubmit}>
+      <FormControl isRequired mt={3}>
         <FormLabel>Nom du groupe</FormLabel>
-        {/* <Input
-          type="name"
-          placeholder=""
-          focusBorderColor="secondary.medium"
-          borderColor="secondary.low"
-          rounded={50}
-          _hover={{ borderColor: "secondary.medium" }}
-        /> */}
         <Input
           type="name"
+          name="name"
+          id="name"
           placeholder="Donnez un nom à votre groupe"
-          focusBorderColor="secondary.medium"
-          borderColor="primary.hightest"
-          rounded={50}
-          _hover="none"
+          variant="goldenInput"
         />
       </FormControl>
-      <FormControl>
+      <FormControl mt={3}>
         <FormLabel>Ajouter des membres</FormLabel>
         <Input
-          type="name"
+          type="text"
           placeholder="Ajoutez des membres à votre groupe"
-          focusBorderColor="secondary.medium"
-          borderColor="primary.hightest"
-          rounded={50}
-          _hover="none"
+          variant="goldenInput"
         />
       </FormControl>
-      <Flex justifyContent="flex-end">
-        <Button variant="greenButton" mr={3}>
+      <Flex justifyContent="flex-end" mt={4}>
+        <Button variant="greenButton" mr={3} onClick={onClose}>
           Annuler
         </Button>
-        <Button variant="goldenOutline">Créer</Button>
+        <Button type="submit" variant="goldenOutline">
+          Créer
+        </Button>
       </Flex>
     </form>
   );

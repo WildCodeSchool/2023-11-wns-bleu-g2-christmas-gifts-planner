@@ -17,11 +17,10 @@ const goldenOutline = defineStyle({
   },
 });
 const greenButton = defineStyle({
-  background: "#003B1E",
+  background: "primary.high",
   color: "white",
   _hover: {
-    background: "#003B1E",
-    opacity: 0.7,
+    background: "primary.lower",
   },
 });
 

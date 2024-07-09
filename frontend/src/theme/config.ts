@@ -3,16 +3,17 @@ import { buttonTheme } from "./components/Button";
 import "@fontsource/amatic-sc";
 import "@fontsource/open-sans";
 import { inputTheme } from "./components/Input";
+import { formTheme } from "./components/Form";
 
 const colors = {
   primary: {
-    lowest: "#ECFFF5",
-    lower: "#D2FFEC",
-    low: "#65FFBE",
-    medium: "#00F97B",
-    high: "#00A250",
-    highter: "#004F2D",
-    hightest: "#003B1E",
+    lowest: "#487F64",
+    lower: "#317D58",
+    low: "#11643C",
+    medium: "#084F2D",
+    high: "#003B1E",
+    highter: "#042515",
+    hightest: "#03110A",
   },
   secondary: {
     lowest: "#FFFEF9",
@@ -47,5 +48,6 @@ export const theme = extendTheme({
   components: {
     Button: buttonTheme,
     Input: inputTheme,
+    Form: formTheme,
   },
 });

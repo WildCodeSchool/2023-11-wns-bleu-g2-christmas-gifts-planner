@@ -13,7 +13,7 @@ import DashboardWhithGroup from "@/components/dashboard/DashboardWithGroup";
 import CreateGroupModal from "@/components/group/CreateGroupModal";
 
 export default function Dashboard() {
-  const { data: currentUser } = useProfileQuery({
+  const { data: currentUser, refetch } = useProfileQuery({
     errorPolicy: "ignore",
   });
   return (
@@ -52,7 +52,7 @@ export default function Dashboard() {
         )}
         <CardFooter>
           <Flex direction="column" gap="1rem">
-            <CreateGroupModal />
+            <CreateGroupModal refetch={refetch} />
           </Flex>
         </CardFooter>
       </Card>
