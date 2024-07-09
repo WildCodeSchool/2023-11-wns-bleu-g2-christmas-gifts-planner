@@ -23,8 +23,11 @@ const colors = {
     highter: "#623921",
     hightest: "#381D10",
   },
+  tertiary: {
+    medium: "#A10702",
+  },
   background: {
-    default: "#FFFEF9",
+    default: "#F4EDCD",
   },
 };
 

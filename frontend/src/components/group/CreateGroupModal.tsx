@@ -24,7 +24,7 @@ export default function CreateGroupModal() {
         size={{ base: "full", md: "md" }}
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent bg="secondary.lowest">
           <ModalCloseButton />
           <ModalBody display="flex" flexDirection="column">
             <FormCreateGroup />

@@ -22,9 +22,10 @@ export default function Dashboard() {
         align="center"
         width={{ base: "95%", md: "48rem" }}
         m="auto"
-        h="100dvh"
+        h="100%"
         paddingBlock="1rem"
         marginBlock="1rem"
+        bg="secondary.lowest"
       >
         {/* <Avatar
           size="xl"
@@ -32,7 +33,7 @@ export default function Dashboard() {
           bg="#003B1E"
           textColor="white"
         /> */}
-        <CardHeader>
+        <CardHeader alignContent="center">
           <Avatar
             size="xl"
             bg="#003B1E"
