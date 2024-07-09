@@ -6,14 +6,13 @@ import {
   Flex,
   Heading,
 } from "@chakra-ui/react";
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import DashboardWhithoutGroup from "@/components/dashboard/DashboardWithoutGroup";
 import { useProfileQuery } from "@/graphql/generated/schema";
 import DashboardWhithGroup from "@/components/dashboard/DashboardWithGroup";
 import CreateGroupModal from "@/components/group/CreateGroupModal";
 
-export default function Dashboard({pageTitle}: {pageTitle: string}) {
-
+export default function Dashboard({ pageTitle }: { pageTitle: string }) {
   useEffect(() => {
     document.title = pageTitle;
   }, [pageTitle]);
@@ -21,7 +20,6 @@ export default function Dashboard({pageTitle}: {pageTitle: string}) {
   const { data: currentUser, refetch } = useProfileQuery({
     errorPolicy: "ignore",
   });
-  const { data: users } = useUsersQuery();
   return (
     <>
       <Card
@@ -59,4 +57,3 @@ export default function Dashboard({pageTitle}: {pageTitle: string}) {
     </>
   );
 }
-

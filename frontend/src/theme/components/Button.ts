@@ -29,7 +29,7 @@ const transparentButton = defineStyle({
   border: "1px solid secondary.medium",
   color: "black",
   _hover: {
-    background: "#primary.hightest",
+    background: "#primary.high",
     opacity: 0.7,
   },
 });
