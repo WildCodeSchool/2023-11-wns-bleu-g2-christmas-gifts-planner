@@ -6,6 +6,14 @@ export class UpdateUserInputType {
   @Field()
   @IsEmail()
   email?: string;
+  
+  @Field()
+  @MinLength(3)
+  firstName?: string;
+
+  @Field()
+  @MinLength(3)
+  lastName?: string;
 
   @Field()
   @MinLength(8)
@@ -15,12 +23,6 @@ export class UpdateUserInputType {
   @Field()
   oldPassword?: string;
 
-  @Field()
-  @MinLength(3)
-  lastName?: string;
 
-  @Field()
-  @MinLength(3)
-  firstName?: string;
 
 }

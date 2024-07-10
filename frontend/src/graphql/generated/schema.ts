@@ -287,7 +287,7 @@ export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariable
 
 
 export const UpdateUserDocument = gql`
-  mutation UpdateUser($data: UpdateUserInputType!, $userId: ID!) {
+  mutation UpdateUser($data: UpdateUserInputType!, $userId: String!) {
     updateUser(data: $data, userId: $userId) {
       id
       firstName
@@ -298,7 +298,7 @@ export const UpdateUserDocument = gql`
 `;
 export type UpdateUserMutationVariables = Exact<{
   data: UpdateUserInputType;
-  userId: number;
+  userId: string;
 }>;
 
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string } };

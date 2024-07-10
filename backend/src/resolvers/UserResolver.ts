@@ -27,13 +27,12 @@ export default class UserResolver {
   }
 
   @Mutation(() => User)
-  async updateUser(@Arg("data") data: UpdateUserInputType, @Arg("userId") userId: number): Promise<User> {
+  async updateUser(@Arg("data") data: UpdateUserInputType, @Arg("userId") userId: string): Promise<User> {
     try {
-      console.log('I RECEIVE: ', data);
-  
-      const existingUser = await User.findOneBy({ id: userId });
+      const existingUser = await User.findOneBy({ id: parseInt(userId) });
       if (!existingUser) throw new GraphQLError("USER_NOT_FOUND");
-  
+      console.log('I RECEIVE: ', data);
+      
       if (data.email && data.email !== existingUser.email) {
         const emailInUse = await User.findOneBy({ email: data.email });
         if (emailInUse) throw new GraphQLError("EMAIL_ALREADY_TAKEN");
@@ -41,10 +40,11 @@ export default class UserResolver {
       }
   
       if (data.oldPassword !== undefined) {
-        const isOldPasswordValid = await verifyPassword(data.oldPassword, existingUser.hashedPassword);
-        if (!isOldPasswordValid) throw new GraphQLError("INVALID_OLD_PASSWORD");
+        const isOldPasswordValid = await verifyPassword(existingUser.hashedPassword, data.oldPassword);
+        
+        if (!isOldPasswordValid) alert("INVALID OLD PASSWORD");
   
-        if (data.newPassword) {
+        if (data.newPassword && isOldPasswordValid) {
           existingUser.password = await hashPassword(data.newPassword);
         }
       }
