@@ -8,7 +8,7 @@ export default class GroupResolver {
   @Query(() => [Group])
   async groups() {
     return Group.find({
-      relations: { owner: true },
+      relations: { owner: true, members: true },
     });
   }
 
