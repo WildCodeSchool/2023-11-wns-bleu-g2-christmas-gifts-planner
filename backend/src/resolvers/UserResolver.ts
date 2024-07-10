@@ -1,7 +1,8 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import datasource from "../config/db";
-import User, { hashPassword } from "../entities/User";
+import User, { hashPassword, verifyPassword } from "../entities/User";
 import { NewUserInputType } from "../types/NewUserInputType";
+import { UpdateUserInputType } from "../types/UpdateUserInputType"
 import { GraphQLError } from "graphql";
 import { LoginInputType } from "../types/LoginInputType";
 import { verify } from "argon2";
@@ -23,6 +24,28 @@ export default class UserResolver {
   } catch (error: string){
     console.error('Error creating user:', error);
     throw new GraphQLError("une erreur est survenue")
+  }
+
+  @Mutation(() => User)
+  async updateUser(@Arg("data") data: UpdateUserInputType): Promise<User> {
+    try {
+      const existingUser = await User.findOneBy({ email: data.email });
+      if (existingUser === null) throw new GraphQLError("USER_NOT_FOUND");
+  
+      const isOldPasswordValid = await verifyPassword(data.oldPassword, existingUser.password);
+      if (!isOldPasswordValid) throw new GraphQLError("INVALID_OLD_PASSWORD");
+  
+      if (data.password) {
+        data.password = await hashPassword(data.password);
+      }
+  
+      Object.assign(existingUser, data);
+      const updatedUser = await existingUser.save();
+      return updatedUser;
+    } catch (error) {
+      console.error('Error updating user:', error);
+      throw new GraphQLError("une erreur est survenue");
+    }
   }
 
   @Mutation(() => String)

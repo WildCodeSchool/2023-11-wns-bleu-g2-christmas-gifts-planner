@@ -1,9 +1,8 @@
 import { IsEmail, Matches, MinLength } from "class-validator";
 import { Field, InputType } from "type-graphql";
-import { UserRole } from "../entities/User";
 
 @InputType()
-export class NewUserInputType {
+export class UpdateUserInputType {
   @Field()
   @IsEmail()
   email?: string;
@@ -12,6 +11,9 @@ export class NewUserInputType {
   @MinLength(8)
   @Matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/)
   password?: string;
+
+  @Field()
+  oldPassword: string;
 
   @Field()
   @MinLength(3)

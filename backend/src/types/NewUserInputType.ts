@@ -1,6 +1,5 @@
 import { IsEmail, Matches, MinLength } from "class-validator";
 import { Field, InputType } from "type-graphql";
-import { UserRole } from "../entities/User";
 
 @InputType()
 export class NewUserInputType {
