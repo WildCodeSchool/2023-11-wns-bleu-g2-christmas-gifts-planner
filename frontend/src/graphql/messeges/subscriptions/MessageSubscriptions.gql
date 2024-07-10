@@ -1,0 +1,10 @@
+subscription newMessage {
+  newMessage {
+    id
+    content
+    sent_at
+    writtenBy {
+      id
+    }
+  }
+}
