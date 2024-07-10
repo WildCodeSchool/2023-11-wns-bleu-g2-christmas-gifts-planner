@@ -88,8 +88,15 @@ const UserProfile = () => {
                                 <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">Cet e-mail existe déjà</Text>
                                 }
                         <Input type='email' isRequired id="email" data-testid="label-email" name="email" placeholder="Adresse mail" my={6} borderRadius={15} borderColor={error === 2 ? "red.700" : "green.600"}/>
-                        {/* Password and confirm Password */}
-                        <InputGroup size='md'>
+                         {/* Old Password */}
+                         <InputGroup size='md'>
+                            {error === 3 &&
+                                <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700">Le mot de passe n&aposest pas le même !</Text>
+                                }
+                            <Input name="oldPassword" id="oldPassword" isRequired type='password' placeholder='Ancien mot de passe' borderRadius={15} borderColor={error === 3 ? "red.700" : "green.600"}/>
+                        </InputGroup>
+                        {/* New Password and confirm Password */}
+                        <InputGroup size='md' mt={6}>
                             {error === 1 &&
                                 <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700">Les mots de passe ne correspondent pas !</Text>
                                 }
@@ -100,10 +107,10 @@ const UserProfile = () => {
                                     </Tooltip>
                                 </Text> 
                                 }
-                            <Input name="password" id="password" isRequired type='password' placeholder='Mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"}/>
+                            <Input name="password" id="password" isRequired type='password' placeholder='Nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"}/>
                         </InputGroup>
                         <InputGroup size='md' mt={6} zIndex={0}>
-                            <Input name="passwordConfirmation" zIndex={0} id="passwordConfirmation" isRequired type={'password'} placeholder='Confirmer le mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"}/>
+                            <Input name="passwordConfirmation" zIndex={0} id="passwordConfirmation" isRequired type={'password'} placeholder='Confirmer le nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"}/>
                         </InputGroup>
                         <Center>
                             <Button variant="goldenButton" type="submit" mt={8}>
