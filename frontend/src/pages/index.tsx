@@ -12,21 +12,20 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Gift, Group, UsersRound } from "lucide-react";
-import { useProfileQuery } from "@/graphql/generated/schema";
 import { useRouter } from "next/router";
+import { useProfileQuery } from "@/graphql/generated/schema";
 
 export default function Home() {
   const router = useRouter();
   const { data: currentUser, client } = useProfileQuery({
     errorPolicy: "ignore",
   });
-  console.log(currentUser);
   return (
     <>
       <Box flexDirection="column">
         <Center>
           <Heading fontSize="m">
-            Organisez vos cadeaux de Noël en Groupe avec ##TEST UPDATE##
+            Organisez vos cadeaux de Noël en Groupe avec
           </Heading>
         </Center>
 
@@ -77,8 +76,8 @@ export default function Home() {
               <Box>
                 <Text pt="2" fontSize="sm">
                   Invitez chaque membre de votre groupe à rejoindre
-                  l&apos;application pour qu&apos;ils puissent suggérer des
-                  idées de cadeaux.{" "}
+                  l'application pour qu'ils puissent suggérer des idées de
+                  cadeaux.{" "}
                 </Text>
               </Box>
             </CardBody>

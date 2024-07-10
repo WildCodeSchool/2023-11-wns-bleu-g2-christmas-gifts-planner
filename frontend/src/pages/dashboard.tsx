@@ -1,42 +1,42 @@
 import {
   Avatar,
-  Button,
   Card,
   CardFooter,
   CardHeader,
   Flex,
   Heading,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import DashboardWhithoutGroup from "@/components/dashboard/DashboardWithoutGroup";
-import { useProfileQuery, useUsersQuery } from "@/graphql/generated/schema";
+import { useProfileQuery } from "@/graphql/generated/schema";
 import DashboardWhithGroup from "@/components/dashboard/DashboardWithGroup";
+import CreateGroupModal from "@/components/group/CreateGroupModal";
 
-export default function Dashboard() {
-  const { data: currentUser } = useProfileQuery({
+export default function Dashboard({ pageTitle }: { pageTitle: string }) {
+  useEffect(() => {
+    document.title = pageTitle;
+  }, [pageTitle]);
+
+  const { data: currentUser, refetch } = useProfileQuery({
     errorPolicy: "ignore",
   });
-  console.log(currentUser);
-  const { data: users } = useUsersQuery();
-  console.log(users);
   return (
     <>
       <Card
         align="center"
         width={{ base: "95%", md: "48rem" }}
         m="auto"
-        h="100dvh"
+        h="100%"
         paddingBlock="1rem"
         marginBlock="1rem"
+        bg="secondary.lowest"
       >
-        {/* <Avatar
-          size="xl"
-          name="firstname lastname"
-          bg="#003B1E"
-          textColor="white"
-        /> */}
-        <CardHeader>
-          <Avatar size="xl" bg="#003B1E" />
+        <CardHeader alignContent="center">
+          <Avatar
+            size="xl"
+            bg="#003B1E"
+            name={currentUser?.profile.firstName}
+          />
         </CardHeader>
         <Heading size="md" marginBlock="1rem">
           Bonjour {currentUser?.profile.firstName}
@@ -50,8 +50,7 @@ export default function Dashboard() {
         )}
         <CardFooter>
           <Flex direction="column" gap="1rem">
-            <Button variant="greenButton">Créer un groupe</Button>
-            <Button variant="greenButton">Rejoindre un groupe</Button>
+            <CreateGroupModal refetch={refetch} />
           </Flex>
         </CardFooter>
       </Card>
