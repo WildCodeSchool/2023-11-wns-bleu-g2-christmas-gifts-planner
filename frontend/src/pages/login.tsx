@@ -26,15 +26,12 @@ const Login = () => {
     const formJSON: any = Object.fromEntries(formData.entries());
     try {
       const res = await login({ variables: { data: formJSON } });
-      console.log({ res });
       router.push('/dashboard')
     } catch (e: any) {
       if(e.message === "Invalid Credentials") {
         setError(1)
-        console.error({e})
       } else if(e.message === "Invalid Password") {
         setError(2)
-        console.error({e})
       } else setError(`Une erreur est survenue : ${e}`);
     }
   };

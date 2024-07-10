@@ -60,7 +60,6 @@ export default function Signup() {
   try {
     if(err === 0){
       const res = await createUser({variables: {data: formJSON}})
-      console.log({ res });
       router.push('/dashboard')
       toast({
         title: "Vous êtes bien enregistré.e !",

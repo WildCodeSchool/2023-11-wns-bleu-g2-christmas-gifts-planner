@@ -28,11 +28,11 @@ const UserProfile = ({ userId }: UpdateUserFormProps) => {
     const router = useRouter()
 
     const [formData, setFormData] = useState({
-      email: undefined,
-      oldPassword: undefined,
-      newPassword: undefined,
-      firstName: undefined,
-      lastName: undefined
+      email: "",
+      oldPassword: "",
+      newPassword: "",
+      firstName: "",
+      lastName: ""
     });
 
     const { data: currentUser } = useProfileQuery({
@@ -68,7 +68,6 @@ const UserProfile = ({ userId }: UpdateUserFormProps) => {
         const formJSON: any = Object.fromEntries(formData.entries());
         const errors = validatePassword(formJSON.newPassword);
         let err = 0;
-        console.log(formJSON)
         if(formJSON.newPassword !== "" && errors.length > 0) {
             setArrayOfErrors(errors);
             err = 4;
@@ -83,8 +82,14 @@ const UserProfile = ({ userId }: UpdateUserFormProps) => {
 
         try{
             if(err === 0) {
-                const res = await updateUser({variables: {data: formJSON, userId: currentUser!.profile.id}})
-                console.log({ res });
+                await updateUser({variables: {data: formJSON, userId: currentUser!.profile.id}})
+                setFormData({
+                    email: "",
+                    oldPassword: "",
+                    newPassword: "",
+                    firstName: "",
+                    lastName: ""
+                });
                 toast({
                     title: "Profile modifié !",
                     description: "Votre profil a bien été modifié",
@@ -93,15 +98,16 @@ const UserProfile = ({ userId }: UpdateUserFormProps) => {
                     isClosable: true,
                   });
             }
-        } catch (e: any) {{
+        } catch (e: any) {
             if (e.message === "EMAIL_ALREADY_TAKEN"){
-              err = 2
+              err = 2;
               setError(2);
+            } else if(e.message === "INVALID_OLD_PASSWORD") {
+                err = 3;
+                setError(3);
             }
-            else setError("une erreur est survenue");
           }
     }
-}
 
     return(
         <>
@@ -128,24 +134,23 @@ const UserProfile = ({ userId }: UpdateUserFormProps) => {
                         <Input type='email' id="email" data-testid="label-email" name="email" placeholder="Adresse mail" my={6} borderRadius={15} borderColor={error === 2 ? "red.700" : "green.600"} onChange={handleChange}/>
                          {/* Old Password */}
                          <InputGroup size='md'>
-                            {error === 3 &&
-                                <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700">Le mot de passe n&aposest pas le même !</Text>
-                                }
                             <Input name="oldPassword" id="oldPassword" type='password' placeholder='Ancien mot de passe' borderRadius={15} borderColor={error === 3 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            {error === 3 &&
+                                <Text position="absolute" mt={10} fontSize={14} fontWeight="bold" color="red.700">Le mot de passe n&apos;est pas le même !</Text>
+                                }
                         </InputGroup>
                         {/* New Password and confirm Password */}
                         <InputGroup size='md' mt={6}>
-                            {error === 1 &&
-                                <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700">Les mots de passe ne correspondent pas !</Text>
-                                }
-                            {error === 4 && <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700" >
-                                <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700">Ce mot de passe n&apos;est pas autorisé</Text>
-                                    <Tooltip label={arrayOfErrors.map((error, index) => (<Text key={index} fontSize={12}>{error}</Text>))}>
-                                        <IconButton icon={<InfoIcon height={22}/>} aria-label="seeMore" h={4} variant="none" bgColor="transparent" boxShadow="none" />
-                                    </Tooltip>
-                                </Text> 
-                                }
                             <Input name="newPassword" id="newPassword" type='password' placeholder='Nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            {error === 1 &&
+                                <Text position="absolute" mt={10} fontSize={14} fontWeight="bold" color="red.700">Les mots de passe ne correspondent pas !</Text>
+                                }
+                            {error === 4 && <Text position="absolute" mt={10} fontSize={14} fontWeight="bold" color="red.700" >Ce mot de passe n&apos;est pas autorisé
+                                    <Tooltip label={arrayOfErrors.map((error, index) => (<Text key={index} fontSize={12}>{error}</Text>))} >
+                                        <IconButton icon={<InfoIcon height={22}/>} aria-label="seeMore" h={4} variant="none" bgColor="transparent" boxShadow="none" />
+                                    </Tooltip> 
+                                    </Text>
+                                }
                         </InputGroup>
                         <InputGroup size='md' mt={6} zIndex={0}>
                             <Input name="passwordConfirmation" zIndex={0} id="passwordConfirmation" type='password' placeholder='Confirmer le nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
