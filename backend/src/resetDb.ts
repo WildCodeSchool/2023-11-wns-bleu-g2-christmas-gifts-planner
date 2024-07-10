@@ -1,4 +1,5 @@
 import db from "./config/db";
+import Group from "./entities/Group";
 import User, { hashPassword } from "./entities/User";
 
 export async function clearDB() {
@@ -75,6 +76,27 @@ export default async function main() {
     password: "NinaLouis1+",
   });
   await userNina.save();
+
+  const firstAdminGroup = new Group();
+  Object.assign(firstAdminGroup, {
+    name: "My best family group",
+    owner: admin,
+  });
+  const secondAdminGroup = new Group();
+  Object.assign(secondAdminGroup, {
+    name: "Perceval group",
+    owner: admin,
+  });
+
+  const tertiaryAdminGroup = new Group();
+  Object.assign(tertiaryAdminGroup, {
+    name: "My best friends group",
+    owner: admin,
+  });
+
+  await firstAdminGroup.save();
+  await secondAdminGroup.save();
+  await tertiaryAdminGroup.save();
 
   await db.destroy();
   console.log("done !");

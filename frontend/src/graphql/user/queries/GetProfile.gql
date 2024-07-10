@@ -8,9 +8,6 @@ query Profile {
     groups {
       id
       name
-      owner {
-        id
-      }
     }
   }
 }
