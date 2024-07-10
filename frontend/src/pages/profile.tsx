@@ -37,7 +37,7 @@ const UserProfile = () => {
         const formJSON: any = Object.fromEntries(formData.entries());
         const errors = validatePassword(formJSON.password);
         let err = 0;
-
+        
         if(errors.length > 0) {
             setArrayOfErrors(errors);
             err = 4;
@@ -47,9 +47,8 @@ const UserProfile = () => {
                 err = 1;
                 return setError(1);
             }
-        }
+        };
         delete formJSON.passwordConfirmation;
-        delete formJSON.isOldPassword;
 
         try{
             if(err === 0) {

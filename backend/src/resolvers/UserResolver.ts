@@ -20,11 +20,6 @@ export default class UserResolver {
     Object.assign(newUser, data);
     const newUserWithId = await newUser.save();
     return newUserWithId;
-
-    const hashedPassword = await hashPassword(data.password);
-    return await datasource
-      .getRepository(User)
-      .save({ ...data, hashedPassword });
   } catch (error: string){
     console.error('Error creating user:', error);
     throw new GraphQLError("une erreur est survenue")
