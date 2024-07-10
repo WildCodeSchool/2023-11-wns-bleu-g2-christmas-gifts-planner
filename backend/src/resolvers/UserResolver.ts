@@ -27,19 +27,31 @@ export default class UserResolver {
   }
 
   @Mutation(() => User)
-  async updateUser(@Arg("data") data: UpdateUserInputType): Promise<User> {
+  async updateUser(@Arg("data") data: UpdateUserInputType, @Arg("userId") userId: number): Promise<User> {
     try {
-      const existingUser = await User.findOneBy({ email: data.email });
-      if (existingUser === null) throw new GraphQLError("USER_NOT_FOUND");
+      console.log('I RECEIVE: ', data);
   
-      const isOldPasswordValid = await verifyPassword(data.oldPassword, existingUser.password);
-      if (!isOldPasswordValid) throw new GraphQLError("INVALID_OLD_PASSWORD");
+      const existingUser = await User.findOneBy({ id: userId });
+      if (!existingUser) throw new GraphQLError("USER_NOT_FOUND");
   
-      if (data.password) {
-        data.password = await hashPassword(data.password);
+      if (data.email && data.email !== existingUser.email) {
+        const emailInUse = await User.findOneBy({ email: data.email });
+        if (emailInUse) throw new GraphQLError("EMAIL_ALREADY_TAKEN");
+        existingUser.email = data.email;
       }
   
-      Object.assign(existingUser, data);
+      if (data.oldPassword !== undefined) {
+        const isOldPasswordValid = await verifyPassword(data.oldPassword, existingUser.hashedPassword);
+        if (!isOldPasswordValid) throw new GraphQLError("INVALID_OLD_PASSWORD");
+  
+        if (data.newPassword) {
+          existingUser.password = await hashPassword(data.newPassword);
+        }
+      }
+  
+      if (data.firstName) existingUser.firstName = data.firstName;
+      if (data.lastName) existingUser.lastName = data.lastName;
+  
       const updatedUser = await existingUser.save();
       return updatedUser;
     } catch (error) {
@@ -47,7 +59,6 @@ export default class UserResolver {
       throw new GraphQLError("une erreur est survenue");
     }
   }
-
   @Mutation(() => String)
   async login(@Arg("data") data: LoginInputType, @Ctx() ctx: ContextType) {
     const existingUser = await User.findOneBy({ email: data.email });

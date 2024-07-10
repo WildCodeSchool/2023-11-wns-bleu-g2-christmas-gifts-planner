@@ -10,10 +10,10 @@ export class UpdateUserInputType {
   @Field()
   @MinLength(8)
   @Matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/)
-  password?: string;
+  newPassword?: string;
 
   @Field()
-  oldPassword: string;
+  oldPassword?: string;
 
   @Field()
   @MinLength(3)

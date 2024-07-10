@@ -54,7 +54,8 @@ export type UpdateUserInputType = {
   email: Scalars['String'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
-  password: Scalars['String'];
+  oldPassword: Scalars['String'];
+  newPassword: Scalars['String'];
 };
 
 export type Query = {
@@ -286,18 +287,18 @@ export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariable
 
 
 export const UpdateUserDocument = gql`
-  mutation UpdateUser($data: UpdateUserInputType!) {
-    updateUser(data: $data) {
+  mutation UpdateUser($data: UpdateUserInputType!, $userId: ID!) {
+    updateUser(data: $data, userId: $userId) {
       id
       firstName
       lastName
       email
-      password
       }
   }
 `;
 export type UpdateUserMutationVariables = Exact<{
   data: UpdateUserInputType;
+  userId: number;
 }>;
 
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string } };
