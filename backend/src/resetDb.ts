@@ -94,7 +94,7 @@ export default async function main() {
     owner: admin,
   });
 
-  firstAdminGroup.members = [admin, userJonas, userMateo, userEnola];
+  firstAdminGroup.members = [userJonas, userMateo, userEnola];
 
   await firstAdminGroup.save();
   await secondAdminGroup.save();
