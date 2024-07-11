@@ -37,10 +37,16 @@ export type Message = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createGroup: Group;
   createMessage: Message;
   createUser: User;
   login: Scalars['String'];
   logout: Scalars['String'];
+};
+
+
+export type MutationCreateGroupArgs = {
+  data: NewGroupInputType;
 };
 
 
@@ -56,6 +62,10 @@ export type MutationCreateUserArgs = {
 
 export type MutationLoginArgs = {
   data: LoginInputType;
+};
+
+export type NewGroupInputType = {
+  name: Scalars['String'];
 };
 
 export type NewMessageInputType = {
@@ -103,6 +113,13 @@ export type User = {
   role: Scalars['String'];
 };
 
+export type CreateGroupMutationVariables = Exact<{
+  data: NewGroupInputType;
+}>;
+
+
+export type CreateGroupMutation = { __typename?: 'Mutation', createGroup: { __typename?: 'Group', id: number, name: string, owner: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, role: string } } };
+
 export type CreateMessageMutationVariables = Exact<{
   data: NewMessageInputType;
 }>;
@@ -142,7 +159,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: string };
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, role: string, groups?: Array<{ __typename?: 'Group', id: number, name: string, owner: { __typename?: 'User', id: string } }> | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, role: string, groups?: Array<{ __typename?: 'Group', id: number, name: string }> | null } };
 
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -150,6 +167,47 @@ export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, firstName: string, lastName: string, email: string }> };
 
 
+export const CreateGroupDocument = gql`
+    mutation CreateGroup($data: NewGroupInputType!) {
+  createGroup(data: $data) {
+    id
+    name
+    owner {
+      id
+      firstName
+      lastName
+      email
+      role
+    }
+  }
+}
+    `;
+export type CreateGroupMutationFn = Apollo.MutationFunction<CreateGroupMutation, CreateGroupMutationVariables>;
+
+/**
+ * __useCreateGroupMutation__
+ *
+ * To run a mutation, you first call `useCreateGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createGroupMutation, { data, loading, error }] = useCreateGroupMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateGroupMutation(baseOptions?: Apollo.MutationHookOptions<CreateGroupMutation, CreateGroupMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateGroupMutation, CreateGroupMutationVariables>(CreateGroupDocument, options);
+      }
+export type CreateGroupMutationHookResult = ReturnType<typeof useCreateGroupMutation>;
+export type CreateGroupMutationResult = Apollo.MutationResult<CreateGroupMutation>;
+export type CreateGroupMutationOptions = Apollo.BaseMutationOptions<CreateGroupMutation, CreateGroupMutationVariables>;
 export const CreateMessageDocument = gql`
     mutation CreateMessage($data: NewMessageInputType!) {
   createMessage(data: $data) {
@@ -370,9 +428,6 @@ export const ProfileDocument = gql`
     groups {
       id
       name
-      owner {
-        id
-      }
     }
   }
 }

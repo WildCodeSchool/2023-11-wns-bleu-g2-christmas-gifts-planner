@@ -37,7 +37,7 @@ export default function Navbar() {
   };
 
   return (
-    <Box as="nav" bg="primary.hightest" color="white" padding="4">
+    <Box as="nav" bg="primary.high" color="white" padding="4">
     <Flex justifyContent="space-between" alignItems="center">
       <Link href="/" passHref>
         <Image
@@ -64,8 +64,8 @@ export default function Navbar() {
                     {language}
                 </MenuButton>
                 <MenuList minWidth="50px">
-                    <MenuItem  color='primary.hightest' _hover={{ bg:'secondary.low'}} fontWeight='bold' onClick={() => handleLanguageChange('FR')}>FR</MenuItem>
-                    <MenuItem  color='primary.hightest' _hover={{ bg:'secondary.low'}} fontWeight='bold' onClick={() => handleLanguageChange('EN')}>EN</MenuItem>
+                    <MenuItem  color='primary.high' _hover={{ bg:'secondary.low'}} fontWeight='bold' onClick={() => handleLanguageChange('FR')}>FR</MenuItem>
+                    <MenuItem  color='primary.high' _hover={{ bg:'secondary.low'}} fontWeight='bold' onClick={() => handleLanguageChange('EN')}>EN</MenuItem>
                 </MenuList>
             </Menu>
 
@@ -101,8 +101,8 @@ export default function Navbar() {
               <MenuList >
                 <Box textAlign="center" p={2} >
                     <Flex flexDirection='column'>
-                      <MenuItem color='primary.hightest' _hover={{ bg:'secondary.low'}} onClick={() => router.push('/profile')}>Mon profil</MenuItem>
-                      <MenuItem color='primary.hightest' _hover={{ bg:'secondary.low'}} onClick={() => router.push('/dashboard')}>Mes groupes</MenuItem>
+                      <MenuItem color='primary.high' _hover={{ bg:'secondary.low'}} onClick={() => router.push('/profile')}>Mon profil</MenuItem>
+                      <MenuItem color='primary.high' _hover={{ bg:'secondary.low'}} onClick={() => router.push('/dashboard')}>Mes groupes</MenuItem>
                       </Flex>
                 </Box>
                 <MenuDivider />                

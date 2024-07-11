@@ -1,5 +1,6 @@
 import db from "./config/db";
 import Message from "./entities/Message";
+import Group from "./entities/Group";
 import User, { UserRole, hashPassword } from "./entities/User";
 
 export async function clearDB() {
@@ -97,6 +98,27 @@ export default async function main() {
     }
   });
   await message02.save();
+
+  const firstAdminGroup = new Group();
+  Object.assign(firstAdminGroup, {
+    name: "My best family group",
+    owner: admin,
+  });
+  const secondAdminGroup = new Group();
+  Object.assign(secondAdminGroup, {
+    name: "Perceval group",
+    owner: admin,
+  });
+
+  const tertiaryAdminGroup = new Group();
+  Object.assign(tertiaryAdminGroup, {
+    name: "My best friends group",
+    owner: admin,
+  });
+
+  await firstAdminGroup.save();
+  await secondAdminGroup.save();
+  await tertiaryAdminGroup.save();
 
   await db.destroy();
   console.log("done !");

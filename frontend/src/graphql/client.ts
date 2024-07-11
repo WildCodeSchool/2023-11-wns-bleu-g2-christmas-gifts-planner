@@ -5,18 +5,15 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 
 
+const uri = process.env.NEXT_PUBLIC_GRAPHQL_API_URL;
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:4001/graphql',
+  uri: uri || "/graphql",
   credentials: 'include',
 });
 
 const wsLink = new GraphQLWsLink(createClient({
   url: 'ws://localhost:4001/',
-  // url: 'ws://localhost:4001/chat',
-
-
-
 }));
 
 // The split function takes three parameters:
@@ -37,7 +34,7 @@ const splitLink = split(
 );
 
 const client = new ApolloClient({
-  uri: "http://localhost:4001",
+  uri: uri || "/graphql",
   link: splitLink,
   cache: new InMemoryCache(),
   credentials: "include",
