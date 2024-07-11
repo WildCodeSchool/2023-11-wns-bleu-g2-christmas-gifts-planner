@@ -1,27 +1,31 @@
-import { useCreateMessageMutation , useMessagesQuery, useNewMessageSubscription, useProfileQuery } from "@/graphql/generated/schema";
+import { NewMessageInputType, useCreateMessageMutation , useMessagesQuery, useNewMessageSubscription, useProfileQuery } from "@/graphql/generated/schema";
 import { Box, Button, Center, Flex, FormControl, FormLabel, Heading, IconButton, Image, Input, Link, Text } from "@chakra-ui/react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Target, Variable } from "lucide-react";
 import { useRouter } from "next/router";
+import { object } from "prop-types";
 import { FormEvent, useEffect, useState } from "react";
 
 const Message = () => {
 
-  const {data:getMessages} = useMessagesQuery();
-  const queryMessages =  getMessages?.messages || [];
-
+  const {data:getMessages,refetch}:any = useMessagesQuery();
+  // const queryMessages =  getMessages?.messages || [];
+  // console.log(getMessages);
+ 
   const [createMessage]= useCreateMessageMutation();
-  const {data:chatListener ,error ,loading}= useNewMessageSubscription();
-  const chatMessages:any =  chatListener?.newMessage || [];
-  // console.log(chatListener|| 'error = '+error|| 'loading = ' + loading);
-  console.log( chatMessages?.content);
-//   const chatMessages = readMessages? [];
-//   const { data } = useRecentAdsQuery();
+  
+  const {data:chatListener ,error ,loading}= useNewMessageSubscription({onData:(newMessage:any)=>{
+    console.log(newMessage.data.data.newMessage);
+    refetch();
+    // return  newMessage.data.data.newMessage;
+    // Object.assign(Target:getMessages,newMessage.data.data.newMessage)
+    
+  }});
+  const chatMessage =  chatListener?.newMessage || [];
 
 
-const { data: currentUser, client } = useProfileQuery({
+const { data: currentUser } = useProfileQuery({
     errorPolicy: "ignore",
   });
-// console.log(currentUser);
 
 
 
@@ -35,7 +39,9 @@ const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     
     // formJSON.writtenBy = selectedTags.map((t) => ({ id: t.id }));
     // formJSO
-    const res = await createMessage({variables: {data: formJSON}})
+    const res = await createMessage({variables: {data: formJSON}});
+    // refetch();
+
     // formJSON
     // console.log(formJSON);
         // console.log(res);
@@ -47,7 +53,8 @@ const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
   // const handleDateTimeChange = () => {
   //   setDateTime(new Date().toLocaleString());
   // };
-
+// console.log(messages);
+const allMessages = getMessages?.messages || [];
   return (
     <>
     <div className="flex justify-center flex-col mt-5">
@@ -55,7 +62,7 @@ const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
       <div className="   ">
           { <div className="flex flex-col h-screen bg-gray-100">
             <div className=" p-4 overflow-y-auto">
-              {queryMessages?.map((message) => (
+              {allMessages.map((message:any) => (
                 <div
                   key={message.id}
                   className={`flex  'justify-end' : 'justify-start'} mb-4`}
