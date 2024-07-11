@@ -7,7 +7,7 @@ import { FormEvent, useEffect, useState } from "react";
 
 const Message = () => {
 
-  const {data:getMessages,refetch}:any = useMessagesQuery();
+  const {data:getMessages,refetch} = useMessagesQuery();
   // const queryMessages =  getMessages?.messages || [];
   // console.log(getMessages);
  
@@ -70,7 +70,7 @@ const allMessages = getMessages?.messages || [];
                   <div
                     className={`max-w-xs p-4 rounded-lg  'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
                   >
-                    <p className="font-semibold">{message.content}</p>
+                    <p className="font-semibold">{  message.writtenBy.firstName+': ' +  message.content}</p>
                     
                     {/* <p className="text-xs mt-1">{format(new Date(message.sent_at), 'p, MMM dd')}</p> */}
                   </div>
