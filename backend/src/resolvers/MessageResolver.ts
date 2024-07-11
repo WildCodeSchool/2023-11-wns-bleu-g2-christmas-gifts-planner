@@ -45,22 +45,7 @@ export default class MessageResolver {
     }
 
     
-      //  ----------------------------------------------------------------------
-  //  ---------------------------------------------------------------------- 
-  //  ---------------------------------------------------------------------- 
 
-  // @Mutation(() => Message)
-  // async createMessage(@Arg("data") data: NewMessageInputType): Promise<Message> {
-  
-  //   const newMessage = new Message();
-  //   Object.assign(newMessage, data);
-  //   const newMessageWithId = await newMessage.save();
-  //   return newMessageWithId;
-  
-  // }
-          //  ----------------------------------------------------------------------
-  //  ---------------------------------------------------------------------- 
-  //  ---------------------------------------------------------------------- 
 
   
   
