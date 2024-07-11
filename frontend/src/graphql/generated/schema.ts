@@ -18,6 +18,7 @@ export type Scalars = {
 export type Group = {
   __typename?: 'Group';
   id: Scalars['Int'];
+  members: Array<User>;
   name: Scalars['String'];
   owner: User;
 };
@@ -51,6 +52,7 @@ export type MutationLoginArgs = {
 };
 
 export type NewGroupInputType = {
+  members?: InputMaybe<Array<ObjectId>>;
   name: Scalars['String'];
 };
 
@@ -59,6 +61,10 @@ export type NewUserInputType = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type ObjectId = {
+  id: Scalars['Int'];
 };
 
 export type Query = {

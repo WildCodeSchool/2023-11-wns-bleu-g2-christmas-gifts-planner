@@ -1,6 +1,6 @@
 import { MinLength } from "class-validator";
 import { Field, InputType } from "type-graphql";
-import { ObjectId } from "./ObjectId";
+import { ObjectId } from "./ObjectIdType";
 
 @InputType()
 export class NewGroupInputType {
