@@ -33,6 +33,7 @@ export default class MessageResolver {
       @PubSub() pubsub: PubSubEngine,
     ): Promise<Message> {
       const newMessage = new Message();
+      newMessage.sent_at = String(new Date());
       Object.assign(newMessage, data);
       await newMessage.save(); 
       await pubsub.publish('NewMessage', newMessage); 

@@ -79,25 +79,7 @@ export default async function main() {
   });
   await userNina.save();
 
-  const message01 = new Message();
-  Object.assign(message01, {
-    content: "Hello Mateo, i tought about an amazing gift for pierre! a fish!",
-    sent_at: "2024-07-03 18:10:31",
-    writtenBy: {
-      id:2
-    }
-  });
-  await message01.save();
 
-  const message02 = new Message();
-  Object.assign(message02, {
-    content: "lol, Jonas!",
-    sent_at: "2024-07-03 18:11:02",
-    writtenBy: {
-      id:3
-    }
-  });
-  await message02.save();
 
   const firstAdminGroup = new Group();
   Object.assign(firstAdminGroup, {
@@ -122,6 +104,26 @@ export default async function main() {
 
   await db.destroy();
   console.log("done !");
+
+  const message01 = new Message();
+  Object.assign(message01, {
+    content: "Hello Mateo, i tought about an amazing gift for pierre! a fish!",
+    sent_at: "2024-07-03 18:10:31",
+    writtenBy: {
+      id:2
+    }
+  });
+  await message01.save();
+
+  const message02 = new Message();
+  Object.assign(message02, {
+    content: "lol, Jonas!",
+    sent_at: "2024-07-03 18:11:02",
+    writtenBy: {
+      id:3
+    }
+  });
+  await message02.save();
 }
 
 main();
