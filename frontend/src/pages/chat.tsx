@@ -1,4 +1,5 @@
 import { NewMessageInputType, useCreateMessageMutation , useMessagesQuery, useNewMessageSubscription, useProfileQuery } from "@/graphql/generated/schema";
+import { gql } from "@apollo/client";
 import { Box, Button, Center, Flex, FormControl, FormLabel, Heading, IconButton, Image, Input, Link, Text } from "@chakra-ui/react";
 import { ArrowLeft, Target, Variable } from "lucide-react";
 import { useRouter } from "next/router";
@@ -7,25 +8,23 @@ import { FormEvent, useEffect, useState } from "react";
 
 const Message = () => {
 
-  const {data:getMessages,refetch} = useMessagesQuery();
-  // const queryMessages =  getMessages?.messages || [];
-  // console.log(getMessages);
- 
-  const [createMessage]= useCreateMessageMutation();
+  const { data: currentUser,client } = useProfileQuery({
+    errorPolicy: "ignore",
+  });
+let {data:getMessages,refetch} = useMessagesQuery();
+
+
+const [createMessage]= useCreateMessageMutation();
+
+const {data:chatListener ,error ,loading}=  useNewMessageSubscription({onData:async(newMessage:any) =>{
   
-  const {data:chatListener ,error ,loading}= useNewMessageSubscription({onData:(newMessage:any)=>{
-    console.log(newMessage.data.data.newMessage);
-    refetch();
-    // return  newMessage.data.data.newMessage;
-    // Object.assign(Target:getMessages,newMessage.data.data.newMessage)
+    
+console.log(refetch());
     
   }});
   const chatMessage =  chatListener?.newMessage || [];
 
 
-const { data: currentUser } = useProfileQuery({
-    errorPolicy: "ignore",
-  });
 
 
 
@@ -40,20 +39,12 @@ const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     // formJSON.writtenBy = selectedTags.map((t) => ({ id: t.id }));
     // formJSO
     const res = await createMessage({variables: {data: formJSON}});
-    // refetch();
 
-    // formJSON
-    // console.log(formJSON);
-        // console.log(res);
 
   };
  
  
-  // const [dateTime, setDateTime] = useState(new Date().toLocaleString());
-  // const handleDateTimeChange = () => {
-  //   setDateTime(new Date().toLocaleString());
-  // };
-// console.log(messages);
+
 const allMessages = getMessages?.messages || [];
   return (
     <>
