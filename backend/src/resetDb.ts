@@ -95,6 +95,8 @@ export default async function main() {
     owner: admin,
   });
 
+  firstAdminGroup.members = [userJonas, userMateo, userEnola];
+
   await firstAdminGroup.save();
   await secondAdminGroup.save();
   await tertiaryAdminGroup.save();

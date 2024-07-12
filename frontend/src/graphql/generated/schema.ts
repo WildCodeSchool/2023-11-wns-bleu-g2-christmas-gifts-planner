@@ -26,6 +26,7 @@ export type Group = {
   __typename?: 'Group';
   channels?: Maybe<Array<Channel>>;
   id: Scalars['Int'];
+  members: Array<User>;
   name: Scalars['String'];
   owner: User;
 };
@@ -37,10 +38,17 @@ export type LoginInputType = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addMemberToGroup: Group;
   createGroup: Group;
   createUser: User;
   login: Scalars['String'];
   logout: Scalars['String'];
+};
+
+
+export type MutationAddMemberToGroupArgs = {
+  groupId: Scalars['Float'];
+  userId: Scalars['Float'];
 };
 
 
@@ -59,6 +67,7 @@ export type MutationLoginArgs = {
 };
 
 export type NewGroupInputType = {
+  members?: InputMaybe<Array<ObjectId>>;
   name: Scalars['String'];
 };
 
@@ -74,6 +83,10 @@ export type UpdateUserInputType = {
   lastName: Scalars['String'];
   oldPassword: Scalars['String'];
   newPassword: Scalars['String'];
+};
+
+export type ObjectId = {
+  id: Scalars['Int'];
 };
 
 export type Query = {
@@ -105,7 +118,7 @@ export type CreateGroupMutationVariables = Exact<{
 }>;
 
 
-export type CreateGroupMutation = { __typename?: 'Mutation', createGroup: { __typename?: 'Group', id: number, name: string, owner: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, role: string } } };
+export type CreateGroupMutation = { __typename?: 'Mutation', createGroup: { __typename?: 'Group', id: number, name: string, owner: { __typename?: 'User', id: string, lastName: string, firstName: string, email: string }, members: Array<{ __typename?: 'User', email: string, firstName: string, id: string, lastName: string }> } };
 
 export type LoginMutationVariables = Exact<{
   data: LoginInputType;
@@ -144,10 +157,15 @@ export const CreateGroupDocument = gql`
     name
     owner {
       id
-      firstName
       lastName
+      firstName
       email
-      role
+    }
+    members {
+      email
+      firstName
+      id
+      lastName
     }
   }
 }

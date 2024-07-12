@@ -36,7 +36,7 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
         <CardHeader alignContent="center">
           <Avatar
             size="xl"
-            bg="#003B1E"
+            bg="primary.high"
             name={currentUser?.profile.firstName}
           />
         </CardHeader>
