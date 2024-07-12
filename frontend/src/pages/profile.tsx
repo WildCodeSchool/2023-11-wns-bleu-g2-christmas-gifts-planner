@@ -17,11 +17,8 @@ function validatePassword(p: string) {
       errors.push("Le mot de passe doit contenir un chiffre");
     return errors;
   }
-    interface UpdateUserFormProps {
-        userId: string | undefined;
-      }
 
-const UserProfile = ({ userId }: UpdateUserFormProps) => {
+const UserProfile = () => {
     const [arrayOfErrors, setArrayOfErrors] = useState<string[]>([])
     const [error, setError] = useState<string | number>(0);
     const [updateUser] = useUpdateUserMutation();
