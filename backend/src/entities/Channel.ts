@@ -5,15 +5,13 @@ import {
   Column,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import User from "./User";
-import Channel from "./Channel";
+import Group from "./Group";
 
 @Entity()
 @ObjectType()
-export default class Group extends BaseEntity {
+export default class Channel extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
   id: number;
@@ -23,11 +21,7 @@ export default class Group extends BaseEntity {
   @Field()
   name: string;
 
-  @Field(() => User)
-  @ManyToOne(() => User, (user) => user.groups)
-  owner: User;
-
-  @Field(() => [Channel], { nullable: true })
-  @OneToMany(() => Channel, (channel) => channel.group)
-  channels: Channel[];
+  @Field(() => Group)
+  @ManyToOne(() => Group, (group) => group.channels)
+  group: Group;
 }

@@ -5,6 +5,7 @@ import "@fontsource/amatic-sc";
 import "@fontsource/open-sans";
 import { inputTheme } from "./components/Input";
 import { formTheme } from "./components/Form";
+import { HeartIcon } from "lucide-react";
 
 const colors = {
   primary: {
@@ -49,6 +50,10 @@ export const theme = extendTheme({
     global: {
       "html, body": {
         backgroundColor: "background.default",
+        height: "100%",
+      },
+      "#__next": {
+        height: "100%",
       },
     },
   },
