@@ -1,4 +1,5 @@
-import { useSignupMutation } from "@/graphql/generated/schema";
+import client from "@/graphql/client";
+import { useLoginMutation, useSignupMutation } from "@/graphql/generated/schema";
 import { Box, Button, Center, FormControl, Grid, GridItem, Heading, IconButton, Input, InputGroup, Link, Text, Tooltip, useToast } from '@chakra-ui/react';
 import { ArrowLeft, InfoIcon } from "lucide-react";
 import { useRouter } from "next/router";
@@ -21,6 +22,7 @@ export default function Signup() {
   const [arrayOfErrors, setArrayOfErrors] = useState<string[]>([])
   const [error, setError] = useState<string | number>(0);
   const [createUser] = useSignupMutation();
+  const [login]= useLoginMutation();
   const toast = useToast();
   const router = useRouter();
   
@@ -59,8 +61,8 @@ export default function Signup() {
     
   try {
     if(err === 0){
-      const res = await createUser({variables: {data: formJSON}})
-      console.log({ res });
+      await createUser({variables: {data: formJSON}})
+      await login({variables: {data: {email: formJSON.email, password: formJSON.password }}})
       router.push('/dashboard')
       toast({
         title: "Vous êtes bien enregistré.e !",
@@ -75,6 +77,8 @@ export default function Signup() {
         err = 2
         setError(2);}
       else setError("une erreur est survenue");
+    } finally {
+      client.resetStore()
     }
   };
 

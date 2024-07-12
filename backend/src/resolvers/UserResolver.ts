@@ -1,7 +1,8 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import datasource from "../config/db";
-import User, { hashPassword } from "../entities/User";
+import User, { hashPassword, verifyPassword } from "../entities/User";
 import { NewUserInputType } from "../types/NewUserInputType";
+import { UpdateUserInputType } from "../types/UpdateUserInputType"
 import { GraphQLError } from "graphql";
 import { LoginInputType } from "../types/LoginInputType";
 import { verify } from "argon2";
@@ -20,15 +21,36 @@ export default class UserResolver {
     Object.assign(newUser, data);
     const newUserWithId = await newUser.save();
     return newUserWithId;
-
-    const hashedPassword = await hashPassword(data.password);
-    return await datasource
-      .getRepository(User)
-      .save({ ...data, hashedPassword });
   } catch (error: string){
     console.error('Error creating user:', error);
     throw new GraphQLError("une erreur est survenue")
   }
+
+  @Mutation(() => User)
+  async updateUser(@Arg("data") data: UpdateUserInputType, @Arg("userId") userId: string): Promise<User> {
+    try{
+    const existingUser = await User.findOneById(userId);
+    if (!existingUser) throw new GraphQLError("USER_NOT_FOUND");
+
+    if (data.oldPassword !== '' && data.newPassword !== '') {
+      const isOldPasswordValid = await verifyPassword(existingUser.hashedPassword, data.oldPassword!);
+      if (!isOldPasswordValid) throw new GraphQLError("INVALID_OLD_PASSWORD");
+
+      existingUser.hashedPassword = await hashPassword(data.newPassword!);
+    }
+
+    if (data.firstName) existingUser.firstName = data.firstName;
+    if (data.lastName) existingUser.lastName = data.lastName;
+    if (data.email) existingUser.email = data.email;
+
+    const updatedUser = await existingUser.save();
+    return updatedUser;
+  } catch (error: any){
+    console.error('Error updating user:', error.message);
+    throw new GraphQLError(error.message);
+  }
+}
+
 
   @Mutation(() => String)
   async login(@Arg("data") data: LoginInputType, @Ctx() ctx: ContextType) {

@@ -63,10 +63,16 @@ export const hashPassword = async (plainPassword: string): Promise<string> =>
   await hash(plainPassword, hashingOptions);
 
 export const verifyPassword = async (
-  plainPassword: string,
-  hashedPassword: string
-): Promise<boolean> =>
-  await verify(hashedPassword, plainPassword, { secret: hashingOptions });
+  hashedPassword: string,
+  plainPassword: string
+): Promise<boolean> => {
+  try {
+    return await verify(hashedPassword, plainPassword);
+  } catch (error) {
+    console.error('Error in verifyPassword:', error);
+    throw new Error('Error verifying password');
+  }
+};
 
 // export const getSafeAttributes = (user: User): User =>
 //     ({
