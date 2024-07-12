@@ -1,4 +1,5 @@
-import { useLoginMutation } from "@/graphql/generated/schema";
+import client from "@/graphql/client";
+import { useLoginMutation, useProfileQuery } from "@/graphql/generated/schema";
 import { Box, Button, Center, Flex, FormControl, FormLabel, Heading, IconButton, Image, Input, Link, Text } from "@chakra-ui/react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/router";
@@ -8,6 +9,9 @@ const Login = () => {
   const [error, setError] = useState<number | string>(0);
   const [login]= useLoginMutation();
   const router = useRouter();
+  const { data: currentUser, client } = useProfileQuery({
+    errorPolicy: "ignore",
+  });
 
   useEffect(() => {
     if (error !== 0) {
@@ -33,6 +37,8 @@ const Login = () => {
       } else if(e.message === "Invalid Password") {
         setError(2)
       } else setError(`Une erreur est survenue : ${e}`);
+    } finally {
+      client.resetStore()
     }
   };
 
