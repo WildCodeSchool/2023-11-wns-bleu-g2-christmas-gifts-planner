@@ -15,8 +15,16 @@ export type Scalars = {
   Float: number;
 };
 
+export type Channel = {
+  __typename?: 'Channel';
+  group_id: Group;
+  id: Scalars['Int'];
+  name: Scalars['String'];
+};
+
 export type Group = {
   __typename?: 'Group';
+  channels?: Maybe<Array<Channel>>;
   id: Scalars['Int'];
   name: Scalars['String'];
   owner: User;
@@ -70,9 +78,16 @@ export type UpdateUserInputType = {
 
 export type Query = {
   __typename?: 'Query';
+  channel?: Maybe<Channel>;
+  channels: Array<Channel>;
   groups: Array<Group>;
   profile: User;
   users: Array<User>;
+};
+
+
+export type QueryChannelArgs = {
+  id: Scalars['Float'];
 };
 
 export type User = {

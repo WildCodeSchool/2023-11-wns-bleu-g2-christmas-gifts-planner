@@ -90,8 +90,11 @@ export default function Navbar() {
             <Menu>
               <MenuButton>
                 <Avatar 
-                  name={`${currentUser?.profile.firstName} ${currentUser?.profile.lastName}`}
-                  // src='https://bit.ly/dan-abramov' 
+                  name={
+                    currentUser?.profile.firstName && currentUser?.profile.lastName 
+                      ? `${currentUser.profile.firstName} ${currentUser.profile.lastName}` 
+                      : undefined
+                  }
                   size="md" 
                   _hover={{
                     cursor: 'pointer',

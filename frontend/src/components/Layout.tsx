@@ -19,7 +19,7 @@ export default function Layout({
         <link rel="icon" href="/gifty-logo.svg" />
       </Head>
         <Navbar />
-      <main className="main-content">{children}</main>
+      <main className="main-content h-full">{children}</main>
         <Footer />
     </>
   );
