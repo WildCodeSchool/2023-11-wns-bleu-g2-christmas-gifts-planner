@@ -4,10 +4,15 @@ mutation CreateGroup($data: NewGroupInputType!) {
     name
     owner {
       id
-      firstName
       lastName
+      firstName
       email
-      role
+    }
+    members {
+      email
+      firstName
+      id
+      lastName
     }
   }
 }

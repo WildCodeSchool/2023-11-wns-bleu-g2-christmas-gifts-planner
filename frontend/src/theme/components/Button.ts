@@ -2,10 +2,8 @@ import { defineStyle, defineStyleConfig } from "@chakra-ui/styled-system";
 
 const goldenButton = defineStyle({
   background: "secondary.medium",
-  border: "1px",
-  borderColor: "secondary.medium",
   _hover: {
-    background: "secondary.lower",
+    background: "secondary.high",
   },
 });
 const goldenOutline = defineStyle({
@@ -34,13 +32,27 @@ const transparentButton = defineStyle({
   },
 });
 
+const cancelButton = defineStyle({
+  background: "white",
+  color: "tertiary.hightest",
+  _hover: {
+    background: "tertiary.lowest",
+  },
+});
+
 export const buttonTheme = defineStyleConfig({
   baseStyle: {
     borderRadius: 50,
     boxShadow: "md",
     color: "black",
   },
-  variants: { goldenButton, greenButton, goldenOutline, transparentButton },
+  variants: {
+    goldenButton,
+    greenButton,
+    goldenOutline,
+    transparentButton,
+    cancelButton,
+  },
   defaultProps: {
     size: "sm",
   },
