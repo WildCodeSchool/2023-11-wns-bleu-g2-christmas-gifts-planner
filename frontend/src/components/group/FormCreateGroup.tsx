@@ -96,10 +96,7 @@ export default function FormCreateGroup({
     const formJson: any = Object.fromEntries(formData.entries());
     try {
       await createGroup({
-        variables: {
-          ...formJson,
-          members: members.map((member) => member.email),
-        },
+        variables: { data: formJson },
       });
       // Refresh the list of groups after creating the new group.
       refetch();
@@ -126,7 +123,6 @@ export default function FormCreateGroup({
         <FormLabel>Ajouter des membres</FormLabel>
         <InputGroup>
           <Input
-            // isInvalid
             type="email"
             placeholder="Ajoutez des membres à votre groupe"
             variant="goldenInput"
