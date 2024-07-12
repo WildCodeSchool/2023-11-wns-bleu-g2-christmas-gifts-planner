@@ -28,6 +28,6 @@ export default class Group extends BaseEntity {
   owner: User;
 
   @Field(() => [Channel], { nullable: true })
-  @OneToMany(() => Channel, (channel) => channel.group_id)
+  @OneToMany(() => Channel, (channel) => channel.group)
   channels: Channel[];
 }

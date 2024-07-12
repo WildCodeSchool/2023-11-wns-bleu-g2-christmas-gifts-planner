@@ -4,17 +4,21 @@ import Channel from "../entities/Channel";
 @Resolver(Channel)
 export default class ChannelResolver {
   @Query(() => [Channel]) 
-  async channels() {
+  async channels(@Arg("groupId") groupId: number) {
     return Channel.find({
-      relations: { group_id: true },
+      where: { group: { id: groupId } },
+      relations: { group: true },
     });
   } 
 
   @Query(() => Channel, { nullable: true })
-  async channel(@Arg("id") id: number) {
+  async channel(
+    @Arg("groupId") groupId: number,
+    @Arg("channelId") channelId: number
+  ) {
     return Channel.findOne({
-      where: { id }, 
-      relations: { group_id: true },
+      where: { id: channelId, group: { id: groupId } },
+      relations: { group: true },
     });
   }
 }

@@ -20,6 +20,8 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
   const { data: currentUser, refetch } = useProfileQuery({
     errorPolicy: "ignore",
   });
+  console.log(currentUser);
+  
   return (
     <>
       <Card

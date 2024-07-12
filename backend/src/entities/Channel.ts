@@ -23,5 +23,5 @@ export default class Channel extends BaseEntity {
 
   @Field(() => Group)
   @ManyToOne(() => Group, (group) => group.channels)
-  group_id: Group;
+  group: Group;
 }
