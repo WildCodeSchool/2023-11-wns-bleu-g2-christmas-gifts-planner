@@ -3,6 +3,7 @@ import { useProfileQuery, useUpdateUserMutation } from "@/graphql/generated/sche
 import isDefined from "@/types/isDefined";
 import isValidNotEmptyString from "@/types/isValidNotEmptyString";
 import { Box, Button, Center, Flex, FormControl, FormLabel, Grid, GridItem, IconButton, Input, InputGroup, Link, Spacer, Text, Tooltip, useToast } from "@chakra-ui/react";
+import { cp } from "fs";
 import { ArrowLeft, InfoIcon, Trash, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
@@ -26,6 +27,7 @@ const UserProfile = () => {
     const [updateUser] = useUpdateUserMutation();
     const toast = useToast();
   const router = useRouter()
+  
     const { data: currentUser } = useProfileQuery({
       errorPolicy: "ignore",
     });
@@ -56,57 +58,112 @@ const UserProfile = () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [currentUser, error, formData, setFormData]);
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        setError(0);
-        setArrayOfErrors([]);
-        e.preventDefault();
-        const formData = new FormData(e.target as HTMLFormElement);
-        const formJSON: any = Object.fromEntries(formData.entries());
-        const errors = validatePassword(formJSON.newPassword);
-        let err = 0;
-        if(formJSON.newPassword !== "" && errors.length > 0) {
-            setArrayOfErrors(errors);
-            err = 4;
-            setError(4)
-        } else if(err === 0){
-            if (formJSON.newPassword !== formJSON.passwordConfirmation){
-                err = 1;
-                return setError(1);
-            }
-        };
-        delete formJSON.passwordConfirmation;
-
-        try{
-            if(err === 0) {
-                await updateUser({variables: {data: formJSON, userId: currentUser!.profile.id}})
-                setFormData({
-                  email: formJSON.email ?? currentUser!.profile.email,
-                  oldPassword: "",
-                  newPassword: "",
-                  firstName: formJSON.firstName ?? currentUser!.profile.firstName,
-                  lastName: formJSON.lastName ?? currentUser!.profile.lastName
-              });
-                toast({
-                    title: "Profile modifié !",
-                    description: "Votre profil a bien été modifié",
-                    status: "success",
-                    duration: 5000,
-                    isClosable: true,
-                  });
-            }
-        } catch (e: any) {
-            if (e.message === "EMAIL_ALREADY_TAKEN"){
-              err = 2;
-              setError(2);
-            } else if(e.message === "INVALID_OLD_PASSWORD") {
-                err = 3;
-                setError(3);
-            }
-          } finally {
-            client.resetStore();
-           
+      const handleSubmitProfile = async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      setError(0);
+      setArrayOfErrors([]);
+  
+      const form = e.target as HTMLFormElement;
+      const formData = new FormData(form);
+      const formJSON: any = Object.fromEntries(formData.entries());
+  
+      try {
+        await updateUser({
+          variables: {
+            data: {
+              firstName: formJSON.firstName,
+              lastName: formJSON.lastName,
+              email: formJSON.email,
+              oldPassword: "",
+              newPassword: ""
+            },
+            userId: currentUser!.profile.id
           }
-    }
+        });
+  
+        setFormData({
+          ...formData,
+          email: formJSON.email ?? currentUser!.profile.email,
+          firstName: formJSON.firstName ?? currentUser!.profile.firstName,
+          lastName: formJSON.lastName ?? currentUser!.profile.lastName,
+          oldPassword: '',
+          newPassword: ''
+        });
+  
+        toast({
+          title: "Profile modifié !",
+          description: "Votre profil a bien été modifié",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      } catch (e: any) {
+        if (e.message === "EMAIL_ALREADY_TAKEN") {
+          setError(2);
+        }
+      } finally {
+        client.resetStore();
+      }
+    };
+    const handleSubmitPassword = async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      setError(0);
+      setArrayOfErrors([]);
+  
+      const form = e.target as HTMLFormElement;
+      const formData = new FormData(form);
+      const formJSON: any = Object.fromEntries(formData.entries());
+  
+      if (isDefined(formJSON.newPassword)) {
+        const errors = validatePassword(formJSON.newPassword);
+        if (formJSON.newPassword !== '' && errors.length > 0) {
+          setArrayOfErrors(errors);
+          return setError(4);
+        } else if (formJSON.newPassword !== formJSON.passwordConfirmation) {
+          return setError(1);
+        }
+      } else {
+        console.error("No new password provided");
+      }
+  
+      try {
+        await updateUser({
+          variables: {
+            data: {
+              newPassword: formJSON.newPassword,
+              oldPassword: formJSON.oldPassword,
+              firstName: "",
+              lastName: "",
+              email: ""
+            },
+            userId: currentUser!.profile.id
+          }
+        });
+  
+        setFormData({
+          ...formData,
+          email: formJSON.email ?? currentUser!.profile.email,
+          firstName: formJSON.firstName ?? currentUser!.profile.firstName,
+          lastName: formJSON.lastName ?? currentUser!.profile.lastName,
+          oldPassword: '',
+          newPassword: ''
+        });
+  
+        toast({
+          title: "Mot de passe modifié !",
+          description: "Votre mot de passe a bien été modifié",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      } catch (e: any) {
+        if (e.message === "INVALID_OLD_PASSWORD") {
+          setError(3);
+        }
+      } finally {
+        client.resetStore();
+      }
+    };
 
     return(
         <>
@@ -114,13 +171,13 @@ const UserProfile = () => {
             <IconButton aria-label="Back" bg="transparent" boxShadow="none" _hover={{ bg: "gray.200" }} icon={<ArrowLeft color="#22543D"/>}/>
         </Link>
             <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmitProfile}>
                   <Text fontWeight="bold">Modifier le profil</Text>
                     <FormControl mt={6}>
                         {/* Firstname and lastname */}
-                                <FormLabel>Prénom</FormLabel>
+                                <FormLabel >Nom</FormLabel>
                                 <Input type="text" name="lastName" id="lastName" minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.lastName)? currentUser!.profile.lastName : "Nom"} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.lastName}/>                        
-                        <FormLabel mt={4} >Nom</FormLabel>
+                        <FormLabel mt={4} >Prénom</FormLabel>
                                 <Input type="text" name="firstName" id="firstName" minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.firstName)? currentUser!.profile.firstName : "Prénom"} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.firstName}/>
                                 {/* Email */}
                         {error === 2 &&
@@ -138,7 +195,7 @@ const UserProfile = () => {
                 </Box>
                          {/* Old Password */}
                          <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
-                         <form>
+                         <form onSubmit={handleSubmitPassword}>
                          <Text fontWeight="bold">Modifier le mot de passe</Text>
                          <FormControl mt={6}>
                          <FormLabel >Mot de passe actuel</FormLabel>
