@@ -59,7 +59,7 @@ export type MutationLoginArgs = {
 };
 
 export type NewGroupInputType = {
-  members?: InputMaybe<Array<ObjectId>>;
+  members?: InputMaybe<Array<Scalars['String']>>;
   name: Scalars['String'];
 };
 
@@ -68,10 +68,6 @@ export type NewUserInputType = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   password: Scalars['String'];
-};
-
-export type ObjectId = {
-  id: Scalars['Int'];
 };
 
 export type Query = {
@@ -120,7 +116,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: string };
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, role: string, groups?: Array<{ __typename?: 'Group', id: number, name: string }> | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, role: string, groups?: Array<{ __typename?: 'Group', id: number, name: string, members: Array<{ __typename?: 'User', id: string, firstName: string, lastName: string, email: string }> }> | null } };
 
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -282,6 +278,12 @@ export const ProfileDocument = gql`
     groups {
       id
       name
+      members {
+        id
+        firstName
+        lastName
+        email
+      }
     }
   }
 }
