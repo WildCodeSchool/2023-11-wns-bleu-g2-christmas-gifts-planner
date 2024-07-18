@@ -1,5 +1,6 @@
 import client from "@/graphql/client";
 import { useProfileQuery, useUpdateUserMutation } from "@/graphql/generated/schema";
+import isDefined from "@/types/isDefined";
 import isValidNotEmptyString from "@/types/isValidNotEmptyString";
 import { Box, Button, Center, FormControl, Grid, GridItem, IconButton, Input, InputGroup, Link, Text, Tooltip, useToast } from "@chakra-ui/react";
 import { ArrowLeft, InfoIcon } from "lucide-react";
@@ -24,16 +25,16 @@ const UserProfile = () => {
     const [error, setError] = useState<string | number>(0);
     const [updateUser] = useUpdateUserMutation();
     const toast = useToast();
-
+  const router = useRouter()
     const { data: currentUser } = useProfileQuery({
       errorPolicy: "ignore",
     });
     const [formData, setFormData] = useState({
-      email: currentUser!.profile.email ?? "",
+      email: "",
       oldPassword: "",
       newPassword: "",
-      firstName: currentUser!.profile.firstName,
-      lastName: currentUser!.profile.lastName
+      firstName: "",
+      lastName: ""
     });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,6 +45,7 @@ const UserProfile = () => {
   };
     
     useEffect(() => {
+      isDefined(currentUser) ?? router.push("/login")
         if (error === 1 || error === 2) {
           const timer = setTimeout(() => {
             setError(0);
@@ -115,12 +117,13 @@ const UserProfile = () => {
                 <form onSubmit={handleSubmit}>
                     <FormControl>
                         {/* Firstname and lastname */}
-                                <Input type="text" name="firstName" id="firstName" minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.firstName)? currentUser?.profile.firstName : "Prénom"} width="100%" borderRadius={15} borderColor="green.600" onChange={handleChange}/>
-                                <Input type="text" name="lastName" id="lastName" minLength={2} maxLength={30} placeholder={`${currentUser!.profile.lastName ?? "Nom"}`} width="100%" borderRadius={15} borderColor="green.600" onChange={handleChange}/>                        {/* Email */}
+                                <Input type="text" name="firstName" id="firstName" minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.firstName)? currentUser!.profile.firstName : "Prénom"} width="100%" borderRadius={15} borderColor="green.600" onChange={handleChange} value={formData.firstName}/>
+                                <Input type="text" name="lastName" id="lastName" minLength={2} maxLength={30} my={6} placeholder={isValidNotEmptyString(currentUser?.profile.lastName)? currentUser!.profile.lastName : "Nom"} width="100%" borderRadius={15} borderColor="green.600" onChange={handleChange} value={formData.lastName}/>                        
+                                {/* Email */}
                         {error === 2 &&
                                 <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">Cet e-mail existe déjà</Text>
                                 }
-                        <Input type='email' id="email" data-testid="label-email" name="email" placeholder="Adresse mail" value={`${currentUser!.profile.email}`} borderRadius={15} borderColor={error === 2 ? "red.700" : "green.600"} onChange={handleChange}/>
+                        <Input type='email' id="email" data-testid="label-email" name="email" placeholder={isValidNotEmptyString(currentUser?.profile.email) ? currentUser!.profile.email : "Email"} borderRadius={15} borderColor={error === 2 ? "red.700" : "green.600"} onChange={handleChange} value={formData.email}/>
                          </FormControl>
                 </form>
                 </Box>
