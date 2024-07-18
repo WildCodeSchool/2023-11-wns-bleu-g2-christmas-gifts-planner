@@ -173,6 +173,7 @@ const UserProfile = () => {
         <Link href='/dashboard'>
             <IconButton aria-label="Back" bg="transparent" boxShadow="none" _hover={{ bg: "gray.200" }} icon={<ArrowLeft color="#22543D"/>}/>
         </Link>
+        <Center>
             <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
                 <form onSubmit={handleSubmitProfile}>
                   <Text fontWeight="bold">Modifier le profil</Text>
@@ -196,7 +197,9 @@ const UserProfile = () => {
                             </Flex>
                 </form>
                 </Box>
+                </Center>
                          {/* Old Password */}
+                         <Center>
                          <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
                          <form onSubmit={handleSubmitPassword}>
                          <Text fontWeight="bold">Modifier le mot de passe</Text>
@@ -208,6 +211,7 @@ const UserProfile = () => {
                             <IconButton
                               aria-label={showOld ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
                               variant="ghost"
+                                boxShadow="none"
                               icon={showOld ? <EyeOff /> : <Eye />}
                               onClick={() => setShowOld(!showOld)}
                                 />
@@ -224,6 +228,7 @@ const UserProfile = () => {
                             <IconButton
                               aria-label={showNew ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
                               variant="ghost"
+                                boxShadow="none"
                               icon={showNew ? <EyeOff /> : <Eye />}
                               onClick={() => setShowNew(!showNew)}
                                 />
@@ -245,6 +250,7 @@ const UserProfile = () => {
                             <IconButton
                               aria-label={showConfirm ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
                               variant="ghost"
+                                boxShadow="none"
                               icon={showConfirm ? <EyeOff /> : <Eye />}
                               onClick={() => setShowConfirm(!showConfirm)}
                                 />
@@ -258,11 +264,14 @@ const UserProfile = () => {
                     </FormControl>
                 </form>
             </Box>
+            </Center>
+            <Center>
             <Box mx="24px" mt="8px" mb={20} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
               <Center p={2}>
                 <Button variant="deleteButton" leftIcon={<Trash2 />}>Supprimer mon compte</Button>
               </Center>
             </Box>
+        </Center>
               <Spacer h={4}/>
         </>
     )
