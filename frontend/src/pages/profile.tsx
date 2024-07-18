@@ -28,7 +28,7 @@ const UserProfile = () => {
       errorPolicy: "ignore",
     });
     const [formData, setFormData] = useState({
-      email: currentUser!.profile.email,
+      email: currentUser!.profile.email ?? "",
       oldPassword: "",
       newPassword: "",
       firstName: currentUser!.profile.firstName,
@@ -128,7 +128,10 @@ const UserProfile = () => {
                                 <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">Cet e-mail existe déjà</Text>
                                 }
                         <Input type='email' id="email" data-testid="label-email" name="email" placeholder="Adresse mail" my={6} value={`${currentUser!.profile.email}`} borderRadius={15} borderColor={error === 2 ? "red.700" : "green.600"} onChange={handleChange}/>
+                         </FormControl>
+                         
                          {/* Old Password */}
+                         <FormControl>
                          <InputGroup size='md'>
                             <Input name="oldPassword" id="oldPassword" type='password' placeholder='Ancien mot de passe' borderRadius={15} borderColor={error === 3 ? "red.700" : "green.600"} onChange={handleChange}/>
                             {error === 3 &&
