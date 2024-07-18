@@ -1,5 +1,6 @@
 import client from "@/graphql/client";
 import { useProfileQuery, useUpdateUserMutation } from "@/graphql/generated/schema";
+import isValidNotEmptyString from "@/types/isValidNotEmptyString";
 import { Box, Button, Center, FormControl, Grid, GridItem, IconButton, Input, InputGroup, Link, Text, Tooltip, useToast } from "@chakra-ui/react";
 import { ArrowLeft, InfoIcon } from "lucide-react";
 import { useRouter } from "next/router";
@@ -114,7 +115,7 @@ const UserProfile = () => {
                 <form onSubmit={handleSubmit}>
                     <FormControl>
                         {/* Firstname and lastname */}
-                                <Input type="text" name="firstName" id="firstName" minLength={2} maxLength={30} placeholder={`${currentUser!.profile.firstName ?? "Prénom"}`} width="100%" borderRadius={15} borderColor="green.600" onChange={handleChange}/>
+                                <Input type="text" name="firstName" id="firstName" minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.firstName)? currentUser?.profile.firstName : "Prénom"} width="100%" borderRadius={15} borderColor="green.600" onChange={handleChange}/>
                                 <Input type="text" name="lastName" id="lastName" minLength={2} maxLength={30} placeholder={`${currentUser!.profile.lastName ?? "Nom"}`} width="100%" borderRadius={15} borderColor="green.600" onChange={handleChange}/>                        {/* Email */}
                         {error === 2 &&
                                 <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">Cet e-mail existe déjà</Text>
