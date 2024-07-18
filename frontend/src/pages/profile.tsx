@@ -110,27 +110,22 @@ const UserProfile = () => {
         <Link href='/dashboard'>
             <IconButton aria-label="Back" bg="transparent" boxShadow="none" _hover={{ bg: "gray.200" }} icon={<ArrowLeft color="#22543D"/>}/>
         </Link>
-        <Center>
             <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="transparent" border="none" boxShadow="none">
                 <form onSubmit={handleSubmit}>
-                    <FormControl bgColor="#FFFEF9">
+                    <FormControl>
                         {/* Firstname and lastname */}
-                        <Grid templateColumns="repeat(2, 1fr)" gap={4} mt={4}>
-                            <GridItem>
-                                <Input type="text" name="firstName" id="firstName" value={`${currentUser!.profile.firstName}`} minLength={2} maxLength={30} placeholder="Nom" width="100%" borderRadius={15} borderColor="green.600" onChange={handleChange}/>
-                            </GridItem>
-                            <GridItem>
-                                <Input type="text" name="lastName" id="lastName" value={`${formData.lastName}`} minLength={2} maxLength={30} placeholder="Prénom" width="100%" borderRadius={15} borderColor="green.600" onChange={handleChange}/>
-                            </GridItem>
-                        </Grid>
-                        {/* Email */}
+                                <Input type="text" name="firstName" id="firstName" minLength={2} maxLength={30} placeholder={`${currentUser!.profile.firstName ?? "Prénom"}`} width="100%" borderRadius={15} borderColor="green.600" onChange={handleChange}/>
+                                <Input type="text" name="lastName" id="lastName" minLength={2} maxLength={30} placeholder={`${currentUser!.profile.lastName ?? "Nom"}`} width="100%" borderRadius={15} borderColor="green.600" onChange={handleChange}/>                        {/* Email */}
                         {error === 2 &&
                                 <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">Cet e-mail existe déjà</Text>
                                 }
-                        <Input type='email' id="email" data-testid="label-email" name="email" placeholder="Adresse mail" my={6} value={`${currentUser!.profile.email}`} borderRadius={15} borderColor={error === 2 ? "red.700" : "green.600"} onChange={handleChange}/>
+                        <Input type='email' id="email" data-testid="label-email" name="email" placeholder="Adresse mail" value={`${currentUser!.profile.email}`} borderRadius={15} borderColor={error === 2 ? "red.700" : "green.600"} onChange={handleChange}/>
                          </FormControl>
-                         
+                </form>
+                </Box>
                          {/* Old Password */}
+                         <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="transparent" border="none" boxShadow="none">
+                         <form>
                          <FormControl>
                          <InputGroup size='md'>
                             <Input name="oldPassword" id="oldPassword" type='password' placeholder='Ancien mot de passe' borderRadius={15} borderColor={error === 3 ? "red.700" : "green.600"} onChange={handleChange}/>
@@ -162,7 +157,6 @@ const UserProfile = () => {
                     </FormControl>
                 </form>
             </Box>
-        </Center>
         </>
     )
 }
