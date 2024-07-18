@@ -2,9 +2,8 @@ import client from "@/graphql/client";
 import { useProfileQuery, useUpdateUserMutation } from "@/graphql/generated/schema";
 import isDefined from "@/types/isDefined";
 import isValidNotEmptyString from "@/types/isValidNotEmptyString";
-import { Box, Button, Center, Flex, FormControl, FormLabel, Grid, GridItem, IconButton, Input, InputGroup, InputRightElement, Link, Spacer, Text, Tooltip, useToast } from "@chakra-ui/react";
-import { cp } from "fs";
-import { ArrowLeft, Eye, EyeOff, InfoIcon, Trash, Trash2 } from "lucide-react";
+import { Box, Button, Center, Flex, FormControl, FormLabel, IconButton, Input, InputGroup, InputRightElement, Link, Spacer, Text, Tooltip, useToast } from "@chakra-ui/react";
+import { ArrowLeft, Eye, EyeOff, InfoIcon, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 
@@ -29,11 +28,13 @@ const UserProfile = () => {
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
     const [updateUser] = useUpdateUserMutation();
     const toast = useToast();
-  const router = useRouter()
+    const router = useRouter()
   
+    
     const { data: currentUser } = useProfileQuery({
       errorPolicy: "ignore",
     });
+
     const [formData, setFormData] = useState({
       email: "",
       oldPassword: "",
@@ -65,7 +66,7 @@ const UserProfile = () => {
       e.preventDefault();
       setError(0);
       setArrayOfErrors([]);
-  
+
       const form = e.target as HTMLFormElement;
       const formData = new FormData(form);
       const formJSON: any = Object.fromEntries(formData.entries());
@@ -83,7 +84,8 @@ const UserProfile = () => {
             userId: currentUser!.profile.id
           }
         });
-  
+
+        
         setFormData({
           ...formData,
           email: formJSON.email ?? currentUser!.profile.email,
@@ -92,7 +94,7 @@ const UserProfile = () => {
           oldPassword: '',
           newPassword: ''
         });
-  
+
         toast({
           title: "Profile modifié !",
           description: "Votre profil a bien été modifié",
@@ -108,11 +110,12 @@ const UserProfile = () => {
         client.resetStore();
       }
     };
+
     const handleSubmitPassword = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setError(0);
       setArrayOfErrors([]);
-  
+
       const form = e.target as HTMLFormElement;
       const formData = new FormData(form);
       const formJSON: any = Object.fromEntries(formData.entries());
@@ -142,7 +145,7 @@ const UserProfile = () => {
             userId: currentUser!.profile.id
           }
         });
-  
+
         setFormData({
           ...formData,
           email: formJSON.email ?? currentUser!.profile.email,
@@ -191,7 +194,7 @@ const UserProfile = () => {
                         <Input type='email' id="email" data-testid="label-email" name="email" placeholder={isValidNotEmptyString(currentUser?.profile.email) ? currentUser!.profile.email : "E-mail"} borderRadius={20} borderColor={error === 2 ? "red.700" : "green.600"} onChange={handleChange} value={formData.email}/>
                          </FormControl>
                          <Flex w="100%" justifyContent="flex-end">
-                         <Button variant="greenButton" type="submit" mt={6}>
+                         <Button variant="greenButton" mt={6} type="submit">
                                 Modifier
                             </Button>
                             </Flex>
@@ -257,11 +260,12 @@ const UserProfile = () => {
                             </InputRightElement>
                         </InputGroup>
                         <Flex w="100%" justifyContent="flex-end">
-                         <Button variant="greenButton" type="submit" mt={6}>
+                         <Button variant="greenButton" mt={6} type="submit">
                                 Modifier
                             </Button>
                             </Flex>
                     </FormControl>
+
                 </form>
             </Box>
             </Center>
