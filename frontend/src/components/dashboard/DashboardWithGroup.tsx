@@ -1,5 +1,5 @@
 import { useProfileQuery } from "@/graphql/generated/schema";
-import { Text } from "@chakra-ui/react";
+import { CardBody, Text } from "@chakra-ui/react";
 import React from "react";
 import GroupList from "../group/GroupList";
 

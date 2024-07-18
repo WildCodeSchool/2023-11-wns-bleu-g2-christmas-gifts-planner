@@ -52,9 +52,12 @@ export const theme = extendTheme({
         backgroundColor: "background.default",
         height: "100%",
       },
-      "#__next": {
-        height: "100%",
+      "html, main": {
+        height: "100dvh",
       },
+      // "#__next": {
+      //   height: "100dvh",
+      // },
     },
   },
   components: {

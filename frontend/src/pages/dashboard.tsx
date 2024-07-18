@@ -5,6 +5,8 @@ import {
   CardHeader,
   Flex,
   Heading,
+  Box,
+  CardBody,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import DashboardWhithoutGroup from "@/components/dashboard/DashboardWithoutGroup";
@@ -21,9 +23,10 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
     errorPolicy: "ignore",
   });
   console.log(currentUser);
-  
+
   return (
     <>
+      {/* <Box> */}
       <Card
         align="center"
         width={{ base: "95%", md: "48rem" }}
@@ -43,19 +46,22 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
         <Heading size="md" marginBlock="1rem">
           Bonjour {currentUser?.profile.firstName}
         </Heading>
-        {currentUser &&
-        currentUser?.profile.groups &&
-        currentUser.profile.groups.length > 0 ? (
-          <DashboardWhithGroup />
-        ) : (
-          <DashboardWhithoutGroup />
-        )}
+        <CardBody w="95%" gap="1rem">
+          {currentUser &&
+          currentUser?.profile.groups &&
+          currentUser.profile.groups.length > 0 ? (
+            <DashboardWhithGroup />
+          ) : (
+            <DashboardWhithoutGroup />
+          )}
+        </CardBody>
         <CardFooter>
           <Flex direction="column" gap="1rem">
             <CreateGroupModal refetch={refetch} />
           </Flex>
         </CardFooter>
       </Card>
+      {/* </Box> */}
     </>
   );
 }

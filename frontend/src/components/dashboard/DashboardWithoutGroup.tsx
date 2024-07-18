@@ -3,7 +3,7 @@ import React from "react";
 
 export default function DashboardWhithoutGroup() {
   return (
-    <CardBody alignContent="center" w="70%" gap="1rem">
+    <>
       <Text>
         Il semble que vous n&apos;appartenez à aucun groupe de discussion
       </Text>
@@ -11,6 +11,6 @@ export default function DashboardWhithoutGroup() {
         Regoignez un groupe existant ou créez en un nouveau pour commencer à
         échanger des idées cadeaux avec vos amis !
       </Text>
-    </CardBody>
+    </>
   );
 }

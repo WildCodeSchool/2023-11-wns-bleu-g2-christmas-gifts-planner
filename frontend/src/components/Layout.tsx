@@ -14,13 +14,16 @@ export default function Layout({
     <>
       <Head>
         <title>{pageTitle} Christmas Gift Planner </title>
-        <meta name="description" content="gift planner for family/friend group" />
+        <meta
+          name="description"
+          content="gift planner for family/friend group"
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/gifty-logo.svg" />
       </Head>
-        <Navbar />
-      <main className="main-content h-full">{children}</main>
-        <Footer />
+      <Navbar />
+      <main className="main-content">{children}</main>
+      <Footer />
     </>
   );
 }
