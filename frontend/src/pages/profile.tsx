@@ -1,7 +1,9 @@
 import client from "@/graphql/client";
 import { useProfileQuery, useUpdateUserMutation } from "@/graphql/generated/schema";
-import { Box, Button, Center, FormControl, Grid, GridItem, IconButton, Input, InputGroup, Link, Text, Tooltip, useToast } from "@chakra-ui/react";
-import { ArrowLeft, InfoIcon } from "lucide-react";
+import isDefined from "@/types/isDefined";
+import isValidNotEmptyString from "@/types/isValidNotEmptyString";
+import { Box, Button, Center, Flex, FormControl, FormLabel, IconButton, Input, InputGroup, InputRightElement, Link, Spacer, Text, Tooltip, useToast } from "@chakra-ui/react";
+import { ArrowLeft, Eye, EyeOff, InfoIcon, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 
@@ -21,18 +23,24 @@ function validatePassword(p: string) {
 const UserProfile = () => {
     const [arrayOfErrors, setArrayOfErrors] = useState<string[]>([])
     const [error, setError] = useState<string | number>(0);
+    const [showOld, setShowOld] = useState<boolean>(false);
+    const [showNew, setShowNew] = useState<boolean>(false);
+    const [showConfirm, setShowConfirm] = useState<boolean>(false);
     const [updateUser] = useUpdateUserMutation();
     const toast = useToast();
-
+    const router = useRouter()
+  
+    
     const { data: currentUser } = useProfileQuery({
       errorPolicy: "ignore",
     });
+
     const [formData, setFormData] = useState({
-      email: currentUser!.profile.email,
+      email: "",
       oldPassword: "",
       newPassword: "",
-      firstName: currentUser!.profile.firstName,
-      lastName: currentUser!.profile.lastName
+      firstName: "",
+      lastName: ""
     });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,6 +51,7 @@ const UserProfile = () => {
   };
     
     useEffect(() => {
+      isDefined(currentUser) ?? router.push("/login")
         if (error === 1 || error === 2) {
           const timer = setTimeout(() => {
             setError(0);
@@ -53,57 +62,114 @@ const UserProfile = () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [currentUser, error, formData, setFormData]);
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        setError(0);
-        setArrayOfErrors([]);
-        e.preventDefault();
-        const formData = new FormData(e.target as HTMLFormElement);
-        const formJSON: any = Object.fromEntries(formData.entries());
-        const errors = validatePassword(formJSON.newPassword);
-        let err = 0;
-        if(formJSON.newPassword !== "" && errors.length > 0) {
-            setArrayOfErrors(errors);
-            err = 4;
-            setError(4)
-        } else if(err === 0){
-            if (formJSON.newPassword !== formJSON.passwordConfirmation){
-                err = 1;
-                return setError(1);
-            }
-        };
-        delete formJSON.passwordConfirmation;
+      const handleSubmitProfile = async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      setError(0);
+      setArrayOfErrors([]);
 
-        try{
-            if(err === 0) {
-                await updateUser({variables: {data: formJSON, userId: currentUser!.profile.id}})
-                setFormData({
-                  email: formJSON.email ?? currentUser!.profile.email,
-                  oldPassword: "",
-                  newPassword: "",
-                  firstName: formJSON.firstName ?? currentUser!.profile.firstName,
-                  lastName: formJSON.lastName ?? currentUser!.profile.lastName
-              });
-                toast({
-                    title: "Profile modifié !",
-                    description: "Votre profil a bien été modifié",
-                    status: "success",
-                    duration: 5000,
-                    isClosable: true,
-                  });
-            }
-        } catch (e: any) {
-            if (e.message === "EMAIL_ALREADY_TAKEN"){
-              err = 2;
-              setError(2);
-            } else if(e.message === "INVALID_OLD_PASSWORD") {
-                err = 3;
-                setError(3);
-            }
-          } finally {
-            client.resetStore();
-           
+      const form = e.target as HTMLFormElement;
+      const formData = new FormData(form);
+      const formJSON: any = Object.fromEntries(formData.entries());
+  
+      try {
+        await updateUser({
+          variables: {
+            data: {
+              firstName: formJSON.firstName,
+              lastName: formJSON.lastName,
+              email: formJSON.email,
+              oldPassword: "",
+              newPassword: ""
+            },
+            userId: currentUser!.profile.id
           }
-    }
+        });
+
+        
+        setFormData({
+          ...formData,
+          email: formJSON.email ?? currentUser!.profile.email,
+          firstName: formJSON.firstName ?? currentUser!.profile.firstName,
+          lastName: formJSON.lastName ?? currentUser!.profile.lastName,
+          oldPassword: '',
+          newPassword: ''
+        });
+
+        toast({
+          title: "Profile modifié !",
+          description: "Votre profil a bien été modifié",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      } catch (e: any) {
+        if (e.message === "EMAIL_ALREADY_TAKEN") {
+          setError(2);
+        }
+      } finally {
+        client.resetStore();
+      }
+    };
+
+    const handleSubmitPassword = async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      setError(0);
+      setArrayOfErrors([]);
+
+      const form = e.target as HTMLFormElement;
+      const formData = new FormData(form);
+      const formJSON: any = Object.fromEntries(formData.entries());
+  
+      if (isDefined(formJSON.newPassword)) {
+        const errors = validatePassword(formJSON.newPassword);
+        if (formJSON.newPassword !== '' && errors.length > 0) {
+          setArrayOfErrors(errors);
+          return setError(4);
+        } else if (formJSON.newPassword !== formJSON.passwordConfirmation) {
+          return setError(1);
+        }
+      } else {
+        console.error("No new password provided");
+      }
+  
+      try {
+        await updateUser({
+          variables: {
+            data: {
+              newPassword: formJSON.newPassword,
+              oldPassword: formJSON.oldPassword,
+              firstName: "",
+              lastName: "",
+              email: ""
+            },
+            userId: currentUser!.profile.id
+          }
+        });
+
+        setFormData({
+          ...formData,
+          email: formJSON.email ?? currentUser!.profile.email,
+          firstName: formJSON.firstName ?? currentUser!.profile.firstName,
+          lastName: formJSON.lastName ?? currentUser!.profile.lastName,
+          oldPassword: '',
+          newPassword: ''
+        });
+  
+        toast({
+          title: "Mot de passe modifié !",
+          description: "Votre mot de passe a bien été modifié",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      } catch (e: any) {
+        if (e.message === "INVALID_OLD_PASSWORD") {
+          setError(3);
+        }
+      } finally {
+        client.resetStore();
+      }
+    };
 
     return(
         <>
@@ -111,33 +177,65 @@ const UserProfile = () => {
             <IconButton aria-label="Back" bg="transparent" boxShadow="none" _hover={{ bg: "gray.200" }} icon={<ArrowLeft color="#22543D"/>}/>
         </Link>
         <Center>
-            <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="transparent" border="none" boxShadow="none">
-                <form onSubmit={handleSubmit}>
-                    <FormControl bgColor="#FFFEF9">
+            <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
+                <form onSubmit={handleSubmitProfile}>
+                  <Text fontWeight="bold">Modifier le profil</Text>
+                    <FormControl mt={6}>
                         {/* Firstname and lastname */}
-                        <Grid templateColumns="repeat(2, 1fr)" gap={4} mt={4}>
-                            <GridItem>
-                                <Input type="text" name="firstName" id="firstName" value={`${currentUser!.profile.firstName}`} minLength={2} maxLength={30} placeholder="Nom" width="100%" borderRadius={15} borderColor="green.600" onChange={handleChange}/>
-                            </GridItem>
-                            <GridItem>
-                                <Input type="text" name="lastName" id="lastName" value={`${formData.lastName}`} minLength={2} maxLength={30} placeholder="Prénom" width="100%" borderRadius={15} borderColor="green.600" onChange={handleChange}/>
-                            </GridItem>
-                        </Grid>
-                        {/* Email */}
+                                <FormLabel >Nom</FormLabel>
+                                <Input type="text" name="lastName" id="lastName" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.lastName)? currentUser!.profile.lastName : "Nom"} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.lastName}/>                        
+                        <FormLabel mt={4} >Prénom</FormLabel>
+                                <Input type="text" name="firstName" id="firstName" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.firstName)? currentUser!.profile.firstName : "Prénom"} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.firstName}/>
+                                {/* Email */}
                         {error === 2 &&
                                 <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">Cet e-mail existe déjà</Text>
                                 }
-                        <Input type='email' id="email" data-testid="label-email" name="email" placeholder="Adresse mail" my={6} value={`${currentUser!.profile.email}`} borderRadius={15} borderColor={error === 2 ? "red.700" : "green.600"} onChange={handleChange}/>
+                                <FormLabel mt={4}>E-mail</FormLabel>
+                        <Input type='email' id="email" data-testid="label-email" name="email" placeholder={isValidNotEmptyString(currentUser?.profile.email) ? currentUser!.profile.email : "E-mail"} borderRadius={20} borderColor={error === 2 ? "red.700" : "green.600"} onChange={handleChange} value={formData.email}/>
+                         </FormControl>
+                         <Flex w="100%" justifyContent="flex-end">
+                         <Button variant="greenButton" mt={6} type="submit">
+                                Modifier
+                            </Button>
+                            </Flex>
+                </form>
+                </Box>
+                </Center>
                          {/* Old Password */}
+                         <Center>
+                         <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
+                         <form onSubmit={handleSubmitPassword}>
+                         <Text fontWeight="bold">Modifier le mot de passe</Text>
+                         <FormControl mt={6}>
+                         <FormLabel >Mot de passe actuel</FormLabel>
                          <InputGroup size='md'>
-                            <Input name="oldPassword" id="oldPassword" type='password' placeholder='Ancien mot de passe' borderRadius={15} borderColor={error === 3 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <Input name="oldPassword" id="oldPassword" fontSize={14} type={showOld ? "text":'password'} placeholder='Ancien mot de passe' borderRadius={15} borderColor={error === 3 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <InputRightElement>
+                            <IconButton
+                              aria-label={showOld ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                              variant="ghost"
+                                boxShadow="none"
+                              icon={showOld ? <EyeOff /> : <Eye />}
+                              onClick={() => setShowOld(!showOld)}
+                                />
+                            </InputRightElement>
                             {error === 3 &&
                                 <Text position="absolute" mt={10} fontSize={14} fontWeight="bold" color="red.700">Le mot de passe n&apos;est pas le même !</Text>
                                 }
                         </InputGroup>
                         {/* New Password and confirm Password */}
-                        <InputGroup size='md' mt={6}>
-                            <Input name="newPassword" id="newPassword" type='password' placeholder='Nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
+                        <FormLabel mt={6}>Nouveau mot de passe</FormLabel>
+                        <InputGroup size='md' >
+                            <Input name="newPassword" id="newPassword" fontSize={14} type={showNew ? "text":'password'} placeholder='Nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <InputRightElement>
+                            <IconButton
+                              aria-label={showNew ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                              variant="ghost"
+                                boxShadow="none"
+                              icon={showNew ? <EyeOff /> : <Eye />}
+                              onClick={() => setShowNew(!showNew)}
+                                />
+                            </InputRightElement>
                             {error === 1 &&
                                 <Text position="absolute" mt={10} fontSize={14} fontWeight="bold" color="red.700">Les mots de passe ne correspondent pas !</Text>
                                 }
@@ -148,18 +246,37 @@ const UserProfile = () => {
                                     </Text>
                                 }
                         </InputGroup>
-                        <InputGroup size='md' mt={6} zIndex={0}>
-                            <Input name="passwordConfirmation" zIndex={0} id="passwordConfirmation" type='password' placeholder='Confirmer le nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
+                        <FormLabel mt={6} >Confirmer le mot de passe</FormLabel>
+                        <InputGroup size='md'  zIndex={0}>
+                            <Input name="passwordConfirmation" zIndex={0} fontSize={14} id="passwordConfirmation"  type={showConfirm ? "text":'password'} placeholder='Confirmer le nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <InputRightElement>
+                            <IconButton
+                              aria-label={showConfirm ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                              variant="ghost"
+                                boxShadow="none"
+                              icon={showConfirm ? <EyeOff /> : <Eye />}
+                              onClick={() => setShowConfirm(!showConfirm)}
+                                />
+                            </InputRightElement>
                         </InputGroup>
-                        <Center>
-                            <Button variant="goldenButton" type="submit" mt={8}>
+                        <Flex w="100%" justifyContent="flex-end">
+                         <Button variant="greenButton" mt={6} type="submit">
                                 Modifier
                             </Button>
-                        </Center>
+                            </Flex>
                     </FormControl>
+
                 </form>
             </Box>
+            </Center>
+            <Center>
+            <Box mx="24px" mt="8px" mb={20} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
+              <Center p={2}>
+                <Button variant="deleteButton" leftIcon={<Trash2 />}>Supprimer mon compte</Button>
+              </Center>
+            </Box>
         </Center>
+              <Spacer h={4}/>
         </>
     )
 }
