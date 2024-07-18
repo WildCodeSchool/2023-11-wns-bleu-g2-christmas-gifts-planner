@@ -20,7 +20,9 @@ export default function Layout({
       </Head>
         <Navbar />
       <main className="main-content h-full">{children}</main>
+      {window.location.pathname.split("/").pop() === "profile" ? "" :
         <Footer />
+        }
     </>
   );
 }
