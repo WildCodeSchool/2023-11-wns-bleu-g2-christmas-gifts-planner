@@ -183,9 +183,9 @@ const UserProfile = () => {
                     <FormControl mt={6}>
                         {/* Firstname and lastname */}
                                 <FormLabel >Nom</FormLabel>
-                                <Input type="text" name="lastName" id="lastName" minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.lastName)? currentUser!.profile.lastName : "Nom"} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.lastName}/>                        
+                                <Input type="text" name="lastName" id="lastName" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.lastName)? currentUser!.profile.lastName : "Nom"} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.lastName}/>                        
                         <FormLabel mt={4} >Prénom</FormLabel>
-                                <Input type="text" name="firstName" id="firstName" minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.firstName)? currentUser!.profile.firstName : "Prénom"} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.firstName}/>
+                                <Input type="text" name="firstName" id="firstName" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.firstName)? currentUser!.profile.firstName : "Prénom"} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.firstName}/>
                                 {/* Email */}
                         {error === 2 &&
                                 <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">Cet e-mail existe déjà</Text>
@@ -209,7 +209,7 @@ const UserProfile = () => {
                          <FormControl mt={6}>
                          <FormLabel >Mot de passe actuel</FormLabel>
                          <InputGroup size='md'>
-                            <Input name="oldPassword" id="oldPassword" type={showOld ? "text":'password'} placeholder='Ancien mot de passe' borderRadius={15} borderColor={error === 3 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <Input name="oldPassword" id="oldPassword" fontSize={14} type={showOld ? "text":'password'} placeholder='Ancien mot de passe' borderRadius={15} borderColor={error === 3 ? "red.700" : "green.600"} onChange={handleChange}/>
                             <InputRightElement>
                             <IconButton
                               aria-label={showOld ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
@@ -226,7 +226,7 @@ const UserProfile = () => {
                         {/* New Password and confirm Password */}
                         <FormLabel mt={6}>Nouveau mot de passe</FormLabel>
                         <InputGroup size='md' >
-                            <Input name="newPassword" id="newPassword" type={showNew ? "text":'password'} placeholder='Nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <Input name="newPassword" id="newPassword" fontSize={14} type={showNew ? "text":'password'} placeholder='Nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
                             <InputRightElement>
                             <IconButton
                               aria-label={showNew ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
@@ -248,7 +248,7 @@ const UserProfile = () => {
                         </InputGroup>
                         <FormLabel mt={6} >Confirmer le mot de passe</FormLabel>
                         <InputGroup size='md'  zIndex={0}>
-                            <Input name="passwordConfirmation" zIndex={0} id="passwordConfirmation"  type={showConfirm ? "text":'password'} placeholder='Confirmer le nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <Input name="passwordConfirmation" zIndex={0} fontSize={14} id="passwordConfirmation"  type={showConfirm ? "text":'password'} placeholder='Confirmer le nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
                             <InputRightElement>
                             <IconButton
                               aria-label={showConfirm ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
