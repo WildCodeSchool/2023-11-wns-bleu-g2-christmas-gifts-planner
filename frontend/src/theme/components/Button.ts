@@ -42,7 +42,7 @@ const cancelButton = defineStyle({
 
 const deleteButton = defineStyle({
   background: "red.600",
-  color: "tertiary.hightest",
+  color: "white",
   _hover: {
     background: "tertiary.lowest",
   },

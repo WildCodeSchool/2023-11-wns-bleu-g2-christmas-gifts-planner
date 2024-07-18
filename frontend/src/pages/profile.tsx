@@ -130,7 +130,7 @@ const UserProfile = () => {
                         <Input type='email' id="email" data-testid="label-email" name="email" placeholder={isValidNotEmptyString(currentUser?.profile.email) ? currentUser!.profile.email : "E-mail"} borderRadius={20} borderColor={error === 2 ? "red.700" : "green.600"} onChange={handleChange} value={formData.email}/>
                          </FormControl>
                          <Flex w="100%" justifyContent="flex-end">
-                         <Button variant="goldenButton" type="submit" mt={6}>
+                         <Button variant="greenButton" type="submit" mt={6}>
                                 Modifier
                             </Button>
                             </Flex>
@@ -167,7 +167,7 @@ const UserProfile = () => {
                             <Input name="passwordConfirmation" zIndex={0} id="passwordConfirmation" type='password' placeholder='Confirmer le nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
                         </InputGroup>
                         <Flex w="100%" justifyContent="flex-end">
-                         <Button variant="goldenButton" type="submit" mt={6}>
+                         <Button variant="greenButton" type="submit" mt={6}>
                                 Modifier
                             </Button>
                             </Flex>
@@ -176,7 +176,7 @@ const UserProfile = () => {
             </Box>
             <Box mx="24px" mt="8px" mb={20} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
               <Center p={2}>
-                <Button variant="deleteButton" color="white" leftIcon={<Trash2 />}>Supprimer mon compte</Button>
+                <Button variant="deleteButton" leftIcon={<Trash2 />}>Supprimer mon compte</Button>
               </Center>
             </Box>
               <Spacer h={4}/>
