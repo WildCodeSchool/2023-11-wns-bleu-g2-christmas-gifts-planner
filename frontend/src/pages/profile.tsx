@@ -2,9 +2,9 @@ import client from "@/graphql/client";
 import { useProfileQuery, useUpdateUserMutation } from "@/graphql/generated/schema";
 import isDefined from "@/types/isDefined";
 import isValidNotEmptyString from "@/types/isValidNotEmptyString";
-import { Box, Button, Center, Flex, FormControl, FormLabel, Grid, GridItem, IconButton, Input, InputGroup, Link, Spacer, Text, Tooltip, useToast } from "@chakra-ui/react";
+import { Box, Button, Center, Flex, FormControl, FormLabel, Grid, GridItem, IconButton, Input, InputGroup, InputRightElement, Link, Spacer, Text, Tooltip, useToast } from "@chakra-ui/react";
 import { cp } from "fs";
-import { ArrowLeft, InfoIcon, Trash, Trash2 } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, InfoIcon, Trash, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 
@@ -24,6 +24,9 @@ function validatePassword(p: string) {
 const UserProfile = () => {
     const [arrayOfErrors, setArrayOfErrors] = useState<string[]>([])
     const [error, setError] = useState<string | number>(0);
+    const [showOld, setShowOld] = useState<boolean>(false);
+    const [showNew, setShowNew] = useState<boolean>(false);
+    const [showConfirm, setShowConfirm] = useState<boolean>(false);
     const [updateUser] = useUpdateUserMutation();
     const toast = useToast();
   const router = useRouter()
@@ -200,7 +203,15 @@ const UserProfile = () => {
                          <FormControl mt={6}>
                          <FormLabel >Mot de passe actuel</FormLabel>
                          <InputGroup size='md'>
-                            <Input name="oldPassword" id="oldPassword" type='password' placeholder='Ancien mot de passe' borderRadius={15} borderColor={error === 3 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <Input name="oldPassword" id="oldPassword" type={showOld ? "text":'password'} placeholder='Ancien mot de passe' borderRadius={15} borderColor={error === 3 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <InputRightElement>
+                            <IconButton
+                              aria-label={showOld ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                              variant="ghost"
+                              icon={showOld ? <EyeOff /> : <Eye />}
+                              onClick={() => setShowOld(!showOld)}
+                                />
+                            </InputRightElement>
                             {error === 3 &&
                                 <Text position="absolute" mt={10} fontSize={14} fontWeight="bold" color="red.700">Le mot de passe n&apos;est pas le même !</Text>
                                 }
@@ -208,7 +219,15 @@ const UserProfile = () => {
                         {/* New Password and confirm Password */}
                         <FormLabel mt={6}>Nouveau mot de passe</FormLabel>
                         <InputGroup size='md' >
-                            <Input name="newPassword" id="newPassword" type='password' placeholder='Nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <Input name="newPassword" id="newPassword" type={showNew ? "text":'password'} placeholder='Nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <InputRightElement>
+                            <IconButton
+                              aria-label={showNew ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                              variant="ghost"
+                              icon={showNew ? <EyeOff /> : <Eye />}
+                              onClick={() => setShowNew(!showNew)}
+                                />
+                            </InputRightElement>
                             {error === 1 &&
                                 <Text position="absolute" mt={10} fontSize={14} fontWeight="bold" color="red.700">Les mots de passe ne correspondent pas !</Text>
                                 }
@@ -221,7 +240,15 @@ const UserProfile = () => {
                         </InputGroup>
                         <FormLabel mt={6} >Confirmer le mot de passe</FormLabel>
                         <InputGroup size='md'  zIndex={0}>
-                            <Input name="passwordConfirmation" zIndex={0} id="passwordConfirmation" type='password' placeholder='Confirmer le nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <Input name="passwordConfirmation" zIndex={0} id="passwordConfirmation"  type={showConfirm ? "text":'password'} placeholder='Confirmer le nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <InputRightElement>
+                            <IconButton
+                              aria-label={showConfirm ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                              variant="ghost"
+                              icon={showConfirm ? <EyeOff /> : <Eye />}
+                              onClick={() => setShowConfirm(!showConfirm)}
+                                />
+                            </InputRightElement>
                         </InputGroup>
                         <Flex w="100%" justifyContent="flex-end">
                          <Button variant="greenButton" type="submit" mt={6}>
