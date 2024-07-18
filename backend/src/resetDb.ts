@@ -101,7 +101,7 @@ export default async function main() {
   await tertiaryAdminGroup.save();
 
   await db.destroy();
-  console.log("done !");
+  console.log("Database reset complete");
 }
 
 main();

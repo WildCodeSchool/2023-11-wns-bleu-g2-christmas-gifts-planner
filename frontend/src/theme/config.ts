@@ -35,7 +35,7 @@ const colors = {
     hightest: "#410301",
   },
   background: {
-    default: "#FAF8EC",
+    default: "#F9F6F1",
   },
 };
 

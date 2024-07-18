@@ -59,7 +59,8 @@ export default function FormCreateGroup({
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
   };
-  const handleAddMember = () => {
+  const handleAddMember = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     if (!validateEmail(memberEmail)) {
       setError("Veuillez entrer une adresse e-mail valide.");
       return;
@@ -84,7 +85,11 @@ export default function FormCreateGroup({
       setColorIndex((colorIndex + 1) % colors.length);
     }
   };
-  const handleRemoveMember = (email: string) => {
+  const handleRemoveMember = (
+    e: React.MouseEvent<HTMLDivElement>,
+    email: string
+  ) => {
+    e.preventDefault();
     setMembers(members.filter((member) => member.email !== email));
   };
   const handleMouse = () => setIsHovered(!isHovered);
@@ -94,6 +99,9 @@ export default function FormCreateGroup({
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const formJson: any = Object.fromEntries(formData.entries());
+    formJson.members = members.map((member) => member.email);
+    console.log("formJson: ", formJson);
+
     try {
       await createGroup({
         variables: { data: formJson },
@@ -168,7 +176,7 @@ export default function FormCreateGroup({
 
               <Box
                 as="button"
-                onClick={() => handleRemoveMember(member.email)}
+                onClick={(event) => handleRemoveMember(event, member.email)}
                 ml="auto"
               >
                 <X color="#A10702" />

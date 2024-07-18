@@ -36,14 +36,20 @@ export default class Group extends BaseEntity {
    * The owner of the group. The owner is a User entity.
    */
   @Field(() => User)
-  @ManyToOne(() => User, (user) => user.groups)
+  @ManyToOne(() => User, (user) => user.groups, {
+    eager: true, // Fetch the owner when fetching the group
+    onDelete: "CASCADE", // Delete the group if the owner is deleted
+  })
   owner: User;
 
   /**
    * The list of members of the group. A group can have many members.
    * Each member is a User entity.
    */
-  @ManyToMany(() => User, (user) => user.groups)
+  @ManyToMany(() => User, (user) => user.groups, {
+    eager: true, // Fetch the members when fetching the group
+    cascade: true, // Allow operations to be cascaded to related entities
+  })
   @JoinTable()
   @Field(() => [User])
   members: User[];

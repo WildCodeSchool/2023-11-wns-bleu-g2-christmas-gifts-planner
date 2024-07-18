@@ -25,9 +25,10 @@ export default class UserResolver {
     return await datasource
       .getRepository(User)
       .save({ ...data, hashedPassword });
-  } catch (error: string){
-    console.error('Error creating user:', error);
-    throw new GraphQLError("une erreur est survenue")
+  }
+  catch(error: string) {
+    console.error("Error creating user:", error);
+    throw new GraphQLError("une erreur est survenue");
   }
 
   @Mutation(() => String)
