@@ -15,8 +15,16 @@ export type Scalars = {
   Float: number;
 };
 
+export type Channel = {
+  __typename?: 'Channel';
+  group_id: Group;
+  id: Scalars['Int'];
+  name: Scalars['String'];
+};
+
 export type Group = {
   __typename?: 'Group';
+  channels?: Maybe<Array<Channel>>;
   id: Scalars['Int'];
   members: Array<User>;
   name: Scalars['String'];
@@ -69,12 +77,26 @@ export type NewUserInputType = {
   lastName: Scalars['String'];
   password: Scalars['String'];
 };
+export type UpdateUserInputType = {
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  oldPassword: Scalars['String'];
+  newPassword: Scalars['String'];
+};
 
 export type Query = {
   __typename?: 'Query';
+  channel?: Maybe<Channel>;
+  channels: Array<Channel>;
   groups: Array<Group>;
   profile: User;
   users: Array<User>;
+};
+
+
+export type QueryChannelArgs = {
+  id: Scalars['Float'];
 };
 
 export type User = {
@@ -352,3 +374,31 @@ export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<User
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
 export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
+
+
+export const UpdateUserDocument = gql`
+  mutation UpdateUser($data: UpdateUserInputType!, $userId: String!) {
+    updateUser(data: $data, userId: $userId) {
+      id
+      firstName
+      lastName
+      email
+      }
+  }
+`;
+export type UpdateUserMutationVariables = Exact<{
+  data: UpdateUserInputType;
+  userId: string;
+}>;
+
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string } };
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+    const options = {...defaultOptions, ...baseOptions};
+    return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+}
+
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;

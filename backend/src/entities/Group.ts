@@ -7,8 +7,10 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import Channel from "./Channel";
 import User from "./User";
 
 /**
@@ -53,4 +55,8 @@ export default class Group extends BaseEntity {
   @Field(() => [User])
   members: User[];
   // The @JoinTable decorator is used to generate a join table with the "Group" and "User" entities.
+
+  @Field(() => [Channel], { nullable: true })
+  @OneToMany(() => Channel, (channel) => channel.group)
+  channels: Channel[];
 }
