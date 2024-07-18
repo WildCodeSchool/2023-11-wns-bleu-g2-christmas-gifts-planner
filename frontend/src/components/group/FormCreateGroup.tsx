@@ -17,10 +17,12 @@ import { UserRoundPlus, X } from "lucide-react";
 type FormCreateGroupProps = {
   onClose: () => void;
   refetch: () => void;
+  initialRef?: React.MutableRefObject<null>;
 };
 export default function FormCreateGroup({
   onClose,
   refetch,
+  initialRef,
 }: FormCreateGroupProps) {
   /**
    * Creates a new group using the useCreateGroupMutation hook.
@@ -115,76 +117,83 @@ export default function FormCreateGroup({
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <FormControl isRequired mt={3}>
-        <FormLabel>Nom du groupe</FormLabel>
-        <Input
-          type="name"
-          name="name"
-          id="name"
-          placeholder="Donnez un nom à votre groupe"
-          variant="goldenInput"
-        />
-      </FormControl>
-
-      <FormControl mt={3} isInvalid={!!error}>
-        <FormLabel>Ajouter des membres</FormLabel>
-        <InputGroup>
+    <form
+      onSubmit={handleSubmit}
+      className="h-full flex flex-col justify-between"
+    >
+      <Box>
+        <FormControl isRequired mt={3}>
+          <FormLabel>Nom du groupe</FormLabel>
           <Input
-            type="email"
-            placeholder="Ajoutez des membres à votre groupe"
+            type="name"
+            name="name"
+            id="name"
+            placeholder="Donnez un nom à votre groupe"
             variant="goldenInput"
-            value={memberEmail}
-            onChange={handleChange}
+            ref={initialRef}
           />
-          <InputRightElement>
-            <Box
-              as="button"
-              onClick={handleAddMember}
-              onMouseEnter={handleMouse}
-              onMouseLeave={handleMouse}
-            >
-              <UserRoundPlus
-                color={isHovered ? "#11643C" : "#03110A"}
-                size={isHovered ? 24 : 20}
-              />
-            </Box>
-          </InputRightElement>
-        </InputGroup>
-        {error !== "" && (
-          <Text mt={3} fontSize={12} color="tertiary.medium">
-            {error}
-          </Text>
-        )}
-      </FormControl>
-      {members.length ? (
+        </FormControl>
+
+        <FormControl mt={3} isInvalid={!!error}>
+          <FormLabel>Ajouter des membres</FormLabel>
+          <InputGroup>
+            <Input
+              type="email"
+              placeholder="Ajoutez des membres à votre groupe"
+              variant="goldenInput"
+              value={memberEmail}
+              onChange={handleChange}
+            />
+            <InputRightElement>
+              <Box
+                as="button"
+                onClick={handleAddMember}
+                onMouseEnter={handleMouse}
+                onMouseLeave={handleMouse}
+              >
+                <UserRoundPlus
+                  color={isHovered ? "#11643C" : "#03110A"}
+                  size={isHovered ? 24 : 20}
+                />
+              </Box>
+            </InputRightElement>
+          </InputGroup>
+          {error !== "" && (
+            <Text mt={3} fontSize={12} color="tertiary.medium">
+              {error}
+            </Text>
+          )}
+        </FormControl>
         <Box
           mt={3}
           p={2}
           borderWidth="1px"
           borderRadius="3xl"
           borderColor="secondary.low"
-          display="flex"
-          flexDirection="column"
-          gap={2}
+          h={150}
+          overflowY="auto"
         >
-          {/* Display the list of members added to the group */}
-          {members.map((member, index) => (
-            <Box key={index} display="flex" marginInline={1} gap={1}>
-              <Avatar size="xs" bg={member.color} name={member.email} />
-              <Text>{member.email}</Text>
+          {members.length ? (
+            <Box display="flex" flexDirection="column" gap={2}>
+              {/* Display the list of members added to the group */}
+              {members.map((member, index) => (
+                <Box key={index} display="flex" marginInline={1} gap={1}>
+                  <Avatar size="xs" bg={member.color} name={member.email} />
+                  <Text>{member.email}</Text>
 
-              <Box
-                as="button"
-                onClick={(event) => handleRemoveMember(event, member.email)}
-                ml="auto"
-              >
-                <X color="#A10702" />
-              </Box>
+                  <Box
+                    as="button"
+                    onClick={(event) => handleRemoveMember(event, member.email)}
+                    ml="auto"
+                  >
+                    <X color="#A10702" />
+                  </Box>
+                </Box>
+              ))}
             </Box>
-          ))}
+          ) : null}
         </Box>
-      ) : null}
+      </Box>
       <Flex justifyContent="flex-end" mt={4}>
         <Button variant="cancelButton" mr={3} onClick={onClose}>
           Annuler
