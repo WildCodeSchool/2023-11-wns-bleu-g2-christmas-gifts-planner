@@ -40,6 +40,14 @@ const cancelButton = defineStyle({
   },
 });
 
+const deleteButton = defineStyle({
+  background: "red.600",
+  color: "tertiary.hightest",
+  _hover: {
+    background: "tertiary.lowest",
+  },
+});
+
 export const buttonTheme = defineStyleConfig({
   baseStyle: {
     borderRadius: 50,
@@ -52,6 +60,7 @@ export const buttonTheme = defineStyleConfig({
     goldenOutline,
     transparentButton,
     cancelButton,
+    deleteButton
   },
   defaultProps: {
     size: "sm",

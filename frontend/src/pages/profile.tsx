@@ -2,8 +2,8 @@ import client from "@/graphql/client";
 import { useProfileQuery, useUpdateUserMutation } from "@/graphql/generated/schema";
 import isDefined from "@/types/isDefined";
 import isValidNotEmptyString from "@/types/isValidNotEmptyString";
-import { Box, Button, Center, Flex, FormControl, FormLabel, Grid, GridItem, IconButton, Input, InputGroup, Link, Text, Tooltip, useToast } from "@chakra-ui/react";
-import { ArrowLeft, InfoIcon } from "lucide-react";
+import { Box, Button, Center, Flex, FormControl, FormLabel, Grid, GridItem, IconButton, Input, InputGroup, Link, Spacer, Text, Tooltip, useToast } from "@chakra-ui/react";
+import { ArrowLeft, InfoIcon, Trash, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 
@@ -137,10 +137,11 @@ const UserProfile = () => {
                 </form>
                 </Box>
                          {/* Old Password */}
-                         <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray" overflow="scroll">
+                         <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
                          <form>
                          <Text fontWeight="bold">Modifier le mot de passe</Text>
                          <FormControl mt={6}>
+                         <FormLabel >Mot de passe actuel</FormLabel>
                          <InputGroup size='md'>
                             <Input name="oldPassword" id="oldPassword" type='password' placeholder='Ancien mot de passe' borderRadius={15} borderColor={error === 3 ? "red.700" : "green.600"} onChange={handleChange}/>
                             {error === 3 &&
@@ -148,7 +149,8 @@ const UserProfile = () => {
                                 }
                         </InputGroup>
                         {/* New Password and confirm Password */}
-                        <InputGroup size='md' mt={6}>
+                        <FormLabel mt={6}>Nouveau mot de passe</FormLabel>
+                        <InputGroup size='md' >
                             <Input name="newPassword" id="newPassword" type='password' placeholder='Nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
                             {error === 1 &&
                                 <Text position="absolute" mt={10} fontSize={14} fontWeight="bold" color="red.700">Les mots de passe ne correspondent pas !</Text>
@@ -160,7 +162,8 @@ const UserProfile = () => {
                                     </Text>
                                 }
                         </InputGroup>
-                        <InputGroup size='md' mt={6} zIndex={0}>
+                        <FormLabel mt={6} >Confirmer le mot de passe</FormLabel>
+                        <InputGroup size='md'  zIndex={0}>
                             <Input name="passwordConfirmation" zIndex={0} id="passwordConfirmation" type='password' placeholder='Confirmer le nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
                         </InputGroup>
                         <Flex w="100%" justifyContent="flex-end">
@@ -171,6 +174,12 @@ const UserProfile = () => {
                     </FormControl>
                 </form>
             </Box>
+            <Box mx="24px" mt="8px" mb={20} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
+              <Center p={2}>
+                <Button variant="deleteButton" color="white" leftIcon={<Trash2 />}>Supprimer mon compte</Button>
+              </Center>
+            </Box>
+              <Spacer h={4}/>
         </>
     )
 }
