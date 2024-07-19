@@ -12,9 +12,12 @@ export default function DashboardWhithGroup() {
     // Set the error policy to "ignore" to prevent the query from failing
     errorPolicy: "ignore",
   });
+  console.log("data: ", currentUser);
   return (
     <>
-      <Text>Liste de mes groupes - {currentUser?.profile.groups?.length}</Text>
+      <Text fontSize="lg">
+        Liste de mes groupes - {currentUser?.profile.groups?.length}
+      </Text>
       {currentUser?.profile.groups?.map((group) => (
         <GroupList key={group.id} name={group.name} />
       ))}

@@ -98,7 +98,7 @@ export default class UserResolver {
     if (!ctx.currentUser) throw new GraphQLError("you need to be logged in!");
     return User.findOneOrFail({
       where: { id: ctx.currentUser.id },
-      relations: { groups: true },
+      relations: { groups: true, memberGroups: true },
     });
   }
   @Mutation(() => String)

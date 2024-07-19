@@ -5,6 +5,7 @@ import {
   BeforeInsert,
   Column,
   Entity,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -48,9 +49,19 @@ export default class User extends BaseEntity {
   @Column({ enum: UserRole, default: UserRole.Visitor })
   role: UserRole;
 
-  @Field(() => [Group], { nullable: true })
+  /**
+   * The list of groups the user owns.
+   */
   @OneToMany(() => Group, (group) => group.owner)
+  @Field(() => [Group], { nullable: true })
   groups: Group[];
+
+  /**
+   * The list of groups the user is a member of.
+   */
+  @ManyToMany(() => Group, (group) => group.members)
+  @Field(() => [Group], { nullable: true })
+  memberGroups: Group[];
 }
 
 const hashingOptions = {
@@ -69,8 +80,8 @@ export const verifyPassword = async (
   try {
     return await verify(hashedPassword, plainPassword);
   } catch (error) {
-    console.error('Error in verifyPassword:', error);
-    throw new Error('Error verifying password');
+    console.error("Error in verifyPassword:", error);
+    throw new Error("Error verifying password");
   }
 };
 

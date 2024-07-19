@@ -26,10 +26,9 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
 
   return (
     <>
-      {/* <Box> */}
       <Card
         align="center"
-        width={{ base: "95%", md: "48rem" }}
+        width={{ base: "90%", md: "48rem" }}
         m="auto"
         h="100%"
         paddingBlock="1rem"
@@ -38,12 +37,12 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
       >
         <CardHeader alignContent="center">
           <Avatar
-            size="xl"
+            size="lg"
             bg="primary.high"
             name={currentUser?.profile.firstName}
           />
         </CardHeader>
-        <Heading size="md" marginBlock="1rem">
+        <Heading as="h1" size="xl" marginBlock="1rem">
           Bonjour {currentUser?.profile.firstName}
         </Heading>
         <CardBody w="95%" gap="1rem">
@@ -61,7 +60,6 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
           </Flex>
         </CardFooter>
       </Card>
-      {/* </Box> */}
     </>
   );
 }
