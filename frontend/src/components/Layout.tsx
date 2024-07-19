@@ -2,6 +2,7 @@ import Head from "next/head";
 import { ReactNode } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import { Box } from "@chakra-ui/react";
 
 export default function Layout({
   children,
@@ -21,9 +22,13 @@ export default function Layout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/gifty-logo.svg" />
       </Head>
-      <Navbar />
-      <main className="main-content">{children}</main>
-      <Footer />
+      <Box display="flex" flexDirection="column" minHeight="100vh">
+        <Navbar />
+        <Box as="main" flex="1">
+          {children}
+        </Box>
+        <Footer />
+      </Box>
     </>
   );
 }

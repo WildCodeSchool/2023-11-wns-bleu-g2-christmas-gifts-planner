@@ -50,14 +50,7 @@ export const theme = extendTheme({
     global: {
       "html, body": {
         backgroundColor: "background.default",
-        height: "100%",
       },
-      "html, main": {
-        height: "100dvh",
-      },
-      // "#__next": {
-      //   height: "100dvh",
-      // },
     },
   },
   components: {
