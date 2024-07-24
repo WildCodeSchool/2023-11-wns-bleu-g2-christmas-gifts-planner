@@ -36,7 +36,7 @@ const colors = {
     hightest: "#410301",
   },
   background: {
-    default: "#FAF8EC",
+    default: "#F9F6F1",
   },
 };
 
@@ -50,10 +50,6 @@ export const theme = extendTheme({
     global: {
       "html, body": {
         backgroundColor: "background.default",
-        height: "100%",
-      },
-      "#__next": {
-        height: "100%",
       },
     },
   },

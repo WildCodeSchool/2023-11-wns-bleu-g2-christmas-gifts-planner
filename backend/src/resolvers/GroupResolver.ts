@@ -3,6 +3,7 @@ import Group from "../entities/Group";
 import { NewGroupInputType } from "../types/NewGroupInputType";
 import { ContextType } from "../types/ContextType";
 import { GraphQLError } from "graphql";
+import { findUserByEmail } from "../services/userService";
 
 /**
  * Resolver class for handling group-related operations.
@@ -55,6 +56,19 @@ export default class GroupResolver {
     const newGroup = new Group();
     Object.assign(newGroup, data);
     newGroup.owner = ctx.currentUser;
+
+    // Validate emails and fetch users
+    if (data.members && data.members.length > 0) {
+      const members = [];
+      for (const email of data.members) {
+        const user = await findUserByEmail(email);
+        if (!user) {
+          throw new GraphQLError(`User with email ${email} not found`);
+        }
+        members.push(user);
+      }
+      newGroup.members = members; // Add the members to the group
+    }
 
     // Save the new group to the database and return it
     const { id } = await newGroup.save();

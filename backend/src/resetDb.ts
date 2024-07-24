@@ -130,7 +130,7 @@ export default async function main() {
   await valentinaChannel.save();
 
   await db.destroy();
-  console.log("done !");
+  console.log("Database reset complete");
 }
 
 main();
