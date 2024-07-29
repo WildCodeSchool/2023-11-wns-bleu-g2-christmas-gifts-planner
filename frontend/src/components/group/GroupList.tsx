@@ -1,34 +1,24 @@
-import { useProfileQuery } from "@/graphql/generated/schema";
-import { Box, CardBody } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import React from "react";
+import { ChevronRight } from "lucide-react";
 
 export default function GroupList({ name }: { name: string }) {
-  const { data: currentUser } = useProfileQuery({
-    errorPolicy: "ignore",
-  });
   return (
     <>
-      {/* <CardBody
-        width="90%"
-        m="auto"
-        h="100dvh"
-        paddingBlock="1rem"
-        marginBlock="1rem"
-        boxShadow="base"
-        borderRadius="md"
-        bg="secondary.lower"
-      > */}
       <Box
         m="auto"
-        paddingBlock="1rem"
-        marginBlock="1rem"
+        p={4}
+        marginTop={4}
         boxShadow="base"
         borderRadius="md"
-        bg="secondary.lower"
+        _hover={{ boxShadow: "lg" }}
+        className="transition ease-in-out delay-120"
       >
-        {name}
+        <Flex justifyContent="space-between">
+          <Text>{name}</Text>
+          <ChevronRight />
+        </Flex>
       </Box>
-      {/* </CardBody> */}
     </>
   );
 }

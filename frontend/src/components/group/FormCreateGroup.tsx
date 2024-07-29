@@ -5,14 +5,12 @@ import {
   Button,
   Flex,
   Avatar,
-  InputRightElement,
-  InputGroup,
   Box,
   Text,
 } from "@chakra-ui/react";
 import { useCreateGroupMutation } from "@/graphql/generated/schema";
 import React, { useState } from "react";
-import { UserRoundPlus, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 
 type FormCreateGroupProps = {
   onClose: () => void;
@@ -133,10 +131,9 @@ export default function FormCreateGroup({
             ref={initialRef}
           />
         </FormControl>
-
         <FormControl mt={3} isInvalid={!!error}>
           <FormLabel>Ajouter des membres</FormLabel>
-          <InputGroup>
+          <Flex>
             <Input
               type="email"
               placeholder="Ajoutez des membres à votre groupe"
@@ -144,28 +141,33 @@ export default function FormCreateGroup({
               value={memberEmail}
               onChange={handleChange}
             />
-            <InputRightElement>
-              <Box
-                as="button"
-                onClick={handleAddMember}
-                onMouseEnter={handleMouse}
-                onMouseLeave={handleMouse}
-              >
-                <UserRoundPlus
-                  color={isHovered ? "#11643C" : "#03110A"}
-                  size={isHovered ? 24 : 20}
-                />
-              </Box>
-            </InputRightElement>
-          </InputGroup>
+            <Button
+              variant="transparentButton"
+              onMouseEnter={handleMouse}
+              onMouseLeave={handleMouse}
+              onClick={handleAddMember}
+              marginBlock="auto"
+              size="md"
+              p={0}
+              ml={3}
+            >
+              <Plus color={isHovered ? "#AA7124" : "#724421"} />
+            </Button>
+          </Flex>
+
           {error !== "" && (
-            <Text mt={3} fontSize={12} color="tertiary.medium">
+            <Text
+              position="absolute"
+              mt={1}
+              fontSize={12}
+              color="tertiary.medium"
+            >
               {error}
             </Text>
           )}
         </FormControl>
         <Box
-          mt={3}
+          mt={6}
           p={2}
           borderWidth="1px"
           borderRadius="3xl"
@@ -186,7 +188,7 @@ export default function FormCreateGroup({
                     onClick={(event) => handleRemoveMember(event, member.email)}
                     ml="auto"
                   >
-                    <X color="#A10702" />
+                    <X color="#A10702" size={20} />
                   </Box>
                 </Box>
               ))}
@@ -195,7 +197,7 @@ export default function FormCreateGroup({
         </Box>
       </Box>
       <Flex justifyContent="flex-end" mt={4}>
-        <Button variant="cancelButton" mr={3} onClick={onClose}>
+        <Button variant="whiteRedButton" mr={3} onClick={onClose}>
           Annuler
         </Button>
         <Button type="submit" variant="greenButton">

@@ -19,6 +19,9 @@ const goldenInput = definePartsStyle({
     _invalid: {
       borderColor: "tertiary.medium",
     },
+    _placeholder: {
+      fontSize: "sm",
+    },
   },
 });
 

@@ -7,6 +7,7 @@ import {
   Heading,
   Box,
   CardBody,
+  Spinner,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import DashboardWhithoutGroup from "@/components/dashboard/DashboardWithoutGroup";
@@ -19,20 +20,49 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
     document.title = pageTitle;
   }, [pageTitle]);
 
-  const { data: currentUser, refetch } = useProfileQuery({
+  const {
+    data: currentUser,
+    refetch,
+    loading,
+  } = useProfileQuery({
     errorPolicy: "ignore",
   });
   console.log(currentUser);
+
+  if (loading) {
+    return (
+      <>
+        <Card
+          align="center"
+          width={{ base: "90%", md: "48rem" }}
+          m="auto"
+          h="100dvh"
+          paddingBlock={4}
+          marginBlock={4}
+          bg="secondary.lowest"
+        >
+          <CardBody w="95%" gap={4}>
+            <Spinner
+              speed="0.7s"
+              size="xl"
+              color="secondary.medium"
+              emptyColor="tertiary.lowest"
+            />
+          </CardBody>
+        </Card>
+      </>
+    );
+  }
 
   return (
     <>
       <Card
         align="center"
-        width={{ base: "90%", md: "48rem" }}
+        width={{ base: "95%", md: "48rem" }}
         m="auto"
         h="100%"
-        paddingBlock="1rem"
-        marginBlock="1rem"
+        paddingBlock={4}
+        marginBlock={4}
         bg="secondary.lowest"
       >
         <CardHeader alignContent="center">
@@ -42,10 +72,10 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
             name={currentUser?.profile.firstName}
           />
         </CardHeader>
-        <Heading as="h1" size="xl" marginBlock="1rem">
+        <Heading as="h1" size="xl" marginBlock={4}>
           Bonjour {currentUser?.profile.firstName}
         </Heading>
-        <CardBody w="95%" gap="1rem">
+        <CardBody w="95%" gap={4}>
           {currentUser &&
           currentUser?.profile.groups &&
           currentUser.profile.groups.length > 0 ? (
@@ -55,7 +85,7 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
           )}
         </CardBody>
         <CardFooter>
-          <Flex direction="column" gap="1rem">
+          <Flex direction="column" gap={4}>
             <CreateGroupModal refetch={refetch} />
           </Flex>
         </CardFooter>

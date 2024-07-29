@@ -1,7 +1,8 @@
 import { useProfileQuery } from "@/graphql/generated/schema";
-import { CardBody, Text } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 import React from "react";
 import GroupList from "../group/GroupList";
+import Link from "next/link";
 
 export default function DashboardWhithGroup() {
   /**
@@ -12,14 +13,16 @@ export default function DashboardWhithGroup() {
     // Set the error policy to "ignore" to prevent the query from failing
     errorPolicy: "ignore",
   });
-  console.log("data: ", currentUser);
+
   return (
     <>
       <Text fontSize="lg">
         Liste de mes groupes - {currentUser?.profile.groups?.length}
       </Text>
       {currentUser?.profile.groups?.map((group) => (
-        <GroupList key={group.id} name={group.name} />
+        <Link href={`/group/${group.id}`} key={group.id}>
+          <GroupList name={group.name} />
+        </Link>
       ))}
     </>
   );

@@ -6,19 +6,46 @@ const goldenButton = defineStyle({
     background: "secondary.high",
   },
 });
-const goldenOutline = defineStyle({
-  background: "secondary.lower",
-  border: "1px",
-  borderColor: "secondary.medium",
+
+const whiteGoldenButton = defineStyle({
+  background: "white",
+  color: "secondary.hightest",
+
   _hover: {
     background: "secondary.medium",
   },
 });
+
 const greenButton = defineStyle({
   background: "primary.high",
   color: "white",
   _hover: {
     background: "primary.lower",
+  },
+});
+
+const whiteGreenButton = defineStyle({
+  background: "white",
+  color: "primary.hightest",
+  _hover: {
+    background: "primary.lower",
+    color: "white",
+  },
+});
+
+const redButton = defineStyle({
+  background: "tertiary.medium",
+  color: "white",
+  _hover: {
+    background: "tertiary.lowest",
+    color: "black",
+  },
+});
+const whiteRedButton = defineStyle({
+  background: "white",
+  color: "tertiary.hightest",
+  _hover: {
+    background: "tertiary.lowest",
   },
 });
 
@@ -29,14 +56,6 @@ const transparentButton = defineStyle({
   _hover: {
     background: "#primary.high",
     opacity: 0.7,
-  },
-});
-
-const cancelButton = defineStyle({
-  background: "white",
-  color: "tertiary.hightest",
-  _hover: {
-    background: "tertiary.lowest",
   },
 });
 
@@ -56,11 +75,13 @@ export const buttonTheme = defineStyleConfig({
   },
   variants: {
     goldenButton,
+    whiteGoldenButton,
     greenButton,
-    goldenOutline,
+    whiteGreenButton,
+    redButton,
+    whiteRedButton,
     transparentButton,
-    cancelButton,
-    deleteButton
+    deleteButton,
   },
   defaultProps: {
     size: "sm",
