@@ -15,6 +15,7 @@ const goldenInput = definePartsStyle({
     _focusVisible: {
       border: "2px solid",
       borderColor: "secondary.medium",
+      bg: "background.default",
     },
     _invalid: {
       borderColor: "tertiary.medium",

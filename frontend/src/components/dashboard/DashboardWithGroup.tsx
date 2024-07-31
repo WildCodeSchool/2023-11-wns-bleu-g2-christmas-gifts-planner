@@ -14,14 +14,28 @@ export default function DashboardWhithGroup() {
     errorPolicy: "ignore",
   });
 
+  const listOfGroups = {
+    groups: currentUser?.profile.groups,
+    memberOf: currentUser?.profile.memberGroups,
+  };
+  console.log("listOfGroups: ", listOfGroups);
+  const numberOfGroups =
+    (listOfGroups.groups?.length ?? 0) + (listOfGroups.memberOf?.length ?? 0);
+
   return (
     <>
-      <Text fontSize="lg">
-        Liste de mes groupes - {currentUser?.profile.groups?.length}
+      <Text fontSize="lg" mb={6}>
+        Vous êtes membre de {numberOfGroups}{" "}
+        {numberOfGroups > 1 ? "groupes" : "groupe"}
       </Text>
-      {currentUser?.profile.groups?.map((group) => (
+      {listOfGroups.groups?.map((group) => (
         <Link href={`/group/${group.id}`} key={group.id}>
-          <GroupList name={group.name} />
+          <GroupList name={group.name} isOwner={true} />
+        </Link>
+      ))}
+      {listOfGroups.memberOf?.map((group) => (
+        <Link href={`/group/${group.id}`} key={group.id}>
+          <GroupList name={group.name} isOwner={false} />
         </Link>
       ))}
     </>

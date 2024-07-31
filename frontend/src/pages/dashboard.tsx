@@ -5,15 +5,14 @@ import {
   CardHeader,
   Flex,
   Heading,
-  Box,
   CardBody,
-  Spinner,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import DashboardWhithoutGroup from "@/components/dashboard/DashboardWithoutGroup";
 import { useProfileQuery } from "@/graphql/generated/schema";
 import DashboardWhithGroup from "@/components/dashboard/DashboardWithGroup";
 import CreateGroupModal from "@/components/group/CreateGroupModal";
+import Loader from "@/components/Loader";
 
 export default function Dashboard({ pageTitle }: { pageTitle: string }) {
   useEffect(() => {
@@ -29,30 +28,13 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
   });
   console.log(currentUser);
 
-  if (loading) {
-    return (
-      <>
-        <Card
-          align="center"
-          width={{ base: "90%", md: "48rem" }}
-          m="auto"
-          h="100dvh"
-          paddingBlock={4}
-          marginBlock={4}
-          bg="secondary.lowest"
-        >
-          <CardBody w="95%" gap={4}>
-            <Spinner
-              speed="0.7s"
-              size="xl"
-              color="secondary.medium"
-              emptyColor="tertiary.lowest"
-            />
-          </CardBody>
-        </Card>
-      </>
-    );
-  }
+  const listOfGroups = {
+    groups: currentUser?.profile.groups,
+    memberOf: currentUser?.profile.memberGroups,
+  };
+  console.log("listOfGroups: ", listOfGroups);
+
+  if (loading) return <Loader></Loader>;
 
   return (
     <>
@@ -76,9 +58,10 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
           Bonjour {currentUser?.profile.firstName}
         </Heading>
         <CardBody w="95%" gap={4}>
-          {currentUser &&
-          currentUser?.profile.groups &&
-          currentUser.profile.groups.length > 0 ? (
+          {(currentUser?.profile.groups &&
+            currentUser.profile.groups.length > 0) ||
+          (currentUser?.profile.memberGroups &&
+            currentUser.profile.memberGroups.length > 0) ? (
             <DashboardWhithGroup />
           ) : (
             <DashboardWhithoutGroup />
