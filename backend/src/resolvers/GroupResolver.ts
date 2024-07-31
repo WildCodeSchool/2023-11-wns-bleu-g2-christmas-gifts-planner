@@ -4,6 +4,7 @@ import { NewGroupInputType } from "../types/NewGroupInputType";
 import { ContextType } from "../types/ContextType";
 import { GraphQLError } from "graphql";
 import { findUserByEmail } from "../services/userService";
+import { UpdateGroupNameInputType } from "../types/UpdateGroupNameInputType";
 
 /**
  * Resolver class for handling group-related operations.
@@ -103,6 +104,47 @@ export default class GroupResolver {
     return Group.findOne({
       where: { id },
       relations: { owner: true, members: true },
+    });
+  }
+
+  /**
+   * Mutation resolver for change the name of the group.
+   */
+  @Authorized()
+  @Mutation(() => Group)
+  async changeGroupName(
+    @Arg("groupId", () => Int) id: number,
+    @Arg("data", { validate: true }) data: UpdateGroupNameInputType,
+    @Ctx() ctx: ContextType
+  ) {
+    // Check if the current user is logged in
+    if (!ctx.currentUser) {
+      throw new GraphQLError("you need to be logged in");
+    }
+
+    // Find the group with the given ID
+    const groupToUpdate = await Group.findOne({
+      where: { id },
+      relations: { owner: true, members: true },
+    });
+
+    // Throw an error if the group is not found
+    if (!groupToUpdate) {
+      throw new GraphQLError("Group not found");
+    }
+
+    // Check if the current user is the owner of the group
+    if (groupToUpdate.owner.id !== ctx.currentUser.id) {
+      throw new GraphQLError("You are not the owner of this group");
+    }
+
+    // Update the group name
+    groupToUpdate.name = data.name;
+    await groupToUpdate.save();
+
+    // Return the updated group
+    return Group.findOne({
+      where: { id },
     });
   }
 }

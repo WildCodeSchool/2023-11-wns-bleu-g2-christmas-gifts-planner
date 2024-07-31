@@ -1,9 +1,9 @@
-import { Arg, Authorized, Ctx, Mutation } from "type-graphql";
+import { Arg, Authorized, Ctx, Int, Mutation } from "type-graphql";
 import Group from "../entities/Group";
 import { ContextType } from "../types/ContextType";
 import { GraphQLError } from "graphql";
-import { UpdateGroupInputType } from "../types/UpdateGroupInputType";
 import { findUserByEmail } from "../services/userService";
+import { AddMembersInputType } from "../types/AddMembersInputType";
 
 /**
  * Resolver class for handling member-related operations.
@@ -15,8 +15,8 @@ export default class MemberResolver {
   @Authorized()
   @Mutation(() => Group)
   async addMemberToGroup(
-    @Arg("groupId") groupId: number,
-    @Arg("data") data: UpdateGroupInputType,
+    @Arg("groupId", () => Int) id: number,
+    @Arg("data", { validate: true }) data: AddMembersInputType,
     @Ctx() ctx: ContextType
   ) {
     // Check if the current user is logged in
@@ -25,37 +25,47 @@ export default class MemberResolver {
     }
 
     // Find the group with the given ID
-    const group = await Group.findOne({
-      where: { id: groupId },
+    const groupToUpdate = await Group.findOne({
+      where: { id },
       relations: { owner: true, members: true },
     });
 
     // Throw an error if the group is not found
-    if (!group) {
+    if (!groupToUpdate) {
       throw new GraphQLError("Group not found");
     }
 
     // Check if the current user is the owner of the group
-    if (group.owner.id !== ctx.currentUser.id) {
+    if (groupToUpdate.owner.id !== ctx.currentUser.id) {
       throw new GraphQLError("You are not the owner of this group");
     }
 
     // Validate emails and fetch users
     if (data.members && data.members.length > 0) {
-      const members = [];
-      for (const email of data.members) {
-        const user = await findUserByEmail(email);
+      for (const memberInput of data.members) {
+        const user = await findUserByEmail(memberInput.email);
         if (!user) {
-          throw new GraphQLError(`User with email ${email} not found`);
+          throw new GraphQLError(
+            `User with email ${memberInput.email} not found`
+          );
         }
-        members.push(user);
+        // Check if the user is already a member of the group
+        if (groupToUpdate.members.some((member) => member.id === user.id)) {
+          throw new GraphQLError(
+            `User with email ${memberInput.email} is already a member`
+          );
+        }
+        // Add the user to the group
+        groupToUpdate.members.push(user);
       }
-      group.members = members; // Add the members to the group
     }
 
-    await group.save();
+    await groupToUpdate.save();
 
     // Return the updated group
-    return group;
+    return Group.findOne({
+      where: { id },
+      relations: { owner: true, members: true },
+    });
   }
 }
