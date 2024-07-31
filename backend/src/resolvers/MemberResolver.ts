@@ -2,7 +2,8 @@ import { Arg, Authorized, Ctx, Mutation } from "type-graphql";
 import Group from "../entities/Group";
 import { ContextType } from "../types/ContextType";
 import { GraphQLError } from "graphql";
-import User from "../entities/User";
+import { UpdateGroupInputType } from "../types/UpdateGroupInputType";
+import { findUserByEmail } from "../services/userService";
 
 /**
  * Resolver class for handling member-related operations.
@@ -15,7 +16,7 @@ export default class MemberResolver {
   @Mutation(() => Group)
   async addMemberToGroup(
     @Arg("groupId") groupId: number,
-    @Arg("userId") userId: number,
+    @Arg("data") data: UpdateGroupInputType,
     @Ctx() ctx: ContextType
   ) {
     // Check if the current user is logged in
@@ -39,16 +40,19 @@ export default class MemberResolver {
       throw new GraphQLError("You are not the owner of this group");
     }
 
-    // Find the user with the given ID
-    const user = await User.findOneBy({ id: userId });
-
-    // Throw an error if the user is not found
-    if (!user) {
-      throw new GraphQLError("User not found");
+    // Validate emails and fetch users
+    if (data.members && data.members.length > 0) {
+      const members = [];
+      for (const email of data.members) {
+        const user = await findUserByEmail(email);
+        if (!user) {
+          throw new GraphQLError(`User with email ${email} not found`);
+        }
+        members.push(user);
+      }
+      group.members = members; // Add the members to the group
     }
 
-    // Add the user to the group's members list and save the changes to the database
-    group.members.push(user);
     await group.save();
 
     // Return the updated group

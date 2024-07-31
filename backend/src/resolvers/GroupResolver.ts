@@ -1,4 +1,4 @@
-import { Arg, Authorized, Ctx, Mutation, Query } from "type-graphql";
+import { Arg, Authorized, Ctx, Int, Mutation, Query } from "type-graphql";
 import Group from "../entities/Group";
 import { NewGroupInputType } from "../types/NewGroupInputType";
 import { ContextType } from "../types/ContextType";
@@ -12,11 +12,39 @@ export default class GroupResolver {
   /**
    * Query resolver for fetching all groups.
    */
+  @Authorized()
   @Query(() => [Group])
-  async groups() {
+  async groups(@Ctx() ctx: ContextType) {
+    // Check if the current user is logged in
+    if (!ctx.currentUser) {
+      throw new GraphQLError("you need to be logged in");
+    }
     return Group.find({
       relations: { owner: true, members: true },
     });
+  }
+
+  /**
+   * Query resolver for retrieving a group by its ID.
+   */
+  @Authorized()
+  @Query(() => Group)
+  async groupById(
+    @Arg("groupId", () => Int) id: number,
+    @Ctx() ctx: ContextType
+  ) {
+    // Check if the current user is logged in
+    if (!ctx.currentUser) {
+      throw new GraphQLError("you need to be logged in");
+    }
+    const group = await Group.findOne({
+      where: { id },
+      relations: { owner: true, members: true },
+    });
+    if (!group) {
+      throw new GraphQLError("Group not found");
+    }
+    return group;
   }
 
   /**
