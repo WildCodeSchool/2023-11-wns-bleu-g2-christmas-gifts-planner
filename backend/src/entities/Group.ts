@@ -39,6 +39,7 @@ export default class Group extends BaseEntity {
    */
   @ManyToOne(() => User, (user) => user.groups, {
     onDelete: "CASCADE", // Delete the group if the owner is deleted
+    eager: true, // Fetch the owner when fetching the group
   })
   @Field(() => User)
   owner: User;

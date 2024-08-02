@@ -9,6 +9,7 @@ import { verify } from "argon2";
 import jwt from "jsonwebtoken";
 import env from "../env";
 import { ContextType } from "../types/ContextType";
+import mailer from "../config/mailer";
 
 @Resolver(User)
 export default class UserResolver {
@@ -105,5 +106,17 @@ export default class UserResolver {
   async logout(@Ctx() ctx: ContextType) {
     ctx.res.clearCookie("token");
     return "ok";
+  }
+
+  @Mutation(() => String)
+  async testMail() {
+    const res = await mailer.sendMail({
+      to: "jasmine.grozinger@gmail.com",
+      from: env.EMAIL_FROM,
+      subject: "Test email",
+      text: "This is a test email",
+    });
+    console.log({ res });
+    return "email sent";
   }
 }

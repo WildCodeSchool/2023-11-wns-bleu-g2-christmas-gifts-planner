@@ -3,8 +3,9 @@ import Group from "../entities/Group";
 import { NewGroupInputType } from "../types/NewGroupInputType";
 import { ContextType } from "../types/ContextType";
 import { GraphQLError } from "graphql";
-import { findUserByEmail } from "../services/userService";
+import { findOrCreateUserByEmail } from "../services/userService";
 import { UpdateGroupNameInputType } from "../types/UpdateGroupNameInputType";
+import { sendAddedToGroupEmail } from "../services/emailService";
 
 /**
  * Resolver class for handling group-related operations.
@@ -20,9 +21,7 @@ export default class GroupResolver {
     if (!ctx.currentUser) {
       throw new GraphQLError("you need to be logged in");
     }
-    return Group.find({
-      relations: { owner: true, members: true },
-    });
+    return Group.find({});
   }
 
   /**
@@ -40,7 +39,6 @@ export default class GroupResolver {
     }
     const group = await Group.findOne({
       where: { id },
-      relations: { owner: true, members: true },
     });
     if (!group) {
       throw new GraphQLError("Group not found");
@@ -72,7 +70,6 @@ export default class GroupResolver {
       where: {
         name: data.name,
       },
-      relations: { members: true },
     });
     const isExistingGroupMember = existingGroupMember?.members.some(
       (member) => member.id === ctx.currentUser?.id
@@ -90,11 +87,9 @@ export default class GroupResolver {
     if (data.members && data.members.length > 0) {
       const members = [];
       for (const email of data.members) {
-        const user = await findUserByEmail(email);
-        if (!user) {
-          throw new GraphQLError(`User with email ${email} not found`);
-        }
+        const user = await findOrCreateUserByEmail(email, data.name);
         members.push(user);
+        // await sendAddedToGroupEmail(email, newGroup.name, newGroup.id);
       }
       newGroup.members = members; // Add the members to the group
     }
@@ -103,7 +98,6 @@ export default class GroupResolver {
     const { id } = await newGroup.save();
     return Group.findOne({
       where: { id },
-      relations: { owner: true, members: true },
     });
   }
 
@@ -125,7 +119,6 @@ export default class GroupResolver {
     // Find the group with the given ID
     const groupToUpdate = await Group.findOne({
       where: { id },
-      relations: { owner: true, members: true },
     });
 
     // Throw an error if the group is not found
@@ -136,6 +129,25 @@ export default class GroupResolver {
     // Check if the current user is the owner of the group
     if (groupToUpdate.owner.id !== ctx.currentUser.id) {
       throw new GraphQLError("You are not the owner of this group");
+    }
+
+    // Check if a group with the same name already exists for the current user
+    const existingGroupOwner = await Group.findOne({
+      where: {
+        name: data.name,
+        owner: ctx.currentUser,
+      },
+    });
+    const existingGroupMember = await Group.findOne({
+      where: {
+        name: data.name,
+      },
+    });
+    const isExistingGroupMember = existingGroupMember?.members.some(
+      (member) => member.id === ctx.currentUser?.id
+    );
+    if (existingGroupOwner || isExistingGroupMember) {
+      throw new GraphQLError("A group with this name already exists for you");
     }
 
     // Update the group name

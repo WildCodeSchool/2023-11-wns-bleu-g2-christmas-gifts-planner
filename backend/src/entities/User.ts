@@ -30,12 +30,12 @@ export default class User extends BaseEntity {
   @Field(() => ID)
   id: number;
 
-  @Column()
-  @Field()
+  @Column({ nullable: true })
+  @Field({ nullable: true })
   firstName: string;
 
-  @Column()
-  @Field()
+  @Column({ nullable: true })
+  @Field({ nullable: true })
   lastName: string;
 
   @Column()
