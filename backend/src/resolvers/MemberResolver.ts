@@ -2,7 +2,7 @@ import { Arg, Authorized, Ctx, Int, Mutation } from "type-graphql";
 import Group from "../entities/Group";
 import { ContextType } from "../types/ContextType";
 import { GraphQLError } from "graphql";
-import { findOrCreateUserByEmail } from "../services/userService";
+import { findOrCreateUserByEmail, sendAnEmail } from "../services/userService";
 import { AddMembersInputType } from "../types/AddMembersInputType";
 
 /**
@@ -43,16 +43,15 @@ export default class MemberResolver {
     // Validate emails and fetch users
     if (data.members && data.members.length > 0) {
       for (const memberInput of data.members) {
-        const user = await findOrCreateUserByEmail(
-          memberInput.email,
-          groupToUpdate.name
-        );
+        const user = await findOrCreateUserByEmail(memberInput.email);
         // Check if the user is already a member of the group
         if (groupToUpdate.members.some((member) => member.id === user.id)) {
           throw new GraphQLError(
             `User with email ${memberInput.email} is already a member`
           );
         }
+        // Send an email to the user informing them that they have been added to a group.
+        sendAnEmail(groupToUpdate, user, id);
         // Add the user to the group
         groupToUpdate.members.push(user);
       }

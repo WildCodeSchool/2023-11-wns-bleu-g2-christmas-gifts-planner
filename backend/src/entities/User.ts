@@ -49,6 +49,12 @@ export default class User extends BaseEntity {
   @Column({ enum: UserRole, default: UserRole.Visitor })
   role: UserRole;
 
+  @Column({ default: false })
+  temporaryPassword: boolean;
+
+  @Column({ nullable: true, type: "varchar", unique: true })
+  verificationToken: string | null;
+
   /**
    * The list of groups the user owns.
    */

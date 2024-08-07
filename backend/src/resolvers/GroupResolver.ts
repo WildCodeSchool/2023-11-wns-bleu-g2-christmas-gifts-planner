@@ -3,9 +3,8 @@ import Group from "../entities/Group";
 import { NewGroupInputType } from "../types/NewGroupInputType";
 import { ContextType } from "../types/ContextType";
 import { GraphQLError } from "graphql";
-import { findOrCreateUserByEmail } from "../services/userService";
+import { findOrCreateUserByEmail, sendAnEmail } from "../services/userService";
 import { UpdateGroupNameInputType } from "../types/UpdateGroupNameInputType";
-import { sendAddedToGroupEmail } from "../services/emailService";
 
 /**
  * Resolver class for handling group-related operations.
@@ -87,15 +86,22 @@ export default class GroupResolver {
     if (data.members && data.members.length > 0) {
       const members = [];
       for (const email of data.members) {
-        const user = await findOrCreateUserByEmail(email, data.name);
+        const user = await findOrCreateUserByEmail(email);
+
         members.push(user);
-        // await sendAddedToGroupEmail(email, newGroup.name, newGroup.id);
       }
       newGroup.members = members; // Add the members to the group
     }
 
     // Save the new group to the database and return it
     const { id } = await newGroup.save();
+
+    // Iterate over each member of the new group
+    newGroup.members.forEach((user) => {
+      // Send an email to the current user
+      sendAnEmail(newGroup, user, id);
+    });
+
     return Group.findOne({
       where: { id },
     });
