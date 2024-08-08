@@ -12,4 +12,6 @@ export default nodemailer.createTransport({
   tls: {
     rejectUnauthorized: false, // ignore self-signed certificates (for testing)
   },
+  logger: true, // log information in console
+  debug: true, // include SMTP traffic in the logs
 });
