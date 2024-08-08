@@ -49,9 +49,17 @@ export default class User extends BaseEntity {
   @Column({ enum: UserRole, default: UserRole.Visitor })
   role: UserRole;
 
+  /**
+   * Temporary passwords are used for new users who have not yet set up a password.
+   */
   @Column({ default: false })
   temporaryPassword: boolean;
 
+  /**
+   * A unique token used to verify the user's profil.
+   * Once the user complete his profil by clicking the link in the email,
+   * this token is set to null.
+   */
   @Column({ nullable: true, type: "varchar", unique: true })
   verificationToken: string | null;
 

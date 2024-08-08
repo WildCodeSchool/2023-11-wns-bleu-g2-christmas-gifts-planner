@@ -1,10 +1,12 @@
 import { Arg, Authorized, Ctx, Int, Mutation, Query } from "type-graphql";
 import Group from "../entities/Group";
-import { NewGroupInputType } from "../types/NewGroupInputType";
+import {
+  NewGroupInputType,
+  UpdateGroupNameInputType,
+} from "../types/GroupTypes";
 import { ContextType } from "../types/ContextType";
 import { GraphQLError } from "graphql";
 import { findOrCreateUserByEmail, sendAnEmail } from "../services/userService";
-import { UpdateGroupNameInputType } from "../types/UpdateGroupNameInputType";
 
 /**
  * Resolver class for handling group-related operations.

@@ -3,7 +3,7 @@ import Group from "../entities/Group";
 import { ContextType } from "../types/ContextType";
 import { GraphQLError } from "graphql";
 import { findOrCreateUserByEmail, sendAnEmail } from "../services/userService";
-import { AddMembersInputType } from "../types/AddMembersInputType";
+import { AddMembersInputType } from "../types/MemberTypes";
 
 /**
  * Resolver class for handling member-related operations.
