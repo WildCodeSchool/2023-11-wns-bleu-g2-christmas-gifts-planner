@@ -99,11 +99,12 @@ export default class GroupResolver {
     const { id } = await newGroup.save();
 
     // Iterate over each member of the new group
-    newGroup.members.forEach((user) => {
-      // Send an email to the current user
-      sendAnEmail(newGroup, user, id);
-    });
-
+    if (newGroup.members && newGroup.members.length > 0) {
+      newGroup.members.forEach((user) => {
+        // Send an email to the current user
+        sendAnEmail(newGroup, user, id);
+      });
+    }
     return Group.findOne({
       where: { id },
     });

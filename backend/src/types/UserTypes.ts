@@ -36,7 +36,7 @@ export class CompleteProfileInputType {
   @Matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>+=-]).{8,}/)
   password: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsEmail()
   email?: string;
 }

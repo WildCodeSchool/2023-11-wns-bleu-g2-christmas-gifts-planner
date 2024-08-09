@@ -13,13 +13,23 @@ import jwt from "jsonwebtoken";
 import env from "../env";
 import { ContextType } from "../types/ContextType";
 
+/**
+ * Resolver class for handling user-related operations.
+ */
 @Resolver(User)
 export default class UserResolver {
+  /**
+   * Mutation resolver for creating a new user.
+   */
   @Mutation(() => User)
-  async createUser(@Arg("data") data: NewUserInputType): Promise<User> {
+  async createUser(
+    @Arg("data", { validate: true }) data: NewUserInputType
+  ): Promise<User> {
+    // Check if the email is already taken.
     const existingUser = await User.findOneBy({ email: data.email });
     if (existingUser !== null) throw new GraphQLError("EMAIL_ALREADY_TAKEN");
 
+    // create a new user with the provided data
     const newUser = new User();
     Object.assign(newUser, data);
     const newUserWithId = await newUser.save();
@@ -33,10 +43,10 @@ export default class UserResolver {
   /**
    * Complete a user's profile with the provided data.
    */
-  @Mutation(() => User)
+  @Mutation(() => String)
   async completeProfile(
     @Arg("token") token: string,
-    @Arg("data") data: CompleteProfileInputType,
+    @Arg("data", { validate: true }) data: CompleteProfileInputType,
     @Ctx() ctx: ContextType
   ) {
     try {

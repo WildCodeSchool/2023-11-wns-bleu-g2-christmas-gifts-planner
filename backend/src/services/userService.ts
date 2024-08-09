@@ -28,7 +28,6 @@ export async function findOrCreateUserByEmail(email: string): Promise<User> {
     await user.save();
     console.info(`User with email ${email} created`);
   }
-
   return user;
 }
 
@@ -37,23 +36,14 @@ export async function findOrCreateUserByEmail(email: string): Promise<User> {
  * If the user has a temporary password, an invitation email is sent.
  * Otherwise, an added to group email is sent.
  */
-export function sendAnEmail(group: Group, user: User, id: number) {
+export async function sendAnEmail(group: Group, user: User, id: number) {
   const { temporaryPassword, email, verificationToken } = user;
   const {
     name,
     owner: { lastName, firstName },
   } = group;
-
-  if (temporaryPassword) {
-    sendInvitationEmail(
-      email,
-      name,
-      id,
-      verificationToken,
-      lastName,
-      firstName
-    );
-  } else {
+  if (!temporaryPassword) {
     sendAddedToGroupEmail(email, name, id, lastName, firstName);
   }
+  sendInvitationEmail(email, name, id, verificationToken, lastName, firstName);
 }

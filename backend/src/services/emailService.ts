@@ -1,6 +1,36 @@
 import mailer from "../config/mailer";
 import env from "../env";
 
+//* you can use this function to test the email service
+export async function testEmail(email: string): Promise<boolean> {
+  const htmlContent = `
+   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background-color: #f9f9f9;">
+        <p style="font-size: 16px; color: #555;">Bonjour,</p>
+       
+          <p style="font-size: 16px; color: #555;">
+            Ceci est un test d'envoi d'email.
+        </p>
+        <br />
+        <div style="text-align: center; padding-top: 20px; border-top: 1px solid #ccc; font-size: 12px; color: #999;">
+            <p>Vous recevez cet email car vous avez été invité à rejoindre Gifty.</p>
+        </div>
+    </div>
+  `;
+  try {
+    const info = await mailer.sendMail({
+      subject: "Email test",
+      to: email,
+      from: env.EMAIL_FROM,
+      html: htmlContent,
+    });
+    console.info("Email sent successfully" + info.response);
+    return true;
+  } catch (error) {
+    console.error("Error sending email", error);
+    return false;
+  }
+}
+
 export async function sendInvitationEmail(
   email: string,
   groupName: string,
@@ -8,7 +38,7 @@ export async function sendInvitationEmail(
   token: string | null,
   lastName: string,
   firstName: string
-) {
+): Promise<boolean> {
   const profileUrl = `${env.FRONTEND_URL}/completeProfile?token=${token}`;
   const groupUrl = `${env.FRONTEND_URL}/dashboard/${groupId}`;
   const member = `${lastName} ${firstName}`;
@@ -59,9 +89,11 @@ export async function sendInvitationEmail(
       from: env.EMAIL_FROM,
       html: htmlContent,
     });
-    console.info("Email sent successfully" + info.response);
+    console.info("Email sent successfully " + info.response);
+    return true;
   } catch (error) {
-    console.error("Error sending email", error);
+    console.error("Error sending email ", error);
+    return false;
   }
 }
 
@@ -106,32 +138,6 @@ export async function sendAddedToGroupEmail(
   try {
     const info = await mailer.sendMail({
       subject: "Vous avez été ajouté à un groupe",
-      to: email,
-      from: env.EMAIL_FROM,
-      html: htmlContent,
-    });
-    console.info("Email sent successfully" + info.response);
-  } catch (error) {
-    console.error("Error sending email", error);
-  }
-}
-export async function testEmail(email: string) {
-  const htmlContent = `
-   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background-color: #f9f9f9;">
-        <p style="font-size: 16px; color: #555;">Bonjour,</p>
-       
-          <p style="font-size: 16px; color: #555;">
-            Ceci est un test d'envoi d'email.
-        </p>
-        <br />
-        <div style="text-align: center; padding-top: 20px; border-top: 1px solid #ccc; font-size: 12px; color: #999;">
-            <p>Vous recevez cet email car vous avez été invité à rejoindre Gifty.</p>
-        </div>
-    </div>
-  `;
-  try {
-    const info = await mailer.sendMail({
-      subject: "Email test",
       to: email,
       from: env.EMAIL_FROM,
       html: htmlContent,

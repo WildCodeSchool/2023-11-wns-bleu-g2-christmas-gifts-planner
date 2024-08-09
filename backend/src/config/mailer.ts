@@ -14,4 +14,6 @@ export default nodemailer.createTransport({
   },
   logger: true, // log information in console
   debug: true, // include SMTP traffic in the logs
+  connectionTimeout: 5 * 60 * 1000, // 5 minutes
+  socketTimeout: 5 * 60 * 1000, // 5 minutes
 });
