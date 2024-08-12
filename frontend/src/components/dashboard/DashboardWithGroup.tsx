@@ -18,7 +18,6 @@ export default function DashboardWhithGroup() {
     groups: currentUser?.profile.groups,
     memberOf: currentUser?.profile.memberGroups,
   };
-  console.log("listOfGroups: ", listOfGroups);
   const numberOfGroups =
     (listOfGroups.groups?.length ?? 0) + (listOfGroups.memberOf?.length ?? 0);
 

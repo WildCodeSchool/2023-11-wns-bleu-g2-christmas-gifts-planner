@@ -15,11 +15,26 @@ export type Scalars = {
   Float: number;
 };
 
+export type AddMembersInputType = {
+  members: Array<EmailInputType>;
+};
+
 export type Channel = {
   __typename?: 'Channel';
   group: Group;
   id: Scalars['Int'];
   name: Scalars['String'];
+};
+
+export type CompleteProfileInputType = {
+  email?: InputMaybe<Scalars['String']>;
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  password: Scalars['String'];
+};
+
+export type EmailInputType = {
+  email: Scalars['String'];
 };
 
 export type Group = {
@@ -39,6 +54,8 @@ export type LoginInputType = {
 export type Mutation = {
   __typename?: 'Mutation';
   addMemberToGroup: Group;
+  changeGroupName: Group;
+  completeProfile: Scalars['String'];
   createGroup: Group;
   createUser: User;
   login: Scalars['String'];
@@ -48,8 +65,20 @@ export type Mutation = {
 
 
 export type MutationAddMemberToGroupArgs = {
-  groupId: Scalars['Float'];
-  userId: Scalars['Float'];
+  data: AddMembersInputType;
+  groupId: Scalars['Int'];
+};
+
+
+export type MutationChangeGroupNameArgs = {
+  data: UpdateGroupNameInputType;
+  groupId: Scalars['Int'];
+};
+
+
+export type MutationCompleteProfileArgs = {
+  data: CompleteProfileInputType;
+  token: Scalars['String'];
 };
 
 
@@ -89,6 +118,7 @@ export type Query = {
   __typename?: 'Query';
   channel?: Maybe<Channel>;
   channels: Array<Channel>;
+  groupById: Group;
   groups: Array<Group>;
   profile: User;
   users: Array<User>;
@@ -105,6 +135,15 @@ export type QueryChannelsArgs = {
   groupId: Scalars['Float'];
 };
 
+
+export type QueryGroupByIdArgs = {
+  groupId: Scalars['Int'];
+};
+
+export type UpdateGroupNameInputType = {
+  name: Scalars['String'];
+};
+
 export type UpdateUserInputType = {
   email: Scalars['String'];
   firstName: Scalars['String'];
@@ -116,10 +155,10 @@ export type UpdateUserInputType = {
 export type User = {
   __typename?: 'User';
   email: Scalars['String'];
-  firstName: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
   groups?: Maybe<Array<Group>>;
   id: Scalars['ID'];
-  lastName: Scalars['String'];
+  lastName?: Maybe<Scalars['String']>;
   memberGroups?: Maybe<Array<Group>>;
   role: Scalars['String'];
 };
@@ -129,7 +168,22 @@ export type CreateGroupMutationVariables = Exact<{
 }>;
 
 
-export type CreateGroupMutation = { __typename?: 'Mutation', createGroup: { __typename?: 'Group', id: number, name: string, owner: { __typename?: 'User', id: string, lastName: string, firstName: string, email: string }, members: Array<{ __typename?: 'User', email: string, firstName: string, id: string, lastName: string }> } };
+export type CreateGroupMutation = { __typename?: 'Mutation', createGroup: { __typename?: 'Group', id: number, name: string, owner: { __typename?: 'User', id: string, lastName?: string | null, firstName?: string | null, email: string }, members: Array<{ __typename?: 'User', email: string, firstName?: string | null, id: string, lastName?: string | null }> } };
+
+export type GroupByIdQueryVariables = Exact<{
+  groupId: Scalars['Int'];
+}>;
+
+
+export type GroupByIdQuery = { __typename?: 'Query', groupById: { __typename?: 'Group', id: number, name: string, owner: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string }, members: Array<{ __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string }> } };
+
+export type CompleteProfileMutationVariables = Exact<{
+  data: CompleteProfileInputType;
+  token: Scalars['String'];
+}>;
+
+
+export type CompleteProfileMutation = { __typename?: 'Mutation', completeProfile: string };
 
 export type LoginMutationVariables = Exact<{
   data: LoginInputType;
@@ -143,7 +197,7 @@ export type SignupMutationVariables = Exact<{
 }>;
 
 
-export type SignupMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string } };
+export type SignupMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string } };
 
 export type UpdateUserMutationVariables = Exact<{
   data: UpdateUserInputType;
@@ -151,7 +205,7 @@ export type UpdateUserMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string } };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -161,12 +215,12 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: string };
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, firstName: string, lastName: string, email: string, role: string, groups?: Array<{ __typename?: 'Group', id: number, name: string, members: Array<{ __typename?: 'User', id: string, firstName: string, lastName: string, email: string }> }> | null, memberGroups?: Array<{ __typename?: 'Group', name: string, id: number, members: Array<{ __typename?: 'User', firstName: string, email: string, lastName: string }> }> | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string, role: string, groups?: Array<{ __typename?: 'Group', id: number, name: string, members: Array<{ __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string }> }> | null, memberGroups?: Array<{ __typename?: 'Group', name: string, id: number, members: Array<{ __typename?: 'User', firstName?: string | null, email: string, lastName?: string | null }> }> | null } };
 
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, firstName: string, lastName: string, email: string }> };
+export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string }> };
 
 
 export const CreateGroupDocument = gql`
@@ -215,6 +269,86 @@ export function useCreateGroupMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateGroupMutationHookResult = ReturnType<typeof useCreateGroupMutation>;
 export type CreateGroupMutationResult = Apollo.MutationResult<CreateGroupMutation>;
 export type CreateGroupMutationOptions = Apollo.BaseMutationOptions<CreateGroupMutation, CreateGroupMutationVariables>;
+export const GroupByIdDocument = gql`
+    query GroupById($groupId: Int!) {
+  groupById(groupId: $groupId) {
+    id
+    name
+    owner {
+      id
+      firstName
+      lastName
+      email
+    }
+    members {
+      id
+      firstName
+      lastName
+      email
+    }
+  }
+}
+    `;
+
+/**
+ * __useGroupByIdQuery__
+ *
+ * To run a query within a React component, call `useGroupByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGroupByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGroupByIdQuery({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useGroupByIdQuery(baseOptions: Apollo.QueryHookOptions<GroupByIdQuery, GroupByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GroupByIdQuery, GroupByIdQueryVariables>(GroupByIdDocument, options);
+      }
+export function useGroupByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GroupByIdQuery, GroupByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GroupByIdQuery, GroupByIdQueryVariables>(GroupByIdDocument, options);
+        }
+export type GroupByIdQueryHookResult = ReturnType<typeof useGroupByIdQuery>;
+export type GroupByIdLazyQueryHookResult = ReturnType<typeof useGroupByIdLazyQuery>;
+export type GroupByIdQueryResult = Apollo.QueryResult<GroupByIdQuery, GroupByIdQueryVariables>;
+export const CompleteProfileDocument = gql`
+    mutation CompleteProfile($data: CompleteProfileInputType!, $token: String!) {
+  completeProfile(data: $data, token: $token)
+}
+    `;
+export type CompleteProfileMutationFn = Apollo.MutationFunction<CompleteProfileMutation, CompleteProfileMutationVariables>;
+
+/**
+ * __useCompleteProfileMutation__
+ *
+ * To run a mutation, you first call `useCompleteProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCompleteProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [completeProfileMutation, { data, loading, error }] = useCompleteProfileMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useCompleteProfileMutation(baseOptions?: Apollo.MutationHookOptions<CompleteProfileMutation, CompleteProfileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CompleteProfileMutation, CompleteProfileMutationVariables>(CompleteProfileDocument, options);
+      }
+export type CompleteProfileMutationHookResult = ReturnType<typeof useCompleteProfileMutation>;
+export type CompleteProfileMutationResult = Apollo.MutationResult<CompleteProfileMutation>;
+export type CompleteProfileMutationOptions = Apollo.BaseMutationOptions<CompleteProfileMutation, CompleteProfileMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($data: LoginInputType!) {
   login(data: $data)

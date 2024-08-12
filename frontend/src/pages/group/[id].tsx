@@ -1,4 +1,4 @@
-import { useProfileQuery } from "@/graphql/generated/schema";
+import { useGroupByIdQuery } from "@/graphql/generated/schema";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -6,13 +6,14 @@ export default function Group() {
   const router = useRouter();
   const { id } = router.query;
 
-  const {
-    data: currentUser,
-    refetch,
-    loading,
-  } = useProfileQuery({
-    errorPolicy: "ignore",
+  const { data: groupeId } = useGroupByIdQuery({
+    variables: { groupId: Number(id) },
   });
-  console.log(currentUser);
-  return <div>Group {id}</div>;
+  const members = groupeId?.groupById.members;
+  return (
+    <div>
+      <h1>Group {id}</h1>
+      {members?.map((member) => <div key={member.id}>{member.email}</div>)}
+    </div>
+  );
 }

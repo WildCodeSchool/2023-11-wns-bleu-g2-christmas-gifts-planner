@@ -1,6 +1,15 @@
 import mailer from "../config/mailer";
 import env from "../env";
 
+// verify connection configuration
+mailer.verify(function (error, success) {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("Server is ready to take our messages");
+  }
+});
+
 //* you can use this function to test the email service
 export async function testEmail(email: string): Promise<boolean> {
   const htmlContent = `

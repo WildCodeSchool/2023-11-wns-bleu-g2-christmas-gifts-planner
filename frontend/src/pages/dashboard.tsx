@@ -26,13 +26,6 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
   } = useProfileQuery({
     errorPolicy: "ignore",
   });
-  console.log(currentUser);
-
-  const listOfGroups = {
-    groups: currentUser?.profile.groups,
-    memberOf: currentUser?.profile.memberGroups,
-  };
-  console.log("listOfGroups: ", listOfGroups);
 
   if (loading) return <Loader></Loader>;
 
@@ -51,7 +44,7 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
           <Avatar
             size="lg"
             bg="primary.high"
-            name={currentUser?.profile.firstName}
+            name={currentUser?.profile.firstName ?? ""}
           />
         </CardHeader>
         <Heading as="h1" size="xl" marginBlock={4}>

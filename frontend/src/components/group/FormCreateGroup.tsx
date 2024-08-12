@@ -100,7 +100,6 @@ export default function FormCreateGroup({
     const formData = new FormData(form);
     const formJson: any = Object.fromEntries(formData.entries());
     formJson.members = members.map((member) => member.email);
-    console.log("formJson: ", formJson);
 
     try {
       await createGroup({

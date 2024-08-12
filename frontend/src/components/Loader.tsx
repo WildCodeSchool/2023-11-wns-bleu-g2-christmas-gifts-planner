@@ -6,10 +6,11 @@ export default function Loader() {
     <>
       <Card
         align="center"
-        width={{ base: "90%", md: "48rem" }}
+        maxWidth={{ base: "90%", md: "48rem" }}
         m="auto"
         paddingBlock={10}
         marginBlock={4}
+        bg={"secondary.lowest"}
       >
         <Spinner
           speed="0.7s"
