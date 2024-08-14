@@ -9,7 +9,9 @@ export class NewUserInputType {
 
   @Field()
   @MinLength(8)
-  @Matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>+=-]).{8,}/)
+  @Matches(
+    /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?\":{}|<>+=-]).{8,}/
+  )
   password: string;
 
   @Field()
@@ -33,7 +35,9 @@ export class CompleteProfileInputType {
 
   @Field()
   @MinLength(8)
-  @Matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>+=-]).{8,}/)
+  @Matches(
+    /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?\":{}|<>+=-]).{8,}/
+  )
   password: string;
 
   @Field({ nullable: true })
