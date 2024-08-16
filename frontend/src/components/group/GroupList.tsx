@@ -1,5 +1,5 @@
 import { useProfileQuery } from "@/graphql/generated/schema";
-import { CardBody } from "@chakra-ui/react";
+import { Box, CardBody } from "@chakra-ui/react";
 import React from "react";
 
 export default function GroupList({ name }: { name: string }) {
@@ -8,7 +8,7 @@ export default function GroupList({ name }: { name: string }) {
   });
   return (
     <>
-      <CardBody
+      {/* <CardBody
         width="90%"
         m="auto"
         h="100dvh"
@@ -17,9 +17,18 @@ export default function GroupList({ name }: { name: string }) {
         boxShadow="base"
         borderRadius="md"
         bg="secondary.lower"
+      > */}
+      <Box
+        m="auto"
+        paddingBlock="1rem"
+        marginBlock="1rem"
+        boxShadow="base"
+        borderRadius="md"
+        bg="secondary.lower"
       >
         {name}
-      </CardBody>
+      </Box>
+      {/* </CardBody> */}
     </>
   );
 }

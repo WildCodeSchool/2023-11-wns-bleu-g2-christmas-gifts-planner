@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Button,
   Modal,
   ModalBody,
@@ -9,12 +8,14 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import FormCreateGroup from "@/components/group/FormCreateGroup";
+import React from "react";
 
 type CreateGroupModalProps = {
   refetch: () => void;
 };
 export default function CreateGroupModal({ refetch }: CreateGroupModalProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const initialRef = React.useRef(null);
   return (
     <>
       <Button onClick={onOpen} variant="goldenButton">
@@ -24,13 +25,19 @@ export default function CreateGroupModal({ refetch }: CreateGroupModalProps) {
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        size={{ base: "full", md: "md" }}
+        motionPreset="slideInBottom"
+        isCentered
+        initialFocusRef={initialRef}
       >
-        <ModalOverlay />
-        <ModalContent bg="secondary.lowest" py={3}>
+        <ModalOverlay backdropFilter="blur(2px)" />
+        <ModalContent bg="secondary.lowest" p={6} top="">
           <ModalCloseButton />
-          <ModalBody display="flex" flexDirection="column">
-            <FormCreateGroup onClose={onClose} refetch={refetch} />
+          <ModalBody>
+            <FormCreateGroup
+              onClose={onClose}
+              refetch={refetch}
+              initialRef={initialRef}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>
