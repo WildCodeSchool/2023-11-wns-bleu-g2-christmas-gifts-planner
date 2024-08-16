@@ -78,14 +78,6 @@ export default class UserResolver {
 
     return token;
   }
-
-  @Query(() => [User])
-  async users(): Promise<User[]> {
-    return User.find({
-      relations: { groups: true },
-    });
-  }
-
   @Authorized()
   @Query(() => User)
   async profile(@Ctx() ctx: ContextType) {

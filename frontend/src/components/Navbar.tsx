@@ -76,7 +76,7 @@ export default function Navbar() {
             mr="4"
           />
 
-          {currentRoute === "/login" || currentRoute === "/signup" || currentRoute === "/" ? (
+            {!currentUser ? (
             <Button colorScheme="white" variant="outline"
               _hover={{
                 textDecoration: 'none',
