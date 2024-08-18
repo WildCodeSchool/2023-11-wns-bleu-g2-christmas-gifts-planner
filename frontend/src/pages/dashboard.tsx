@@ -7,12 +7,16 @@ import {
   Heading,
   CardBody,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import DashboardWhithoutGroup from "@/components/dashboard/DashboardWithoutGroup";
 import { useProfileQuery } from "@/graphql/generated/schema";
 import DashboardWhithGroup from "@/components/dashboard/DashboardWithGroup";
 import CreateGroupModal from "@/components/group/CreateGroupModal";
 import Loader from "@/components/Loader";
+import Error from "@/components/Error";
+import UnauthorizedImage from "../assets/images/Unauthorized.png";
+import GenericError from "../assets/images/GenericError.png";
+import ErrorContext from "@/contexts/ErrorContext";
 
 export default function Dashboard({ pageTitle }: { pageTitle: string }) {
   useEffect(() => {
@@ -23,11 +27,29 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
     data: currentUser,
     refetch,
     loading,
+    error,
   } = useProfileQuery({
     errorPolicy: "ignore",
   });
 
+  const { messages } = useContext(ErrorContext);
+
   if (loading) return <Loader></Loader>;
+  if (error) {
+    <Error
+      image={GenericError}
+      alt="generic error"
+      message={messages.generic}
+    ></Error>;
+  }
+  if (!currentUser)
+    return (
+      <Error
+        image={UnauthorizedImage}
+        alt="unauthorized error"
+        message={messages.unauthorized}
+      ></Error>
+    );
 
   return (
     <>
