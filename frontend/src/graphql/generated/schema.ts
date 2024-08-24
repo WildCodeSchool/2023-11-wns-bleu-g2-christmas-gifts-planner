@@ -130,7 +130,7 @@ export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: { 
 export type MessagesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MessagesQuery = { __typename?: 'Query', messages: Array<{ __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string, firstName: string } }> };
+export type MessagesQuery = { __typename?: 'Query', messages: Array<{ __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string, firstName: string, lastName: string } }> };
 
 export type NewMessageSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -255,6 +255,7 @@ export const MessagesDocument = gql`
     writtenBy {
       id
       firstName
+      lastName
     }
   }
 }
