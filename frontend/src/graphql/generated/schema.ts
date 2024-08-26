@@ -177,6 +177,14 @@ export type GroupByIdQueryVariables = Exact<{
 
 export type GroupByIdQuery = { __typename?: 'Query', groupById: { __typename?: 'Group', id: number, name: string, owner: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string }, members: Array<{ __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string }> } };
 
+export type AddMemberToGroupMutationVariables = Exact<{
+  data: AddMembersInputType;
+  groupId: Scalars['Int'];
+}>;
+
+
+export type AddMemberToGroupMutation = { __typename?: 'Mutation', addMemberToGroup: { __typename?: 'Group', id: number, name: string, owner: { __typename?: 'User', id: string, email: string, firstName?: string | null, lastName?: string | null }, members: Array<{ __typename?: 'User', email: string, id: string, firstName?: string | null, lastName?: string | null }> } };
+
 export type CompleteProfileMutationVariables = Exact<{
   data: CompleteProfileInputType;
   token: Scalars['String'];
@@ -317,6 +325,53 @@ export function useGroupByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type GroupByIdQueryHookResult = ReturnType<typeof useGroupByIdQuery>;
 export type GroupByIdLazyQueryHookResult = ReturnType<typeof useGroupByIdLazyQuery>;
 export type GroupByIdQueryResult = Apollo.QueryResult<GroupByIdQuery, GroupByIdQueryVariables>;
+export const AddMemberToGroupDocument = gql`
+    mutation AddMemberToGroup($data: AddMembersInputType!, $groupId: Int!) {
+  addMemberToGroup(data: $data, groupId: $groupId) {
+    id
+    name
+    owner {
+      id
+      email
+      firstName
+      lastName
+    }
+    members {
+      email
+      id
+      firstName
+      lastName
+    }
+  }
+}
+    `;
+export type AddMemberToGroupMutationFn = Apollo.MutationFunction<AddMemberToGroupMutation, AddMemberToGroupMutationVariables>;
+
+/**
+ * __useAddMemberToGroupMutation__
+ *
+ * To run a mutation, you first call `useAddMemberToGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddMemberToGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addMemberToGroupMutation, { data, loading, error }] = useAddMemberToGroupMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useAddMemberToGroupMutation(baseOptions?: Apollo.MutationHookOptions<AddMemberToGroupMutation, AddMemberToGroupMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddMemberToGroupMutation, AddMemberToGroupMutationVariables>(AddMemberToGroupDocument, options);
+      }
+export type AddMemberToGroupMutationHookResult = ReturnType<typeof useAddMemberToGroupMutation>;
+export type AddMemberToGroupMutationResult = Apollo.MutationResult<AddMemberToGroupMutation>;
+export type AddMemberToGroupMutationOptions = Apollo.BaseMutationOptions<AddMemberToGroupMutation, AddMemberToGroupMutationVariables>;
 export const CompleteProfileDocument = gql`
     mutation CompleteProfile($data: CompleteProfileInputType!, $token: String!) {
   completeProfile(data: $data, token: $token)

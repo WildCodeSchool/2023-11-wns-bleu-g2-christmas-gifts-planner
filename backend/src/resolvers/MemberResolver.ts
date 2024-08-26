@@ -27,7 +27,6 @@ export default class MemberResolver {
     // Find the group with the given ID
     const groupToUpdate = await Group.findOne({
       where: { id },
-      relations: { owner: true, members: true },
     });
 
     // Throw an error if the group is not found
@@ -62,7 +61,6 @@ export default class MemberResolver {
     // Return the updated group
     return Group.findOne({
       where: { id },
-      relations: { owner: true, members: true },
     });
   }
 }
