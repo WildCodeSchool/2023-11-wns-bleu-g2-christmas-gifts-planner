@@ -5,6 +5,8 @@ mutation CreateMessage($data: NewMessageInputType!) {
     sent_at
     writtenBy {
       id
+      firstName
+      lastName
     }
   }
 }

@@ -15,6 +15,12 @@ export type Scalars = {
   Float: number;
 };
 
+export type Author = {
+  firstName: Scalars['String'];
+  id: Scalars['Int'];
+  lastName: Scalars['String'];
+};
+
 export type Group = {
   __typename?: 'Group';
   id: Scalars['Int'];
@@ -71,7 +77,7 @@ export type NewGroupInputType = {
 export type NewMessageInputType = {
   content: Scalars['String'];
   sent_at: Scalars['String'];
-  writtenBy: ObjectId;
+  writtenBy: Author;
 };
 
 export type NewUserInputType = {
@@ -79,10 +85,6 @@ export type NewUserInputType = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   password: Scalars['String'];
-};
-
-export type ObjectId = {
-  id: Scalars['Int'];
 };
 
 export type Query = {
@@ -125,7 +127,7 @@ export type CreateMessageMutationVariables = Exact<{
 }>;
 
 
-export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string } } };
+export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string, firstName: string, lastName: string } } };
 
 export type MessagesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -135,7 +137,7 @@ export type MessagesQuery = { __typename?: 'Query', messages: Array<{ __typename
 export type NewMessageSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NewMessageSubscription = { __typename?: 'Subscription', newMessage: { __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string } } };
+export type NewMessageSubscription = { __typename?: 'Subscription', newMessage: { __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string, firstName: string, lastName: string } } };
 
 export type LoginMutationVariables = Exact<{
   data: LoginInputType;
@@ -216,6 +218,8 @@ export const CreateMessageDocument = gql`
     sent_at
     writtenBy {
       id
+      firstName
+      lastName
     }
   }
 }
@@ -288,13 +292,15 @@ export type MessagesQueryHookResult = ReturnType<typeof useMessagesQuery>;
 export type MessagesLazyQueryHookResult = ReturnType<typeof useMessagesLazyQuery>;
 export type MessagesQueryResult = Apollo.QueryResult<MessagesQuery, MessagesQueryVariables>;
 export const NewMessageDocument = gql`
-    subscription newMessage {
+    subscription NewMessage {
   newMessage {
     id
     content
     sent_at
     writtenBy {
       id
+      firstName
+      lastName
     }
   }
 }

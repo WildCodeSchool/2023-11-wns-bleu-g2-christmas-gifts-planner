@@ -1,10 +1,12 @@
-subscription newMessage {
+subscription NewMessage {
   newMessage {
     id
     content
     sent_at
     writtenBy {
       id
+      firstName
+      lastName
     }
   }
 }
