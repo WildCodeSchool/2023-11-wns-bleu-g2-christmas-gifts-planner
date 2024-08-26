@@ -1,34 +1,36 @@
 import { execute } from "../jest.setup";
 import User, { UserRole } from "../src/entities/User";
+import getProfileContext from "./helpers/getProfileContext";
 import addUser from "./operations/addUser";
-import getUsers from "./operations/getUsers";
+import Profile from "./operations/getProfile";
 
 describe("Users Resolver", () => {
-  it("should read users", async () => {
-    const firstName1 = "user1";
-    const lastName1 = "userName1";
-    const email1 = "userEmail1";
-    const password1 = "Paswordtest/1";
-    const u1 = new User();
-    u1.firstName = firstName1;
-    u1.lastName = lastName1;
-    u1.email = email1;
-    u1.password = password1;
-    await u1.save();
+  it("should read Profile with admin jwt", async () => {
 
-    const res = await execute(getUsers);
+    const res = await execute(
+      Profile,
+      {data: {name: "test"}},
+    await getProfileContext());
     expect(res).toMatchInlineSnapshot(`
 {
   "data": {
-    "users": [
-      {
-        "email": "userEmail1",
-        "firstName": "user1",
-        "id": "1",
-        "lastName": "userName1",
-      },
-    ],
+    "profile": {
+      "firstName": "user1",
+      "lastName": "userName1",
+    },
   },
+}
+`);
+  });
+
+  it("should read Profile without admin jwt", async () => {
+    const res = await execute(Profile, { data: {name: "test"}});
+    expect(res).toMatchInlineSnapshot(`
+{
+  "data": null,
+  "errors": [
+    [GraphQLError: Cannot destructure property 'headers' of 'context.req' as it is undefined.],
+  ],
 }
 `);
   });
