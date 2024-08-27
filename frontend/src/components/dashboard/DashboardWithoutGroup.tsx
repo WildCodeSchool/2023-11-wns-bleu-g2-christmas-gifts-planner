@@ -1,15 +1,15 @@
-import { Card, CardBody, Text } from "@chakra-ui/react";
-import React from "react";
+import { Text } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 export default function DashboardWhithoutGroup() {
+  const { t } = useTranslation()
   return (
     <>
       <Text>
-        Il semble que vous n&apos;appartenez à aucun groupe de discussion
+       { t("no-group-warning") }
       </Text>
       <Text marginTop="1rem">
-        Regoignez un groupe existant ou créez en un nouveau pour commencer à
-        échanger des idées cadeaux avec vos amis !
+        {t("join-to-start")}
       </Text>
     </>
   );
