@@ -44,6 +44,14 @@ export async function sendAnEmail(group: Group, user: User, id: number) {
   } = group;
   if (!temporaryPassword) {
     sendAddedToGroupEmail(email, name, id, lastName, firstName);
+  } else {
+    sendInvitationEmail(
+      email,
+      name,
+      id,
+      verificationToken,
+      lastName,
+      firstName
+    );
   }
-  sendInvitationEmail(email, name, id, verificationToken, lastName, firstName);
 }
