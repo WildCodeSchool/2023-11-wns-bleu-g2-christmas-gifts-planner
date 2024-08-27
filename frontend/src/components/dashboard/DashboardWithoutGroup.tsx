@@ -2,7 +2,7 @@ import { Text } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 export default function DashboardWhithoutGroup() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   return (
     <>
       <Text>

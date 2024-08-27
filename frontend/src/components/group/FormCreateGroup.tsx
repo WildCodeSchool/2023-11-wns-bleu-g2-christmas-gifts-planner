@@ -13,6 +13,7 @@ import {
 import { useCreateGroupMutation } from "@/graphql/generated/schema";
 import React, { useState } from "react";
 import { UserRoundPlus, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type FormCreateGroupProps = {
   onClose: () => void;
@@ -32,6 +33,7 @@ export default function FormCreateGroup({
   const [members, setMembers] = useState<{ email: string; color: string }[]>(
     []
   );
+  const { t } = useTranslation();
   const [error, setError] = useState("");
   const [isHovered, setIsHovered] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
@@ -64,11 +66,11 @@ export default function FormCreateGroup({
   const handleAddMember = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!validateEmail(memberEmail)) {
-      setError("Veuillez entrer une adresse e-mail valide.");
+      setError(t("add-valid-email"));
       return;
     }
     if (members.some((member) => member.email === memberEmail)) {
-      setError("Cet e-mail est déjà ajouté.");
+      setError(t("email-already-added"));
       return;
     }
     if (
@@ -123,23 +125,23 @@ export default function FormCreateGroup({
     >
       <Box>
         <FormControl isRequired mt={3}>
-          <FormLabel>Nom du groupe</FormLabel>
+          <FormLabel>{t("group-name")}</FormLabel>
           <Input
             type="name"
             name="name"
             id="name"
-            placeholder="Donnez un nom à votre groupe"
+            placeholder={t("placeholder-name-your-group")}
             variant="goldenInput"
             ref={initialRef}
           />
         </FormControl>
 
         <FormControl mt={3} isInvalid={!!error}>
-          <FormLabel>Ajouter des membres</FormLabel>
+          <FormLabel>{t("add-members")}</FormLabel>
           <InputGroup>
             <Input
               type="email"
-              placeholder="Ajoutez des membres à votre groupe"
+              placeholder={t("placeholder-add-members-to-group")}
               variant="goldenInput"
               value={memberEmail}
               onChange={handleChange}
@@ -183,7 +185,7 @@ export default function FormCreateGroup({
 
                   <Box
                     as="button"
-                    onClick={(event) => handleRemoveMember(event, member.email)}
+                    onClick={(event : any) => handleRemoveMember(event, member.email)}
                     ml="auto"
                   >
                     <X color="#A10702" />
@@ -199,7 +201,7 @@ export default function FormCreateGroup({
           Annuler
         </Button>
         <Button type="submit" variant="greenButton">
-          Créer
+          {t("create")}
         </Button>
       </Flex>
     </form>

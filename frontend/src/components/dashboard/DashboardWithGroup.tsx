@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 
 export default function DashboardWhithGroup() {
-  const {t} = useTranslation()
+  const { t } = useTranslation();
   const router = useRouter();
 
   // Fetches the current user's profile and groups

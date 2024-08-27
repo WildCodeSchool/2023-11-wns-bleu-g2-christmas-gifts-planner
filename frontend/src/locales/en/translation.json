@@ -1,6 +1,14 @@
 
     {
         "no-group-warning" : "It seems like you're not part of any chat group",
-        "join-to-start" :"Join an existing group or create a new one to start exchanging presents ideas with your friends !",
-        "my-groups-list":"My groups list"
+        "join-to-start" : "Join an existing group or create a new one to start exchanging presents ideas with your friends !",
+        "my-groups-list" : "My groups list",
+        "create-group" : "Create a group",
+        "add-valid-email" : "Please add a valid email adress.",
+        "email-already-added" : "This email is already added.",
+        "group-name" : "Group name",
+        "placeholder-name-your-group" : "Give a name to your group",
+        "add-members" : "Add members",
+        "placeholder-add-members-to-group" : "Add members to your group",
+        "create" : "Create"
     }

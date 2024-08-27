@@ -1,6 +1,14 @@
 
     {
-        "no-group-warning":"Il semble que vous n'appartenez à aucun groupe de discussion",
-        "join-to-start": "Rejoignez un groupe existant ou créez en un nouveau pour commencer à échanger des idées cadeaux avec vos amis !",
-        "my-groups-list":"Liste de mes groupes"
+        "no-group-warning" : "Il semble que vous n'appartenez à aucun groupe de discussion",
+        "join-to-start" : "Rejoignez un groupe existant ou créez en un nouveau pour commencer à échanger des idées cadeaux avec vos amis !",
+        "my-groups-list" : "Liste de mes groupes",
+        "create-group" : "Créez un groupe",
+        "add-valid-email" : "Veuillez entrer une adresse e-mail valide.",
+        "email-already-added" : "Cet email est déjà ajouté.",
+        "group-name" : "Nom du groupe",
+        "placeholder-name-your-group" : "Donnez un nom à votre groupe",
+        "add-members" : "Ajouter des membres",
+        "placeholder-add-members-to-group" : "Ajoutez des membres à votre groupe",
+        "create" : "Créer"
     }
