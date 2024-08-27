@@ -3,12 +3,13 @@ import { useProfileQuery, useGetGroupDetailsQuery } from "@/graphql/generated/sc
 import { Card, Avatar, Box, Flex, Heading, IconButton, Input, InputGroup, InputLeftElement, Stack, Text } from "@chakra-ui/react";
 import { SearchIcon, AddIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 
 export default function Channels() {
   const router = useRouter();
   const { groupId } = router.query; // Récupère groupId depuis l'URL
   const [searchMember, setSearchMember] = useState(""); 
-
+  const { t } = useTranslation();
   const { data: groupDetails, loading, error } = useGetGroupDetailsQuery({
     variables: { groupId: parseFloat(groupId as string) },
   });
@@ -36,7 +37,7 @@ export default function Channels() {
       />
       <Box p="4" mx='2' bg={'white'} height={'full'} boxShadow={'0px -2px #00000025'} borderRadius={'xl'}>
         <Box textAlign="center" mb="4">
-          <Heading size="lg" my={4}>{group?.name || "Nom du Groupe"}</Heading> 
+          <Heading size="lg" my={4}>{group?.name || t("group-name")}</Heading> 
         </Box>
         <Flex justifyContent="center" my={8}>
           <Stack direction="row" spacing={4}>
@@ -66,7 +67,7 @@ export default function Channels() {
           </InputLeftElement>
           <Input 
             type="text" 
-            placeholder="Trouver un fil de discussion" 
+            placeholder={t("placeholder-find-thread")}
             height="full" 
             borderRadius="full" 
             value={searchMember} 
@@ -92,7 +93,7 @@ export default function Channels() {
                 bg={avatarColors[index % avatarColors.length]} 
                 color='white' mr="4" />
                 <Box>
-                  <Text as='b' size="md" flexWrap='wrap' color={'primary.medium'}>Idées cadeaux pour {member.firstName + " " + member.lastName}</Text>
+                  <Text as='b' size="md" flexWrap='wrap' color={'primary.medium'}>{t("present-ideas")} {member.firstName + " " + member.lastName}</Text>
                 </Box>
               </Flex>
             </Card>

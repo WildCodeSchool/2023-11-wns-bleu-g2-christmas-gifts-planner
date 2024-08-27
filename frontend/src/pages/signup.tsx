@@ -4,19 +4,9 @@ import { Box, Button, Center, FormControl, Grid, GridItem, Heading, IconButton, 
 import { ArrowLeft, InfoIcon } from "lucide-react";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
-function validatePassword(p: string) {
-  let errors = [];
-  if (p.length < 8)
-    errors.push("Le mot de passe doit faire minimum 8 caractères");
-  if (p.search(/[a-z]/) < 0)
-    errors.push("Le mot de passe doit contenir une minuscule");
-  if (p.search(/[A-Z]/) < 0)
-    errors.push("Le mot de passe doit contenir une majuscule");
-  if (p.search(/[0-9]/) < 0)
-    errors.push("Le mot de passe doit contenir un chiffre");
-  return errors;
-}
+
 
 export default function Signup() {
   const [arrayOfErrors, setArrayOfErrors] = useState<string[]>([])
@@ -25,7 +15,20 @@ export default function Signup() {
   const [login]= useLoginMutation();
   const toast = useToast();
   const router = useRouter();
-  
+  const { t } = useTranslation();
+
+  function validatePassword(p: string) {
+  let errors = [];
+  if (p.length < 8)
+    errors.push(t("character-limit"));
+  if (p.search(/[a-z]/) < 0)
+    errors.push(t("password-lowercase"));
+  if (p.search(/[A-Z]/) < 0)
+    errors.push(t("password-uppercase"));
+  if (p.search(/[0-9]/) < 0)
+    errors.push(t("password-number"));
+  return errors;
+}
   useEffect(() => {
     if (error === 1 || error === 2) {
       const timer = setTimeout(() => {
@@ -65,8 +68,8 @@ export default function Signup() {
       await login({variables: {data: {email: formJSON.email, password: formJSON.password }}})
       router.push('/dashboard')
       toast({
-        title: "Vous êtes bien enregistré.e !",
-        description: "Votre inscription a bien été prise en compte",
+        title: t("success-signed-up"),
+        description: t("description-success-signed-up"),
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -93,7 +96,7 @@ export default function Signup() {
           icon={<ArrowLeft color="#22543D"/>}
         />
         </Link>
-      <Heading as="h1" fontSize='6xl' fontWeight="bold" mt={8} textAlign="center" color="green.800">Créer un compte</Heading>
+      <Heading as="h1" fontSize='6xl' fontWeight="bold" mt={8} textAlign="center" color="green.800">{t("create-account")}</Heading>
       <Center>
       <Box
         mx="24px"
@@ -119,7 +122,7 @@ export default function Signup() {
             minLength={2}
             maxLength={30}
             isRequired
-            placeholder="Nom"
+            placeholder={t("lastname")}
             width="100%"
             borderRadius={15}
 						borderColor="green.600"
@@ -133,7 +136,7 @@ export default function Signup() {
             minLength={2}
             maxLength={30}
             isRequired
-            placeholder="Prénom"
+            placeholder={t("firstname")}
             width="100%"
             borderRadius={15}
 						borderColor="green.600"
@@ -142,14 +145,14 @@ export default function Signup() {
       </Grid>
       {/* Email */}
       {error === 2 ? 
-                <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">Cet e-mail existe déjà</Text>
+                <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">{t("email-already-existing")}</Text>
               : ""}
         <Input type='email' 
         isRequired
         id="email" 
         data-testid="label-email" 
         name="email" 
-        placeholder="Adresse mail" 
+        placeholder={t("email-adress")}
         my={6}
         borderRadius={15}
 				borderColor={error === 2 ? "red.700" : "green.600"}
@@ -157,10 +160,10 @@ export default function Signup() {
 {/* Password and confirm Password */}
         <InputGroup size='md'>
               {error === 1 &&
-                <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700">Les mots de passe ne correspondent pas !</Text>
+                <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700">{t("passwords-are-not-equals")}</Text>
                }
                {error === 4 && <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700" >
-                Ce mot de passe n&apos;est pas autorisé 
+                {t("unauthorized-password")} 
                 <Tooltip label={arrayOfErrors.map((error, index) => (<Text key={index} fontSize={12}>{error}</Text>))
                 }>
                   <IconButton icon={<InfoIcon height={22}/>} aria-label="seeMore" h={4} variant="none" bgColor="transparent" boxShadow="none" /></Tooltip></Text> }
@@ -171,7 +174,7 @@ export default function Signup() {
           id="password" 
           isRequired
           type='password'
-          placeholder='Mot de passe'
+          placeholder={t("password")}
           borderRadius={15}
 					borderColor={error === 1 || error === 4 ? "red.700" : "green.600"}
           />
@@ -182,21 +185,21 @@ export default function Signup() {
           id="passwordConfirmation" 
           isRequired
           type={'password'}
-          placeholder='Confirmer le mot de passe'
+          placeholder={t("confirm-password")}
           borderRadius={15}
 					borderColor={error === 1 || error === 4 ? "red.700" : "green.600"}
           />
         </InputGroup>
 		    <Center>
           <Button variant="goldenButton" type="submit" mt={8}>
-            S&apos;inscrire
+            {t("sign-up2")}
           </Button>
 		    </Center>
       </FormControl>
     </form>
   </Box>
   </Center>
-			<Text ml={16} mt={4} fontSize={12}>Déjà inscrit ? <Link href='/login'  _hover={{ bg: "gray.200" }}  p={1} borderRadius="md" color="gray">Se connecter</Link></Text>
+			<Text ml={16} mt={4} fontSize={12}>{t("already-have-an-account")} <Link href='/login'  _hover={{ bg: "gray.200" }}  p={1} borderRadius="md" color="gray">{t("sign-in")}</Link></Text>
 </>
   );
 }

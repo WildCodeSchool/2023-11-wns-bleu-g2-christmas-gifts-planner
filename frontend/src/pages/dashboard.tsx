@@ -13,12 +13,13 @@ import DashboardWhithoutGroup from "@/components/dashboard/DashboardWithoutGroup
 import { useProfileQuery } from "@/graphql/generated/schema";
 import DashboardWhithGroup from "@/components/dashboard/DashboardWithGroup";
 import CreateGroupModal from "@/components/group/CreateGroupModal";
+import { useTranslation } from "react-i18next";
 
 export default function Dashboard({ pageTitle }: { pageTitle: string }) {
   useEffect(() => {
     document.title = pageTitle;
   }, [pageTitle]);
-
+  const { t } = useTranslation()
   const { data: currentUser, refetch } = useProfileQuery({
     errorPolicy: "ignore",
   });
@@ -44,7 +45,7 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
           />
         </CardHeader>
         <Heading size="md" marginBlock="1rem">
-          Bonjour {currentUser?.profile.firstName}
+          {t("hello")} {currentUser?.profile.firstName}
         </Heading>
         <CardBody w="95%" gap="1rem">
           {currentUser &&
