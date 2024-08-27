@@ -22,6 +22,7 @@ export type AddMembersInputType = {
 export type Channel = {
   __typename?: 'Channel';
   group: Group;
+  group: Group;
   id: Scalars['Int'];
   name: Scalars['String'];
 };
@@ -118,10 +119,10 @@ export type Query = {
   __typename?: 'Query';
   channel?: Maybe<Channel>;
   channels: Array<Channel>;
+  group: Group;
   groupById: Group;
   groups: Array<Group>;
   profile: User;
-  users: Array<User>;
 };
 
 
@@ -133,6 +134,35 @@ export type QueryChannelArgs = {
 
 export type QueryChannelsArgs = {
   groupId: Scalars['Float'];
+};
+
+
+export type QueryGroupArgs = {
+  id: Scalars['Float'];
+  channelId: Scalars['Float'];
+  groupId: Scalars['Float'];
+};
+
+
+export type QueryChannelsArgs = {
+  groupId: Scalars['Float'];
+};
+
+
+export type QueryGroupByIdArgs = {
+  groupId: Scalars['Int'];
+};
+
+export type UpdateGroupNameInputType = {
+  name: Scalars['String'];
+};
+
+export type UpdateUserInputType = {
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  newPassword: Scalars['String'];
+  oldPassword: Scalars['String'];
 };
 
 
@@ -176,6 +206,13 @@ export type GroupByIdQueryVariables = Exact<{
 
 
 export type GroupByIdQuery = { __typename?: 'Query', groupById: { __typename?: 'Group', id: number, name: string, owner: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string }, members: Array<{ __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string }> } };
+
+export type GetGroupDetailsQueryVariables = Exact<{
+  groupId: Scalars['Float'];
+}>;
+
+
+export type GetGroupDetailsQuery = { __typename?: 'Query', group: { __typename?: 'Group', id: number, name: string, members: Array<{ __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string }>, owner: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string, role: string } } };
 
 export type AddMemberToGroupMutationVariables = Exact<{
   data: AddMembersInputType;
@@ -224,11 +261,6 @@ export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string, role: string, groups?: Array<{ __typename?: 'Group', id: number, name: string, members: Array<{ __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string }> }> | null, memberGroups?: Array<{ __typename?: 'Group', name: string, id: number, members: Array<{ __typename?: 'User', firstName?: string | null, email: string, lastName?: string | null }> }> | null } };
-
-export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string }> };
 
 
 export const CreateGroupDocument = gql`
@@ -325,6 +357,55 @@ export function useGroupByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type GroupByIdQueryHookResult = ReturnType<typeof useGroupByIdQuery>;
 export type GroupByIdLazyQueryHookResult = ReturnType<typeof useGroupByIdLazyQuery>;
 export type GroupByIdQueryResult = Apollo.QueryResult<GroupByIdQuery, GroupByIdQueryVariables>;
+export const GetGroupDetailsDocument = gql`
+    query getGroupDetails($groupId: Float!) {
+  group(id: $groupId) {
+    id
+    name
+    members {
+      id
+      firstName
+      lastName
+      email
+    }
+    owner {
+      id
+      firstName
+      lastName
+      email
+      role
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetGroupDetailsQuery__
+ *
+ * To run a query within a React component, call `useGetGroupDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetGroupDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetGroupDetailsQuery({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useGetGroupDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetGroupDetailsQuery, GetGroupDetailsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetGroupDetailsQuery, GetGroupDetailsQueryVariables>(GetGroupDetailsDocument, options);
+      }
+export function useGetGroupDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetGroupDetailsQuery, GetGroupDetailsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetGroupDetailsQuery, GetGroupDetailsQueryVariables>(GetGroupDetailsDocument, options);
+        }
+export type GetGroupDetailsQueryHookResult = ReturnType<typeof useGetGroupDetailsQuery>;
+export type GetGroupDetailsLazyQueryHookResult = ReturnType<typeof useGetGroupDetailsLazyQuery>;
+export type GetGroupDetailsQueryResult = Apollo.QueryResult<GetGroupDetailsQuery, GetGroupDetailsQueryVariables>;
 export const AddMemberToGroupDocument = gql`
     mutation AddMemberToGroup($data: AddMembersInputType!, $groupId: Int!) {
   addMemberToGroup(data: $data, groupId: $groupId) {
@@ -595,40 +676,3 @@ export function useProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Pr
 export type ProfileQueryHookResult = ReturnType<typeof useProfileQuery>;
 export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>;
 export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVariables>;
-export const UsersDocument = gql`
-    query Users {
-  users {
-    id
-    firstName
-    lastName
-    email
-  }
-}
-    `;
-
-/**
- * __useUsersQuery__
- *
- * To run a query within a React component, call `useUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useUsersQuery({
- *   variables: {
- *   },
- * });
- */
-export function useUsersQuery(baseOptions?: Apollo.QueryHookOptions<UsersQuery, UsersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
-      }
-export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
-        }
-export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
-export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
-export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;

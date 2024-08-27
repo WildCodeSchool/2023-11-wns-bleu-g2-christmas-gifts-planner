@@ -1,0 +1,19 @@
+query getGroupDetails($groupId: Float!) {
+  group(id: $groupId) {
+    id
+    name
+    members {
+      id
+      firstName
+      lastName
+      email
+    }
+    owner {
+      id
+      firstName
+      lastName
+      email
+      role
+    }
+  }
+}

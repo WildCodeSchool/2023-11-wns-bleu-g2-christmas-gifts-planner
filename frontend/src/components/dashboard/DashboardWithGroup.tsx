@@ -5,12 +5,10 @@ import GroupList from "../group/GroupList";
 import Link from "next/link";
 
 export default function DashboardWhithGroup() {
-  /**
-   * Fetches the current user's profile and groups using the `useProfileQuery` hook.
-   * @returns {Object} An object containing the current user's profile and groups.
-   */
+  const router = useRouter();
+
+  // Fetches the current user's profile and groups
   const { data: currentUser } = useProfileQuery({
-    // Set the error policy to "ignore" to prevent the query from failing
     errorPolicy: "ignore",
   });
 
