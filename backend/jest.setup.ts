@@ -35,6 +35,8 @@ beforeAll(async () => {
       user: env.SMTP_USER,
       pass: env.SMTP_PASSWORD,
     },
+    logger: false,
+    debug: false,
   });
 });
 
@@ -45,7 +47,7 @@ beforeEach(async () => {
 afterAll(async () => {
   try {
     if (transporter) {
-      transporter.close();
+      await transporter.close();
     }
   } catch (error) {
     console.error("Error closing transporter: ", error);
