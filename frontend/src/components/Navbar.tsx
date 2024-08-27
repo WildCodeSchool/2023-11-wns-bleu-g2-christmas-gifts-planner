@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useState } from "react";
 import { useProfileQuery, useLogoutMutation } from "@/graphql/generated/schema";
+import i18n from "@/pages/i18n";
 
 
 
@@ -18,7 +19,12 @@ export default function Navbar() {
   };
 
   const handleLanguageChange = (lang: string) => {
-    setLanguage(lang);
+    setLanguage(lang)
+    if(lang === "FR"){
+      i18n.changeLanguage('fr')
+    } else if (lang === "EN"){
+      i18n.changeLanguage('en-US')
+    }
   };
 
   const { data: currentUser } = useProfileQuery({
