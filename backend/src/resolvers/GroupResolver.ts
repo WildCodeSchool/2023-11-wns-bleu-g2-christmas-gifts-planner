@@ -47,18 +47,6 @@ export default class GroupResolver {
     return group;
   }
 
-   /**
-   * Query resolver for fetching one group.
-   */
-
-  @Query(() => Group)
-  async group(@Arg("id") id: number) {
-    return Group.findOne({
-      where: { id },
-      relations: { owner: true, members: true },
-    });
-  }
-
   /**
    * Mutation resolver for creating a new group.
    */

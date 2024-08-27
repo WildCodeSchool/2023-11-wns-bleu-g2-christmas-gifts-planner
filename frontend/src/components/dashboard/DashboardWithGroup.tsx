@@ -5,8 +5,6 @@ import GroupList from "../group/GroupList";
 import Link from "next/link";
 
 export default function DashboardWhithGroup() {
-  const router = useRouter();
-
   // Fetches the current user's profile and groups
   const { data: currentUser } = useProfileQuery({
     errorPolicy: "ignore",
