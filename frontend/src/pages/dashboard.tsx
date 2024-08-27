@@ -60,7 +60,6 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
         h="100%"
         paddingBlock={4}
         marginBlock={4}
-        bg="secondary.lowest"
       >
         <CardHeader alignContent="center">
           <Avatar

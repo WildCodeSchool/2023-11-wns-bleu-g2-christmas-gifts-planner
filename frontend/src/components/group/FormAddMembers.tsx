@@ -163,6 +163,20 @@ export default function FormAddMembers({
           borderColor="secondary.low"
           h={150}
           overflowY="auto"
+          sx={{
+            "::-webkit-scrollbar": {
+              width: "0.9rem",
+            },
+            "::-webkit-scrollbar-thumb": {
+              backgroundColor: "secondary.low",
+              borderRadius: "1rem",
+              border: "0.4rem solid transparent",
+              backgroundClip: "padding-box",
+            },
+            "::-webkit-scrollbar-track": {
+              marginBlock: "1.2rem",
+            },
+          }}
         >
           {members.length ? (
             <Box display="flex" flexDirection="column" gap={2}>
@@ -190,7 +204,7 @@ export default function FormAddMembers({
           Annuler
         </Button>
         <Button type="submit" variant="greenButton">
-          Créer
+          Ajouter
         </Button>
       </Flex>
     </form>

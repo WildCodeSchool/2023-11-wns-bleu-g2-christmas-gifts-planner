@@ -33,7 +33,7 @@ export default function AddMembersModal({ refetch, id }: AddMembersModalProps) {
       >
         <ModalOverlay backdropFilter="blur(2px)" />
         <ModalContent
-          bg="secondary.lowest"
+          bg="background.default"
           p={6}
           mb={isMobile ? 0 : "auto"}
           mt="auto"

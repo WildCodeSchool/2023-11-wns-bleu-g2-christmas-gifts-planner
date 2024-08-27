@@ -17,13 +17,17 @@ import {
 } from "@chakra-ui/react";
 import { Check, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useFormValidation } from "@/hooks/useFormValidation";
+import Error from "@/components/Error";
+import UnauthorizedImage from "../assets/images/Unauthorized.png";
+import ErrorContext from "@/contexts/ErrorContext";
 
 export default function CompleteProfile() {
   //Get the token from the URL query params
   const router = useRouter();
   const token = router.query.token as string;
+  const { messages } = useContext(ErrorContext);
 
   // Use the useCompleteProfileMutation hook to handle the mutation for completing the profile
   const [CompleteProfile, { error }] = useCompleteProfileMutation();
@@ -123,7 +127,14 @@ export default function CompleteProfile() {
       }
     }
   };
-
+  if (!token)
+    return (
+      <Error
+        image={UnauthorizedImage}
+        alt="unauthorized error"
+        message={messages.unauthorized}
+      ></Error>
+    );
   if (token)
     return (
       <form onSubmit={handleSubmit}>
@@ -136,7 +147,6 @@ export default function CompleteProfile() {
           <Card
             paddingBlock={{ base: "0", md: "6" }}
             paddingInline={{ base: "0", md: "32" }}
-            bg={"secondary.lowest"}
           >
             <CardHeader pb={0} fontWeight="bold">
               Compléter votre profil
@@ -210,7 +220,6 @@ export default function CompleteProfile() {
           <Card
             paddingBlock={{ base: "0", md: "6" }}
             paddingInline={{ base: "0", md: "32" }}
-            bg={"secondary.lowest"}
           >
             <CardHeader pb={0} fontWeight="bold">
               Configurer votre mot de passe
