@@ -39,27 +39,27 @@ const Message = () => {
   // console.log(getMessages);
 
   const oldMessages = getMessages?.messages || [];
-  // useNewMessageSubscription({
-  //   onData: async (newMessage: any) => {
-  //     // oldMessages.push(newMessage.data.data.newMessage);
-  //     const getMessages = await client.readQuery({ query: MessagesDocument });
-  //     const oldMessages = getMessages.messages;
-  //     console.log(oldMessages);
-  //     // console.log(newMessage.data.data.newMessage);
-  //     const newMsgObj = newMessage.data.data.newMessage;
-  //     // console.log(newMessage);
-  //     client.writeQuery({
-  //       query: MessagesDocument,
-  //       data: [...oldMessages, newMsgObj],
-  //     });
-  //   },
-  // });
   useNewMessageSubscription({
     onData: async (newMessage: any) => {
-      await newMessages.push(newMessage.data.data.newMessage);
-      console.log(newMessages);
+      // oldMessages.push(newMessage.data.data.newMessage);
+      const getMessages = await client.readQuery({ query: MessagesDocument });
+      const oldMessages = getMessages.messages;
+      console.log(oldMessages);
+      // console.log(newMessage.data.data.newMessage);
+      const newMsgObj = newMessage.data.data.newMessage;
+      // console.log(newMessage);
+      client.writeQuery({
+        query: MessagesDocument,
+        data: [...oldMessages, newMsgObj],
+      });
     },
   });
+  // useNewMessageSubscription({
+  //   onData: async (newMessage: any) => {
+  //     await newMessages.push(newMessage.data.data.newMessage);
+  //     console.log(newMessages);
+  //   },
+  // });
   // const chatMessage = chatListener?.newMessage || [];
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
@@ -85,27 +85,6 @@ const Message = () => {
         <div className="  h-[75vh] overflow-y-auto">
           <div className=" p-4 ">
             {oldMessages.map((message: any) => (
-              <div
-                key={message.id}
-                className="flex   'justify-start' mb-4 bg-white  p-3 border-solid border-2 border-green-950 rounded-lg gap-3"
-              >
-                <Avatar
-                  name={`${message.writtenBy.firstName} ${message.writtenBy.lastName}`}
-                  // src='https://bit.ly/dan-abramov'
-                  size="sm"
-                  _hover={{
-                    cursor: "pointer",
-                  }}
-                />
-                {/* <p className="font-semibold">{ ' firstName:'+ message.writtenBy.firstName +' lastname:'+message.writtenBy.lastName}</p> */}
-
-                <p className="font-semibold">{message.content}</p>
-                {/* <p className="text-xs mt-1">{message.sent_at}</p> */}
-              </div>
-            ))}
-          </div>
-          <div className=" pt-0 p-4 ">
-            {newMessages.map((message: any) => (
               <div
                 key={message.id}
                 className="flex   'justify-start' mb-4 bg-white  p-3 border-solid border-2 border-green-950 rounded-lg gap-3"
