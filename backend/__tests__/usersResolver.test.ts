@@ -4,7 +4,14 @@ import getProfileContext from "./helpers/getProfileContext";
 import addUser from "./operations/addUser";
 import Profile from "./operations/getProfile";
 
+import * as nodemailer from "nodemailer";
+import { NodemailerMock } from "nodemailer-mock";
+const { mock } = nodemailer as unknown as NodemailerMock;
+
 describe("Users Resolver", () => {
+  beforeEach(() => {
+    mock.reset();
+  });
   it("should read Profile with admin jwt", async () => {
     const res = await execute(
       Profile,
@@ -56,5 +63,7 @@ describe("Users Resolver", () => {
   }
 }"
 `);
+    const sentEmails = mock.getSentMail();
+    expect(sentEmails).toHaveLength(0);
   });
 });
