@@ -10,5 +10,10 @@
         "placeholder-name-your-group" : "Give a name to your group",
         "add-members" : "Add members",
         "placeholder-add-members-to-group" : "Add members to your group",
-        "create" : "Create"
+        "create" : "Create",
+        "legal-notices" : "Legal notices",
+        "sign-in" : "Sign in",
+        "nav-my-profile" : "My profile",
+        "nav-my-groups" : "My groups",
+        "sign-out" : "Sign out"
     }

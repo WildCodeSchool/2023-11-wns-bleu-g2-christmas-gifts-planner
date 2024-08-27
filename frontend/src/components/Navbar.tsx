@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useProfileQuery, useLogoutMutation } from "@/graphql/generated/schema";
 import i18n from "@/pages/i18n";
+import { useTranslation } from "react-i18next";
 
 
 
@@ -13,7 +14,7 @@ export default function Navbar() {
   const router = useRouter();
   const currentRoute = router.pathname;
   const [language, setLanguage] = useState('FR');
-
+  const { t } = useTranslation()
   const handleLogin = () => {
     router.push("/login");
   };
@@ -90,7 +91,7 @@ export default function Navbar() {
               }}
               onClick={handleLogin}
             >
-              Se connecter
+              {t("sign-in")}
             </Button>
           ) : (
             <Menu>
@@ -110,18 +111,18 @@ export default function Navbar() {
               <MenuList >
                 <Box textAlign="center" p={2} >
                     <Flex flexDirection='column'>
-                      <MenuItem color='primary.high' _hover={{ bg:'secondary.low'}} onClick={() => router.push('/profile')}>Mon profil</MenuItem>
-                      <MenuItem color='primary.high' _hover={{ bg:'secondary.low'}} onClick={() => router.push('/dashboard')}>Mes groupes</MenuItem>
+                      <MenuItem color='primary.high' _hover={{ bg:'secondary.low'}} onClick={() => router.push('/profile')}>{t("nav-my-profile")}</MenuItem>
+                      <MenuItem color='primary.high' _hover={{ bg:'secondary.low'}} onClick={() => router.push('/dashboard')}>{t("nav-my-groups")}</MenuItem>
                       </Flex>
                 </Box>
                 <MenuDivider />                
                 <Box textAlign="center" p={4} >
                   <Flex flexDirection='column'>
                     <Button mb={4} variant="goldenButton" onClick={() => router.push('/create-group')}>
-                      Créer un groupe
+                      {t("create-group")}
                     </Button>
                     <Button variant="greenButton" onClick={handleLogout}>
-                    Se déconnecter
+                    {t("sign-out")}
                     </Button>
                   </Flex>
                 </Box>                
