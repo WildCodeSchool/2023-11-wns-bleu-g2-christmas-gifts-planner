@@ -1,34 +1,37 @@
-import { useProfileQuery } from "@/graphql/generated/schema";
-import { Box, CardBody } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import React from "react";
+import { ChevronRight, Crown } from "lucide-react";
 
-export default function GroupList({ name }: { name: string }) {
-  const { data: currentUser } = useProfileQuery({
-    errorPolicy: "ignore",
-  });
+export default function GroupList({
+  name,
+  isOwner = false,
+}: {
+  name: string;
+  isOwner: boolean;
+}) {
   return (
     <>
-      {/* <CardBody
-        width="90%"
-        m="auto"
-        h="100dvh"
-        paddingBlock="1rem"
-        marginBlock="1rem"
-        boxShadow="base"
-        borderRadius="md"
-        bg="secondary.lower"
-      > */}
       <Box
         m="auto"
-        paddingBlock="1rem"
-        marginBlock="1rem"
+        p={4}
+        marginTop={4}
         boxShadow="base"
         borderRadius="md"
-        bg="secondary.lower"
+        _hover={{
+          boxShadow: "lg",
+          border: "0.03rem solid",
+          borderColor: "primary.lowest",
+        }}
+        className="transition ease-in-out delay-120"
       >
-        {name}
+        <Flex justifyContent="space-between">
+          <Box display="flex" alignItems="center" gap={3}>
+            <Text>{name}</Text>
+            {isOwner && <Crown size={16} color="#CC952E" />}
+          </Box>
+          <ChevronRight />
+        </Flex>
       </Box>
-      {/* </CardBody> */}
     </>
   );
 }

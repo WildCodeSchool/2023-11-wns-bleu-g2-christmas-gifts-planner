@@ -1,19 +1,18 @@
-query getGroupDetails($groupId: Float!) {
-  group(id: $groupId) {
+query GroupById($groupId: Int!) {
+  groupById(groupId: $groupId) {
     id
     name
-    members {
-      id
-      firstName
-      lastName
-      email
-    }
     owner {
       id
       firstName
       lastName
       email
-      role
+    }
+    members {
+      id
+      firstName
+      lastName
+      email
     }
   }
 }

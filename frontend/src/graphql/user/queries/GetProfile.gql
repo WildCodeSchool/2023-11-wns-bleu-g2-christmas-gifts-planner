@@ -15,5 +15,14 @@ query Profile {
         email
       }
     }
+    memberGroups {
+      name
+      id
+      members {
+        firstName
+        email
+        lastName
+      }
+    }
   }
 }

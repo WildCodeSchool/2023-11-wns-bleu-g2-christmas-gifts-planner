@@ -8,20 +8,21 @@ import {
   useDisclosure,
   useMediaQuery,
 } from "@chakra-ui/react";
-import FormCreateGroup from "@/components/group/FormCreateGroup";
 import React from "react";
+import FormAddMembers from "./FormAddMembers";
 
-type CreateGroupModalProps = {
+type AddMembersModalProps = {
   refetch: () => void;
+  id: string;
 };
-export default function CreateGroupModal({ refetch }: CreateGroupModalProps) {
+export default function AddMembersModal({ refetch, id }: AddMembersModalProps) {
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   return (
     <>
       <Button onClick={onOpen} variant="goldenButton">
-        Créer un groupe
+        Ajouter des membres
       </Button>
 
       <Modal
@@ -39,10 +40,11 @@ export default function CreateGroupModal({ refetch }: CreateGroupModalProps) {
         >
           <ModalCloseButton />
           <ModalBody p={isMobile ? 0 : "auto"}>
-            <FormCreateGroup
+            <FormAddMembers
               onClose={onClose}
               refetch={refetch}
               initialRef={initialRef}
+              id={id}
             />
           </ModalBody>
         </ModalContent>
