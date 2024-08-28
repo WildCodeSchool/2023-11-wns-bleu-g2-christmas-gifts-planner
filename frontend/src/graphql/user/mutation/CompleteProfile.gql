@@ -1,0 +1,3 @@
+mutation CompleteProfile($data: CompleteProfileInputType!, $token: String!) {
+  completeProfile(data: $data, token: $token)
+}

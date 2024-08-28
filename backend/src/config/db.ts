@@ -3,6 +3,7 @@ import env from "../env";
 import User from "../entities/User";
 import Group from "../entities/Group";
 import Message from "../entities/Message";
+import Channel from "../entities/Channel";
 
 const db = new DataSource({
   type: "postgres",
@@ -11,7 +12,7 @@ const db = new DataSource({
   username: env.DB_USER,
   password: env.DB_PASS,
   database: env.DB_NAME,
-  entities: [User, Group,Message],
+  entities: [User, Group, Channel, Message],
   synchronize: true,
   logging: env.NODE_ENV !== "test",
 });

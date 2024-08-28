@@ -5,21 +5,52 @@ import {
   CardHeader,
   Flex,
   Heading,
+  CardBody,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import DashboardWhithoutGroup from "@/components/dashboard/DashboardWithoutGroup";
 import { useProfileQuery } from "@/graphql/generated/schema";
 import DashboardWhithGroup from "@/components/dashboard/DashboardWithGroup";
 import CreateGroupModal from "@/components/group/CreateGroupModal";
+import Loader from "@/components/Loader";
+import Error from "@/components/Error";
+import UnauthorizedImage from "../assets/images/Unauthorized.png";
+import GenericError from "../assets/images/GenericError.png";
+import ErrorContext from "@/contexts/ErrorContext";
 
 export default function Dashboard({ pageTitle }: { pageTitle: string }) {
   useEffect(() => {
     document.title = pageTitle;
   }, [pageTitle]);
 
-  const { data: currentUser, refetch } = useProfileQuery({
+  const {
+    data: currentUser,
+    refetch,
+    loading,
+    error,
+  } = useProfileQuery({
     errorPolicy: "ignore",
   });
+
+  const { messages } = useContext(ErrorContext);
+
+  if (loading) return <Loader></Loader>;
+  if (error) {
+    <Error
+      image={GenericError}
+      alt="generic error"
+      message={messages.generic}
+    ></Error>;
+  }
+  if (!currentUser)
+    return (
+      <Error
+        image={UnauthorizedImage}
+        alt="unauthorized error"
+        message={messages.unauthorized}
+      ></Error>
+    );
+
   return (
     <>
       <Card
@@ -27,29 +58,32 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
         width={{ base: "95%", md: "48rem" }}
         m="auto"
         h="100%"
-        paddingBlock="1rem"
-        marginBlock="1rem"
+        paddingBlock={4}
+        marginBlock={4}
         bg="secondary.lowest"
       >
         <CardHeader alignContent="center">
           <Avatar
-            size="xl"
-            bg="#003B1E"
-            name={currentUser?.profile.firstName}
+            size="lg"
+            bg="primary.high"
+            name={currentUser?.profile.firstName ?? ""}
           />
         </CardHeader>
-        <Heading size="md" marginBlock="1rem">
+        <Heading as="h1" size="xl" marginBlock={4}>
           Bonjour {currentUser?.profile.firstName}
         </Heading>
-        {currentUser &&
-        currentUser?.profile.groups &&
-        currentUser.profile.groups.length > 0 ? (
-          <DashboardWhithGroup />
-        ) : (
-          <DashboardWhithoutGroup />
-        )}
+        <CardBody w="95%" gap={4}>
+          {(currentUser?.profile.groups &&
+            currentUser.profile.groups.length > 0) ||
+          (currentUser?.profile.memberGroups &&
+            currentUser.profile.memberGroups.length > 0) ? (
+            <DashboardWhithGroup />
+          ) : (
+            <DashboardWhithoutGroup />
+          )}
+        </CardBody>
         <CardFooter>
-          <Flex direction="column" gap="1rem">
+          <Flex direction="column" gap={4}>
             <CreateGroupModal refetch={refetch} />
           </Flex>
         </CardFooter>

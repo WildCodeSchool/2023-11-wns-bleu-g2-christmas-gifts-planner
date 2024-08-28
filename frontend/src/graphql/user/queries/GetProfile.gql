@@ -8,6 +8,21 @@ query Profile {
     groups {
       id
       name
+      members {
+        id
+        firstName
+        lastName
+        email
+      }
+    }
+    memberGroups {
+      name
+      id
+      members {
+        firstName
+        email
+        lastName
+      }
     }
   }
 }

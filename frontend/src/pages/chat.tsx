@@ -27,7 +27,7 @@ import { useRouter } from "next/router";
 import { object } from "prop-types";
 import { FormEvent, useEffect, useState } from "react";
 import { Gift } from "lucide-react";
-const newMessages: any = [];
+// const newMessages: any = [];
 
 const Message = () => {
   const { data: currentUser, client } = useProfileQuery({
@@ -50,7 +50,8 @@ const Message = () => {
       // console.log(newMessage);
       client.writeQuery({
         query: MessagesDocument,
-        data: [...oldMessages, newMsgObj],
+        // data: [...oldMessages, newMsgObj],
+        data: { messages: [...oldMessages, newMsgObj] },
       });
     },
   });
@@ -60,6 +61,7 @@ const Message = () => {
   //     console.log(newMessages);
   //   },
   // });
+
   // const chatMessage = chatListener?.newMessage || [];
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {

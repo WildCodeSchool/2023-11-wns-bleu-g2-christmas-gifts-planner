@@ -2,25 +2,50 @@ import { defineStyle, defineStyleConfig } from "@chakra-ui/styled-system";
 
 const goldenButton = defineStyle({
   background: "secondary.medium",
-  border: "1px",
-  borderColor: "secondary.medium",
   _hover: {
-    background: "secondary.lower",
+    background: "secondary.high",
   },
 });
-const goldenOutline = defineStyle({
-  background: "secondary.lower",
-  border: "1px",
-  borderColor: "secondary.medium",
+
+const whiteGoldenButton = defineStyle({
+  background: "white",
+  color: "secondary.hightest",
+
   _hover: {
     background: "secondary.medium",
   },
 });
+
 const greenButton = defineStyle({
   background: "primary.high",
   color: "white",
   _hover: {
     background: "primary.lower",
+  },
+});
+
+const whiteGreenButton = defineStyle({
+  background: "white",
+  color: "primary.hightest",
+  _hover: {
+    background: "primary.lower",
+    color: "white",
+  },
+});
+
+const redButton = defineStyle({
+  background: "tertiary.medium",
+  color: "white",
+  _hover: {
+    background: "tertiary.lowest",
+    color: "black",
+  },
+});
+const whiteRedButton = defineStyle({
+  background: "white",
+  color: "tertiary.hightest",
+  _hover: {
+    background: "tertiary.lowest",
   },
 });
 
@@ -34,13 +59,30 @@ const transparentButton = defineStyle({
   },
 });
 
+const deleteButton = defineStyle({
+  background: "red.600",
+  color: "white",
+  _hover: {
+    background: "tertiary.lowest",
+  },
+});
+
 export const buttonTheme = defineStyleConfig({
   baseStyle: {
     borderRadius: 50,
     boxShadow: "md",
     color: "black",
   },
-  variants: { goldenButton, greenButton, goldenOutline, transparentButton },
+  variants: {
+    goldenButton,
+    whiteGoldenButton,
+    greenButton,
+    whiteGreenButton,
+    redButton,
+    whiteRedButton,
+    transparentButton,
+    deleteButton,
+  },
   defaultProps: {
     size: "sm",
   },

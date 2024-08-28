@@ -5,6 +5,7 @@ import {
   BeforeInsert,
   Column,
   Entity,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -30,12 +31,12 @@ export default class User extends BaseEntity {
   @Field(() => ID)
   id: number;
 
-  @Column()
-  @Field()
+  @Column({ nullable: true })
+  @Field({ nullable: true })
   firstName: string;
 
-  @Column()
-  @Field()
+  @Column({ nullable: true })
+  @Field({ nullable: true })
   lastName: string;
 
   @Column()
@@ -49,14 +50,36 @@ export default class User extends BaseEntity {
   @Column({ enum: UserRole, default: UserRole.Visitor })
   role: UserRole;
 
-  @Field(() => [Group], { nullable: true })
+  /**
+   * Temporary passwords are used for new users who have not yet set up a password.
+   */
+  @Column({ default: false })
+  temporaryPassword: boolean;
+
+  /**
+   * A unique token used to verify the user's profil.
+   * Once the user complete his profil by clicking the link in the email,
+   * this token is set to null.
+   */
+  @Column({ nullable: true, type: "varchar", unique: true })
+  verificationToken: string | null;
+
+  /**
+   * The list of groups the user owns.
+   */
   @OneToMany(() => Group, (group) => group.owner)
+  @Field(() => [Group], { nullable: true })
   groups: Group[];
 
-  @OneToMany(() => Message, Message => Message.writtenBy)
-  messages: Message[];
+  /**
+   * The list of groups the user is a member of.
+   */
+  @ManyToMany(() => Group, (group) => group.members)
+  @Field(() => [Group], { nullable: true })
+  memberGroups: Group[];
 
-  
+  @OneToMany(() => Message, (Message) => Message.writtenBy)
+  messages: Message[];
 }
 
 const hashingOptions = {
@@ -69,10 +92,16 @@ export const hashPassword = async (plainPassword: string): Promise<string> =>
   await hash(plainPassword, hashingOptions);
 
 export const verifyPassword = async (
-  plainPassword: string,
-  hashedPassword: string
-): Promise<boolean> =>
-  await verify(hashedPassword, plainPassword, { secret: hashingOptions });
+  hashedPassword: string,
+  plainPassword: string
+): Promise<boolean> => {
+  try {
+    return await verify(hashedPassword, plainPassword);
+  } catch (error) {
+    console.error("Error in verifyPassword:", error);
+    throw new Error("Error verifying password");
+  }
+};
 
 // export const getSafeAttributes = (user: User): User =>
 //     ({

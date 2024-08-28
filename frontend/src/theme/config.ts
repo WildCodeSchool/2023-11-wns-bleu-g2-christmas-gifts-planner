@@ -5,6 +5,7 @@ import "@fontsource/amatic-sc";
 import "@fontsource/open-sans";
 import { inputTheme } from "./components/Input";
 import { formTheme } from "./components/Form";
+import { HeartIcon } from "lucide-react";
 
 const colors = {
   primary: {
@@ -17,19 +18,25 @@ const colors = {
     hightest: "#03110A",
   },
   secondary: {
-    lowest: "#FFFEF9",
+    lowest: "#FAF8EC",
     lower: "#F4EDCD",
     low: "#E0BF64",
     medium: "#CC952E",
-    high: "#885220",
-    highter: "#623921",
-    hightest: "#381D10",
+    high: "#AA7124",
+    highter: "#885220",
+    hightest: "#724421",
   },
   tertiary: {
+    lowest: "#FEBBB8",
+    lower: "#FD7B77",
+    low: "#CE231D",
     medium: "#A10702",
+    high: "#830602",
+    highter: "#600401",
+    hightest: "#410301",
   },
   background: {
-    default: "#F4EDCD",
+    default: "#F9F6F1",
   },
 };
 
