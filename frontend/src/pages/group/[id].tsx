@@ -1,6 +1,7 @@
 import AddMembersModal from "@/components/group/AddMembersModal";
 import { useGroupByIdQuery } from "@/graphql/generated/schema";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import React, { useState } from "react";
 import {
   Card,
@@ -105,39 +106,41 @@ export default function Channels() {
         </InputGroup>
         <Box my={8}>
           {filteredMembers?.map((member, index) => (
-            <Card
-              className="items-start pl-8"
-              key={member.id}
-              align="center"
-              width={{ base: "95%", md: "48rem" }}
-              m="auto"
-              h="100%"
-              paddingBlock="1rem"
-              marginBlock="1rem"
-              bg="secondary.lowest"
-              boxShadow={"lg"}
-              borderRadius={"lg"}
-            >
-              <Flex align="center" pr={2}>
-                <Avatar
-                  name={member.firstName + " " + member.lastName}
-                  bg={avatarColors[index % avatarColors.length]}
-                  color="white"
-                  mr="4"
-                />
-                <Box>
-                  <Text
-                    as="b"
-                    size="md"
-                    flexWrap="wrap"
-                    color={"primary.medium"}
-                  >
-                    Idées cadeaux pour{" "}
-                    {member.firstName + " " + member.lastName}
-                  </Text>
-                </Box>
-              </Flex>
-            </Card>
+            <Link key={member.id} href={`/channel/${member.id}`}>
+              <Card
+                className="items-start pl-8"
+                key={member.id}
+                align="center"
+                width={{ base: "95%", md: "48rem" }}
+                m="auto"
+                h="100%"
+                paddingBlock="1rem"
+                marginBlock="1rem"
+                bg="secondary.lowest"
+                boxShadow={"lg"}
+                borderRadius={"lg"}
+              >
+                <Flex align="center" pr={2}>
+                  <Avatar
+                    name={member.firstName + " " + member.lastName}
+                    bg={avatarColors[index % avatarColors.length]}
+                    color="white"
+                    mr="4"
+                  />
+                  <Box>
+                    <Text
+                      as="b"
+                      size="md"
+                      flexWrap="wrap"
+                      color={"primary.medium"}
+                    >
+                      Idées cadeaux pour{" "}
+                      {member.firstName + " " + member.lastName}
+                    </Text>
+                  </Box>
+                </Flex>
+              </Card>
+            </Link>
           ))}
         </Box>
       </Box>

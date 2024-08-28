@@ -4,8 +4,7 @@ import User, { UserRole } from "../entities/User";
 import Message from "../entities/Message";
 import { ObjectId } from "./ObjectIdType";
 import { Author } from "./Author";
-
-
+import Channel from "../entities/Channel";
 
 @InputType()
 export class NewMessageInputType {
@@ -17,4 +16,7 @@ export class NewMessageInputType {
 
   @Field(() => Author)
   writtenBy: Author;
+
+  @Field(() => ObjectId)
+  channelId: ObjectId;
 }

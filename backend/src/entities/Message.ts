@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import User from "./User";
+import Channel from "./Channel";
 
 @Entity()
 @ObjectType()
@@ -23,15 +24,18 @@ export default class Message extends BaseEntity {
 
   @Column()
   @Field()
-  sent_at:string;
+  sent_at: string;
 
-  @ManyToOne(() => User, User => User.id, {
+  @ManyToOne(() => User, (User) => User.id, {
     cascade: true,
     onDelete: "CASCADE",
   })
-  
   @Field(() => User)
   writtenBy: User;
 
-  
+  @ManyToOne(() => Channel, (channel) => channel.id, {
+    onDelete: "CASCADE",
+  })
+  @Field(() => Channel)
+  channel: Channel;
 }

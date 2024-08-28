@@ -59,6 +59,7 @@ export type LoginInputType = {
 
 export type Message = {
   __typename?: 'Message';
+  channel: Channel;
   content: Scalars['String'];
   id: Scalars['Int'];
   sent_at: Scalars['String'];
@@ -128,6 +129,7 @@ export type NewGroupInputType = {
 };
 
 export type NewMessageInputType = {
+  channelId: ObjectId;
   content: Scalars['String'];
   sent_at: Scalars['String'];
   writtenBy: Author;
@@ -138,6 +140,10 @@ export type NewUserInputType = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type ObjectId = {
+  id: Scalars['Int'];
 };
 
 export type Query = {
@@ -168,6 +174,7 @@ export type QueryGroupByIdArgs = {
 
 
 export type QueryMessagesArgs = {
+  channelId?: InputMaybe<Scalars['Int']>;
   userId?: InputMaybe<Scalars['Float']>;
 };
 
@@ -228,10 +235,12 @@ export type CreateMessageMutationVariables = Exact<{
 
 export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } } };
 
-export type MessagesQueryVariables = Exact<{ [key: string]: never; }>;
+export type MessagesQueryVariables = Exact<{
+  channelId?: InputMaybe<Scalars['Int']>;
+}>;
 
 
-export type MessagesQuery = { __typename?: 'Query', messages: Array<{ __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } }> };
+export type MessagesQuery = { __typename?: 'Query', messages: Array<{ __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null }, channel: { __typename?: 'Channel', id: number } }> };
 
 export type NewMessageSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -461,8 +470,8 @@ export type CreateMessageMutationHookResult = ReturnType<typeof useCreateMessage
 export type CreateMessageMutationResult = Apollo.MutationResult<CreateMessageMutation>;
 export type CreateMessageMutationOptions = Apollo.BaseMutationOptions<CreateMessageMutation, CreateMessageMutationVariables>;
 export const MessagesDocument = gql`
-    query Messages {
-  messages {
+    query Messages($channelId: Int) {
+  messages(channelId: $channelId) {
     id
     content
     sent_at
@@ -470,6 +479,9 @@ export const MessagesDocument = gql`
       id
       firstName
       lastName
+    }
+    channel {
+      id
     }
   }
 }
@@ -487,6 +499,7 @@ export const MessagesDocument = gql`
  * @example
  * const { data, loading, error } = useMessagesQuery({
  *   variables: {
+ *      channelId: // value for 'channelId'
  *   },
  * });
  */

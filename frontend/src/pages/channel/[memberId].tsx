@@ -1,80 +1,62 @@
 import {
-  NewMessageInputType,
+  MessagesDocument,
   useCreateMessageMutation,
   useMessagesQuery,
   useNewMessageSubscription,
   useProfileQuery,
-  MessagesDocument,
 } from "@/graphql/generated/schema";
-import { gql } from "@apollo/client";
-import {
-  Avatar,
-  Box,
-  Button,
-  Center,
-  Flex,
-  FormControl,
-  FormLabel,
-  Heading,
-  IconButton,
-  Image,
-  Input,
-  Link,
-  Text,
-} from "@chakra-ui/react";
-import { ArrowLeft, SendHorizontal, Target, Variable } from "lucide-react";
+import { Avatar } from "@chakra-ui/react";
+import { SendHorizontal } from "lucide-react";
 import { useRouter } from "next/router";
-import { object } from "prop-types";
-import { FormEvent, useEffect, useState } from "react";
-import { Gift } from "lucide-react";
-
+import { FormEvent } from "react";
 
 const Message = () => {
+  const router = useRouter();
+  const channelMemberId: any = router.query?.memberId;
   const { data: currentUser, client } = useProfileQuery({
     errorPolicy: "ignore",
   });
-
-  let { data: getMessages, refetch } = useMessagesQuery();
+  console.log(channelMemberId);
+  let { data: getMessages } = useMessagesQuery({
+    variables: { channelId: parseInt(channelMemberId as string) },
+  });
   const [createMessage] = useCreateMessageMutation();
- 
 
   const oldMessages = getMessages?.messages || [];
   useNewMessageSubscription({
     onData: async (newMessage: any) => {
-     
       const getMessages = await client.readQuery({ query: MessagesDocument });
       const oldMessages = getMessages.messages;
       console.log(oldMessages);
-  
+
       const newMsgObj = newMessage.data.data.newMessage;
- 
+
       client.writeQuery({
         query: MessagesDocument,
-        
+
         data: { messages: [...oldMessages, newMsgObj] },
       });
     },
   });
-
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
-   
+
     formJSON.writtenBy = {
       id: parseInt(formJSON.writtenBy, 10),
       firstName: currentUser?.profile.firstName,
       lastName: currentUser?.profile.lastName,
     };
 
-
     const res = await createMessage({ variables: { data: formJSON } });
   };
 
   return (
     <>
+      <h1>{channelMemberId}</h1>
       <div className="flex  just flex-col">
         <div className="  h-[75vh] overflow-y-auto">
           <div className=" p-4 ">
