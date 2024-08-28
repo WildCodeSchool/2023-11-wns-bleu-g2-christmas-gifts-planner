@@ -4,13 +4,20 @@ import getProfileContext from "./helpers/getProfileContext";
 import addUser from "./operations/addUser";
 import Profile from "./operations/getProfile";
 
-describe("Users Resolver", () => {
-  it("should read Profile with admin jwt", async () => {
+import * as nodemailer from "nodemailer";
+import { NodemailerMock } from "nodemailer-mock";
+const { mock } = nodemailer as unknown as NodemailerMock;
 
+describe("Users Resolver", () => {
+  beforeEach(() => {
+    mock.reset();
+  });
+  it("should read Profile with admin jwt", async () => {
     const res = await execute(
       Profile,
-      {data: {name: "test"}},
-    await getProfileContext());
+      { data: { name: "test" } },
+      await getProfileContext()
+    );
     expect(res).toMatchInlineSnapshot(`
 {
   "data": {
@@ -24,7 +31,7 @@ describe("Users Resolver", () => {
   });
 
   it("should read Profile without admin jwt", async () => {
-    const res = await execute(Profile, { data: {name: "test"}});
+    const res = await execute(Profile, { data: { name: "test" } });
     expect(res).toMatchInlineSnapshot(`
 {
   "data": null,
@@ -41,8 +48,7 @@ describe("Users Resolver", () => {
         email: "emailtest2@mail.com",
         firstName: "firstname test2",
         lastName: "lastname test2",
-        password: "Paswordtest/2",
-
+        password: "PasswordTest@2",
       },
     });
     expect(JSON.stringify(res, null, 2)).toMatchInlineSnapshot(`
@@ -57,5 +63,7 @@ describe("Users Resolver", () => {
   }
 }"
 `);
+    const sentEmails = mock.getSentMail();
+    expect(sentEmails).toHaveLength(0);
   });
 });

@@ -1,0 +1,18 @@
+mutation AddMemberToGroup($data: AddMembersInputType!, $groupId: Int!) {
+  addMemberToGroup(data: $data, groupId: $groupId) {
+    id
+    name
+    owner {
+      id
+      email
+      firstName
+      lastName
+    }
+    members {
+      email
+      id
+      firstName
+      lastName
+    }
+  }
+}
