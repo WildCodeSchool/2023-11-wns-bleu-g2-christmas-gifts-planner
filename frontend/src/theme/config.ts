@@ -22,7 +22,7 @@ const colors = {
     lower: "#F4EDCD",
     low: "#E0BF64",
     medium: "#CC952E",
-    high: "#aa7124",
+    high: "#AA7124",
     highter: "#885220",
     hightest: "#724421",
   },

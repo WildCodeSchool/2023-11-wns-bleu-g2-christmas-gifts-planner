@@ -1,32 +1,31 @@
+import { useAddMemberToGroupMutation } from "@/graphql/generated/schema";
+import { ApolloError } from "@apollo/client";
 import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
   FormControl,
   FormLabel,
   Input,
-  Button,
-  Flex,
-  Avatar,
-  Box,
   Text,
-  FormErrorMessage,
 } from "@chakra-ui/react";
-import { useCreateGroupMutation } from "@/graphql/generated/schema";
-import React, { useState } from "react";
 import { Plus, X } from "lucide-react";
+import React, { useState } from "react";
 
-type FormCreateGroupProps = {
+type FormAddMembersProps = {
   onClose: () => void;
   refetch: () => void;
   initialRef?: React.MutableRefObject<null>;
+  id: string;
 };
-export default function FormCreateGroup({
+export default function FormAddMembers({
   onClose,
   refetch,
   initialRef,
-}: FormCreateGroupProps) {
-  /**
-   * Creates a new group using the useCreateGroupMutation hook.
-   */
-  const [createGroup] = useCreateGroupMutation();
+  id,
+}: FormAddMembersProps) {
+  const [addMembers] = useAddMemberToGroupMutation();
   const [memberEmail, setMemberEmail] = React.useState("");
   const [members, setMembers] = useState<{ email: string; color: string }[]>(
     []
@@ -45,12 +44,6 @@ export default function FormCreateGroup({
     "tertiary.lower",
   ];
 
-  /**
-   * Handles form submission, sends a mutation to create a new group
-   * and refreshes the list of groups using refetch.
-   * @param {React.FormEvent<HTMLFormElement>} e - The form event.
-   */
-
   const handleChange = (event: {
     target: { value: React.SetStateAction<string> };
   }) => setMemberEmail(event.target.value);
@@ -60,6 +53,7 @@ export default function FormCreateGroup({
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
   };
+
   const handleAddMember = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!validateEmail(memberEmail)) {
@@ -100,37 +94,31 @@ export default function FormCreateGroup({
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const formJson: any = Object.fromEntries(formData.entries());
-    formJson.members = members.map((member) => member.email);
+    formJson.members = members.map((member) => ({ email: member.email }));
 
     try {
-      await createGroup({
-        variables: { data: formJson },
+      await addMembers({
+        variables: {
+          groupId: Number(id),
+          data: formJson,
+        },
       });
-      // Refresh the list of groups after creating the new group.
       refetch();
       onClose();
     } catch (error) {
-      console.error(error);
+      if (error instanceof ApolloError) {
+        console.error("GraphQL Error:", error.graphQLErrors);
+      } else {
+        console.error("Error adding members to group: ", error);
+      }
     }
   };
-
   return (
     <form
       onSubmit={handleSubmit}
       className="h-full flex flex-col justify-between"
     >
       <Box>
-        <FormControl isRequired mt={3}>
-          <FormLabel>Nom du groupe</FormLabel>
-          <Input
-            type="name"
-            name="name"
-            id="name"
-            placeholder="Donnez un nom à votre groupe"
-            variant="goldenInput"
-            ref={initialRef}
-          />
-        </FormControl>
         <FormControl mt={3} isInvalid={!!error}>
           <FormLabel>Ajouter des membres</FormLabel>
           <Flex>
@@ -140,6 +128,7 @@ export default function FormCreateGroup({
               variant="goldenInput"
               value={memberEmail}
               onChange={handleChange}
+              ref={initialRef}
             />
             <Button
               variant="transparentButton"
@@ -155,8 +144,15 @@ export default function FormCreateGroup({
             </Button>
           </Flex>
 
-          {error && (
-            <FormErrorMessage color="tertiary.medium">{error}</FormErrorMessage>
+          {error !== "" && (
+            <Text
+              position="absolute"
+              mt={1}
+              fontSize={12}
+              color="tertiary.medium"
+            >
+              {error}
+            </Text>
           )}
         </FormControl>
         <Box

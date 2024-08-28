@@ -10,4 +10,10 @@ export default load({
   CORS_ALLOWED_ORIGINS: String,
   JWT_PRIVATE_KEY: String,
   NODE_ENV: String,
+  SMTP_HOST: String,
+  SMTP_PORT: Number,
+  SMTP_USER: String,
+  SMTP_PASSWORD: String,
+  EMAIL_FROM: String,
+  FRONTEND_URL: String,
 });
