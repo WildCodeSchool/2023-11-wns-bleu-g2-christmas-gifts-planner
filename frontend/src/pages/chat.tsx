@@ -27,7 +27,7 @@ import { useRouter } from "next/router";
 import { object } from "prop-types";
 import { FormEvent, useEffect, useState } from "react";
 import { Gift } from "lucide-react";
-// const newMessages: any = [];
+
 
 const Message = () => {
   const { data: currentUser, client } = useProfileQuery({
@@ -36,48 +36,40 @@ const Message = () => {
 
   let { data: getMessages, refetch } = useMessagesQuery();
   const [createMessage] = useCreateMessageMutation();
-  // console.log(getMessages);
+ 
 
   const oldMessages = getMessages?.messages || [];
   useNewMessageSubscription({
     onData: async (newMessage: any) => {
-      // oldMessages.push(newMessage.data.data.newMessage);
+     
       const getMessages = await client.readQuery({ query: MessagesDocument });
       const oldMessages = getMessages.messages;
       console.log(oldMessages);
-      // console.log(newMessage.data.data.newMessage);
+  
       const newMsgObj = newMessage.data.data.newMessage;
-      // console.log(newMessage);
+ 
       client.writeQuery({
         query: MessagesDocument,
-        // data: [...oldMessages, newMsgObj],
+        
         data: { messages: [...oldMessages, newMsgObj] },
       });
     },
   });
-  // useNewMessageSubscription({
-  //   onData: async (newMessage: any) => {
-  //     await newMessages.push(newMessage.data.data.newMessage);
-  //     console.log(newMessages);
-  //   },
-  // });
 
-  // const chatMessage = chatListener?.newMessage || [];
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
-    // formJSON.price = parseFloat(formJSON.price);
+   
     formJSON.writtenBy = {
       id: parseInt(formJSON.writtenBy, 10),
       firstName: currentUser?.profile.firstName,
       lastName: currentUser?.profile.lastName,
     };
 
-    // formJSON.writtenBy = selectedTags.map((t) => ({ id: t.id }));
-    // formJSO
+
     const res = await createMessage({ variables: { data: formJSON } });
   };
 
