@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 
 export default function DashboardWhithGroup() {
   const { t } = useTranslation();
-  const router = useRouter();
 
   // Fetches the current user's profile and groups
   const { data: currentUser } = useProfileQuery({
@@ -24,8 +23,7 @@ export default function DashboardWhithGroup() {
   return (
     <>
       <Text fontSize="lg" mb={6}>
-        //TODO: Trad
-        Vous êtes membre de {numberOfGroups}{" "}
+        {t("my-groups-list")} {numberOfGroups}{" "}
         {numberOfGroups > 1 ? "groupes" : "groupe"}
       </Text>
       {listOfGroups.groups?.map((group) => (

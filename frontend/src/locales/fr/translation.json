@@ -31,7 +31,7 @@
     "modify-old-password-is-different": "Le mot de passe n'est pas le même !",
     "modify-password": "Modifier le mot de passe",
     "modify-profile": "Modifier le profil",
-    "my-groups-list": "Liste de mes groupes",
+    "my-groups-list": "Vous êtes membre de",
     "nav-my-groups": "Mes groupes",
     "nav-my-profile": "Mon profil",
     "new-password": "Nouveau mot de passe",
@@ -63,5 +63,9 @@
     "success-profile-modified": "Profil modifié !",
     "success-signed-up": "Vous êtes bien enregistré.e",
     "unauthorized-password": "Ce mot de passe n'est pas autorisé",
-    "welcome-back": "Bon retour"
+    "welcome-back": "Bon retour",
+    "no-group" : "Vous n'avez aucun groupe de discussion",
+    "create-new-group-to-start" : "Créez un nouveau groupe pour commencer à échanger des idées cadeaux avec vos proches",
+    "placeholder-add-member-email" : "Saisissez l'email d'un membre à ajouter",
+    "cancel" : "Annuler"
 }

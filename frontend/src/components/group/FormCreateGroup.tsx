@@ -136,10 +136,9 @@ export default function FormCreateGroup({
         <FormControl mt={3} isInvalid={!!error}>
           <FormLabel>{t("add-members")}</FormLabel>
           <Flex>
-            {/*TODO: Trad*/}
             <Input
               type="email"
-              placeholder="Saisissez l'email d'un membre à ajouter"
+              placeholder={t("placeholder-add-member-email")}
               variant="goldenInput"
               value={memberEmail}
               onChange={handleChange}
@@ -194,7 +193,7 @@ export default function FormCreateGroup({
       </Box>
       <Flex justifyContent="flex-end" mt={4}>
         <Button variant="whiteRedButton" mr={3} onClick={onClose}>
-          Annuler
+          {t("cancel")}
         </Button>
         <Button type="submit" variant="greenButton">
           {t("create")}

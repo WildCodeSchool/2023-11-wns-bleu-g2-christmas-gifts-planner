@@ -31,7 +31,7 @@
     "modify-old-password-is-different": "The password isn't the same !",
     "modify-password": "Modify the password",
     "modify-profile": "Modify the profile",
-    "my-groups-list": "My groups list",
+    "my-groups-list": "You are a member of",
     "nav-my-groups": "My groups",
     "nav-my-profile": "My profile",
     "new-password": "New password",
@@ -63,5 +63,9 @@
     "success-profile-modified": "Profile modified !",
     "success-signed-up": "You are signed up !",
     "unauthorized-password": "This password isn't authorized",
-    "welcome-back": "Welcome back"
+    "welcome-back": "Welcome back",
+    "no-group" : "You don't have any group",
+    "create-new-group-to-start" : "Create a new group to start exchanging present ideas with your kin",
+    "placeholder-add-member-email" : "Insert a member's email to add him",
+    "cancel" : "Cancel"
 }
