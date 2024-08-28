@@ -4,6 +4,8 @@ import { NewGroupInputType } from "../types/NewGroupInputType";
 import { ContextType } from "../types/ContextType";
 import { GraphQLError } from "graphql";
 import { findUserByEmail } from "../services/userService";
+import Channel from "../entities/Channel";
+import User from "../entities/User";
 
 /**
  * Resolver class for handling group-related operations.
@@ -74,12 +76,22 @@ export default class GroupResolver {
       const members = [];
       for (const email of data.members) {
         const user = await findUserByEmail(email);
-        if (!user) {
-          throw new GraphQLError(`User with email ${email} not found`);
-        }
+        // if (!user) {
+        //   throw new GraphQLError(`User with email ${email} not found`);
+        // }
         members.push(user);
+        newGroup.members = members.filter(member => member !== null) as User[]; // Add the members to the group
+        const channel = new Channel();
+      Object.assign(channel, {
+        name: `${user?.lastName} ${user?.firstName}'s channel`,
+        group: newGroup,
+      });
+      console.log(channel);
+      
+      await channel.save();
       }
-      newGroup.members = members; // Add the members to the group
+  
+  
     }
 
     // Save the new group to the database and return it
