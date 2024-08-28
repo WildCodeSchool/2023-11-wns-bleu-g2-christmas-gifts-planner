@@ -14,9 +14,9 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import { WebSocketServer } from 'ws';
 import { useServer } from 'graphql-ws/lib/use/ws';
 import { PubSub } from "graphql-subscriptions";
-// import { pubsub } from "./resolvers/MessageResolver";
 
-// const pubSub = new PubSub();
+
+
 
 
 const app = express();
