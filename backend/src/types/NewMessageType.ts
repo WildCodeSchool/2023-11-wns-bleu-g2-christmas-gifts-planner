@@ -5,10 +5,7 @@ import Message from "../entities/Message";
 import { ObjectId } from "./ObjectIdType";
 import { Author } from "./Author";
 
-// import { ObjectId } from "./ObjectId";
 
-// import { ObjectId } from "typeorm";
-// import { ObjectId } from "../types";
 
 @InputType()
 export class NewMessageInputType {
