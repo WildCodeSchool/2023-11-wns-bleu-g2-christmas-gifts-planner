@@ -1,11 +1,11 @@
-import { MenuItem, extendTheme } from "@chakra-ui/react";
+import { extendTheme } from "@chakra-ui/react";
 import { buttonTheme } from "./components/Button";
 import { menuItemTheme } from "./components/MenuItem";
 import "@fontsource/amatic-sc";
 import "@fontsource/open-sans";
 import { inputTheme } from "./components/Input";
 import { formTheme } from "./components/Form";
-import { HeartIcon } from "lucide-react";
+import { toastTheme } from "./components/Toast";
 
 const colors = {
   primary: {
@@ -58,5 +58,6 @@ export const theme = extendTheme({
     MenuItem: menuItemTheme,
     Input: inputTheme,
     Form: formTheme,
+    Alert: toastTheme,
   },
 });

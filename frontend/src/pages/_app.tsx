@@ -17,7 +17,15 @@ interface MyAppProps extends AppProps {
 export default function App({ Component, pageProps }: MyAppProps) {
   return (
     <ApolloProvider client={client}>
-      <ChakraProvider theme={theme}>
+      <ChakraProvider
+        theme={theme}
+        toastOptions={{
+          defaultOptions: {
+            position: "bottom-right",
+            variant: "top-accent",
+          },
+        }}
+      >
         <ErrorContextProvider>
           <Layout pageTitle={pageProps.pageTitle}>
             <Component {...pageProps} />

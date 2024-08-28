@@ -21,12 +21,16 @@ import React, { useContext, useState } from "react";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import Error from "@/components/Error";
 import UnauthorizedImage from "../assets/images/Unauthorized.png";
+import GenericErrorImage from "../assets/images/GenericError.png";
 import ErrorContext from "@/contexts/ErrorContext";
 
 export default function CompleteProfile() {
   //Get the token from the URL query params
   const router = useRouter();
   const token = router.query.token as string;
+  // const errorContext = useContext(ErrorContext);
+  // const messages = errorContext ? errorContext.messages : null;
+
   const { messages } = useContext(ErrorContext);
 
   // Use the useCompleteProfileMutation hook to handle the mutation for completing the profile
@@ -132,9 +136,18 @@ export default function CompleteProfile() {
       <Error
         image={UnauthorizedImage}
         alt="unauthorized error"
-        message={messages.unauthorized}
+        message={messages?.unauthorized}
       ></Error>
     );
+  if (error) {
+    return (
+      <Error
+        image={GenericErrorImage}
+        alt="generic error"
+        message={messages?.generic}
+      ></Error>
+    );
+  }
   if (token)
     return (
       <form onSubmit={handleSubmit}>

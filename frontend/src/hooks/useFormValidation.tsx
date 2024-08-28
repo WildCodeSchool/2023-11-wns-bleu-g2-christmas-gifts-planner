@@ -17,10 +17,16 @@ export function useFormValidation() {
     }
     return errors.length > 0 ? errors : [];
   };
-  const validateEmail = (email: string): string[] => {
+  const validateEmail = (
+    email: string,
+    existingEmails: string[] = []
+  ): string[] => {
     let errors = [];
     if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email)) {
       errors.push("L'adresse e-mail doit être au format 'nom@domaine.com'.");
+    }
+    if (existingEmails.includes(email)) {
+      errors.push("Cet e-mail est déjà ajouté.");
     }
     return errors.length > 0 ? errors : [];
   };
@@ -48,11 +54,19 @@ export function useFormValidation() {
       errors.push("Les mots de passe ne correspondent pas");
     return errors.length > 0 ? errors : [];
   };
+
+  const validateGroupName = (groupName: string): string[] => {
+    let errors = [];
+    if (groupName.length < 2)
+      errors.push("Le nom du groupe doit contenir au moins 2 caractères.");
+    return errors.length > 0 ? errors : [];
+  };
   return {
     validateLastName,
     validateFirstName,
     validateEmail,
     validatePassword,
     validateConfirmPassword,
+    validateGroupName,
   };
 }

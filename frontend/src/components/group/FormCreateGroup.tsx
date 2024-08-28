@@ -8,10 +8,13 @@ import {
   Box,
   Text,
   FormErrorMessage,
+  useToast,
 } from "@chakra-ui/react";
 import { useCreateGroupMutation } from "@/graphql/generated/schema";
 import React, { useState } from "react";
 import { Plus, X } from "lucide-react";
+import { ApolloError } from "@apollo/client";
+import { useFormValidation } from "@/hooks/useFormValidation";
 
 type FormCreateGroupProps = {
   onClose: () => void;
@@ -31,9 +34,21 @@ export default function FormCreateGroup({
   const [members, setMembers] = useState<{ email: string; color: string }[]>(
     []
   );
-  const [error, setError] = useState("");
+  const [groupName, setGroupName] = useState("");
+
+  const { validateEmail, validateGroupName } = useFormValidation();
+  const [errors, setErrors] = useState<{
+    groupName?: string[];
+    email?: string[];
+    generic?: string[];
+  }>({});
   const [isHovered, setIsHovered] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
+  const toast = useToast({
+    containerStyle: {
+      bg: "secondary.low",
+    },
+  });
 
   // Colors used to display the members of the group
   const colors = [
@@ -45,30 +60,40 @@ export default function FormCreateGroup({
     "tertiary.lower",
   ];
 
-  /**
-   * Handles form submission, sends a mutation to create a new group
-   * and refreshes the list of groups using refetch.
-   * @param {React.FormEvent<HTMLFormElement>} e - The form event.
-   */
-
-  const handleChange = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => setMemberEmail(event.target.value);
-
-  const validateEmail = (email: string) => {
-    //
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(email).toLowerCase());
+  const handleChangeGroupName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newGroupName = e.target.value;
+    setGroupName(newGroupName);
+    if (newGroupName.length >= 2) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        groupName: [],
+        generic: [],
+      }));
+    }
   };
+
+  const handleChangeMemberEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newMemberEmail = e.target.value;
+    setMemberEmail(newMemberEmail);
+    if (
+      /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(newMemberEmail) ||
+      newMemberEmail === ""
+    ) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        email: [],
+      }));
+    }
+  };
+
   const handleAddMember = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (!validateEmail(memberEmail)) {
-      setError("Veuillez entrer une adresse e-mail valide.");
-      return;
-    }
-    if (members.some((member) => member.email === memberEmail)) {
-      setError("Cet e-mail est déjà ajouté.");
-      return;
+    const newErrors = validateEmail(
+      memberEmail,
+      members.map((member) => member.email)
+    );
+    if (newErrors.length > 0) {
+      return setErrors({ ...errors, email: newErrors });
     }
     if (
       memberEmail.trim() !== "" &&
@@ -80,7 +105,7 @@ export default function FormCreateGroup({
       };
       setMembers([...members, newMember]);
       setMemberEmail("");
-      setError("");
+      setErrors({});
 
       // Change the color of the next member to be added
       setColorIndex((colorIndex + 1) % colors.length);
@@ -109,9 +134,51 @@ export default function FormCreateGroup({
       // Refresh the list of groups after creating the new group.
       refetch();
       onClose();
+      toast({
+        title: "Groupe créé.",
+        description: `Votre groupe ${groupName} a été créé avec succes.`,
+        status: "success",
+        variant: "success",
+        duration: 9000,
+        isClosable: true,
+      });
     } catch (error) {
-      console.error(error);
+      if (error instanceof ApolloError) {
+        console.error("GraphQL Error:", error.graphQLErrors);
+
+        handleGraphQLError(error);
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          generic: ["Une erreur graphql est survenue"],
+        }));
+      } else {
+        console.error(error);
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          generic: ["Une erreur inattendue est survenue"],
+        }));
+      }
     }
+  };
+
+  const handleGraphQLError = (error: ApolloError) => {
+    const newErrors: { [key: string]: string[] } = {};
+
+    error.graphQLErrors.forEach((err) => {
+      if (err.message.includes("Argument Validation Error")) {
+        newErrors.groupName = validateGroupName(groupName);
+      } else if (
+        err.message.includes("A group with this name already exists for you")
+      ) {
+        newErrors.groupName = ["Ce nom de groupe existe déjà"];
+      } else {
+        newErrors.generic = [
+          "Une erreur est survenue lors de la création du groupe",
+        ];
+      }
+    });
+
+    setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
   };
 
   return (
@@ -120,18 +187,29 @@ export default function FormCreateGroup({
       className="h-full flex flex-col justify-between"
     >
       <Box>
-        <FormControl isRequired mt={3}>
+        <FormControl
+          isRequired
+          isInvalid={errors.groupName && errors.groupName.length > 0}
+          mt={3}
+        >
           <FormLabel>Nom du groupe</FormLabel>
           <Input
-            type="name"
+            type="text"
             name="name"
-            id="name"
             placeholder="Donnez un nom à votre groupe"
             variant="goldenInput"
             ref={initialRef}
+            value={groupName}
+            onChange={handleChangeGroupName}
           />
+          {errors.groupName &&
+            errors.groupName.map((error, index) => (
+              <FormErrorMessage key={index} color="tertiary.medium">
+                {error}
+              </FormErrorMessage>
+            ))}
         </FormControl>
-        <FormControl mt={3} isInvalid={!!error}>
+        <FormControl mt={3} isInvalid={errors.email && errors.email.length > 0}>
           <FormLabel>Ajouter des membres</FormLabel>
           <Flex>
             <Input
@@ -139,7 +217,7 @@ export default function FormCreateGroup({
               placeholder="Saisissez l'email d'un membre à ajouter"
               variant="goldenInput"
               value={memberEmail}
-              onChange={handleChange}
+              onChange={handleChangeMemberEmail}
             />
             <Button
               variant="transparentButton"
@@ -155,9 +233,12 @@ export default function FormCreateGroup({
             </Button>
           </Flex>
 
-          {error && (
-            <FormErrorMessage color="tertiary.medium">{error}</FormErrorMessage>
-          )}
+          {errors.email &&
+            errors.email.map((error, index) => (
+              <FormErrorMessage key={index} color="tertiary.medium">
+                {error}
+              </FormErrorMessage>
+            ))}
         </FormControl>
         <Box
           mt={6}
@@ -202,6 +283,12 @@ export default function FormCreateGroup({
             </Box>
           ) : null}
         </Box>
+        {errors.generic &&
+          errors.generic.map((error, index) => (
+            <Text key={index} color="tertiary.medium" mt={2} fontSize={14}>
+              {error}
+            </Text>
+          ))}
       </Box>
       <Flex justifyContent="flex-end" mt={4}>
         <Button variant="whiteRedButton" mr={3} onClick={onClose}>
