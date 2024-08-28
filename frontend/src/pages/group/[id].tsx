@@ -17,12 +17,13 @@ import {
 } from "@chakra-ui/react";
 import { SearchIcon } from "lucide-react";
 import { AddIcon } from "@chakra-ui/icons";
+import { useTranslation } from "react-i18next";
 
 export default function Channels() {
   const router = useRouter();
+  const { t } = useTranslation();
   const id = router.query?.id as string;
   const [searchMember, setSearchMember] = useState("");
-
   const { data: groupeId, refetch } = useGroupByIdQuery({
     variables: { groupId: Number(id) },
   });
@@ -53,7 +54,7 @@ export default function Channels() {
       >
         <Box textAlign="center" mb="4">
           <Heading size="lg" my={4}>
-            {groupeId?.groupById.name || "Nom du Groupe"}
+            {groupeId?.groupById.name || t("group-name")}
           </Heading>
         </Box>
         <Flex justifyContent="center" my={8}>
@@ -96,7 +97,7 @@ export default function Channels() {
           </InputLeftElement>
           <Input
             type="text"
-            placeholder="Trouver un fil de discussion"
+            placeholder={t("placeholder-find-thread")}
             height="full"
             borderRadius="full"
             value={searchMember}
@@ -132,7 +133,7 @@ export default function Channels() {
                     flexWrap="wrap"
                     color={"primary.medium"}
                   >
-                    Idées cadeaux pour{" "}
+                   {t("present-ideas")}{" "}
                     {member.firstName + " " + member.lastName}
                   </Text>
                 </Box>
