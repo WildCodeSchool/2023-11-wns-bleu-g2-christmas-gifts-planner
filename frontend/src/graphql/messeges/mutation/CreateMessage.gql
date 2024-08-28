@@ -1,0 +1,12 @@
+mutation CreateMessage($data: NewMessageInputType!) {
+  createMessage(data: $data) {
+    id
+    content
+    sent_at
+    writtenBy {
+      id
+      firstName
+      lastName
+    }
+  }
+}
