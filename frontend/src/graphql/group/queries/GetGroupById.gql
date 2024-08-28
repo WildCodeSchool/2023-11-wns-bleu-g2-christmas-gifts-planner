@@ -1,0 +1,18 @@
+query GroupById($groupId: Int!) {
+  groupById(groupId: $groupId) {
+    id
+    name
+    owner {
+      id
+      firstName
+      lastName
+      email
+    }
+    members {
+      id
+      firstName
+      lastName
+      email
+    }
+  }
+}

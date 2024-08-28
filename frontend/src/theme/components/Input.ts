@@ -10,14 +10,18 @@ const goldenInput = definePartsStyle({
     rounded: 50,
     bg: "inherit",
     _hover: {
-      borderColor: "secondary.hight",
+      borderColor: "secondary.high",
     },
     _focusVisible: {
       border: "2px solid",
       borderColor: "secondary.medium",
+      bg: "background.default",
     },
     _invalid: {
       borderColor: "tertiary.medium",
+    },
+    _placeholder: {
+      fontSize: "sm",
     },
   },
 });

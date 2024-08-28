@@ -1,5 +1,6 @@
 import db from "./config/db";
 import Group from "./entities/Group";
+import Channel from "./entities/Channel";
 import User, { hashPassword } from "./entities/User";
 
 export async function clearDB() {
@@ -94,12 +95,58 @@ export default async function main() {
     owner: admin,
   });
 
+  firstAdminGroup.members = [userJonas, userMateo, userEnola];
+
+  const firstJonasGroup = new Group();
+  Object.assign(firstJonasGroup, {
+    name: "Gifty group",
+    owner: userJonas,
+  });
+  const secondJonasGroup = new Group();
+  Object.assign(secondJonasGroup, {
+    name: "Lance-lots",
+    owner: userJonas,
+  });
+
+  firstJonasGroup.members = [admin, userMateo];
+
   await firstAdminGroup.save();
   await secondAdminGroup.save();
   await tertiaryAdminGroup.save();
 
+  await firstJonasGroup.save();
+  await secondJonasGroup.save();
+
+  const mateoChannel = new Channel();
+  Object.assign(mateoChannel, {
+    name: "Mateo's channel",
+    group: firstAdminGroup,
+  });
+  await mateoChannel.save();
+
+  const ninaChannel = new Channel();
+  Object.assign(ninaChannel, {
+    name: "Nina's channel",
+    group: firstAdminGroup,
+  });
+  await ninaChannel.save();
+
+  const enolaChannel = new Channel();
+  Object.assign(enolaChannel, {
+    name: "Enola's channel",
+    group: secondAdminGroup,
+  });
+  await enolaChannel.save();
+
+  const valentinaChannel = new Channel();
+  Object.assign(valentinaChannel, {
+    name: "Valentinas's channel",
+    group: secondAdminGroup,
+  });
+  await valentinaChannel.save();
+
   await db.destroy();
-  console.log("done !");
+  console.log("Database reset complete");
 }
 
 main();
