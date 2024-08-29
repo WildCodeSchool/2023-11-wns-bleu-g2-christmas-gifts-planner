@@ -17,19 +17,28 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useState } from "react";
 import { useProfileQuery, useLogoutMutation } from "@/graphql/generated/schema";
+import i18n from "@/pages/i18n";
+import { useTranslation } from "react-i18next";
+
+
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
   const currentRoute = router.pathname;
-  const [language, setLanguage] = useState("FR");
-
+  const [language, setLanguage] = useState('FR');
+  const { t } = useTranslation()
   const handleLogin = () => {
     router.push("/login");
   };
 
   const handleLanguageChange = (lang: string) => {
-    setLanguage(lang);
+    setLanguage(lang)
+    if(lang === "FR"){
+      i18n.changeLanguage('fr')
+    } else if (lang === "EN"){
+      i18n.changeLanguage('en-US')
+    }
   };
 
   const { data: currentUser } = useProfileQuery({
@@ -116,7 +125,7 @@ export default function Navbar() {
               }}
               onClick={handleLogin}
             >
-              Se connecter
+              {t("sign-in")}
             </Button>
           ) : (
             <Menu>
@@ -142,29 +151,25 @@ export default function Navbar() {
                       _hover={{ bg: "secondary.low" }}
                       onClick={() => router.push("/profile")}
                     >
-                      Mon profil
-                    </MenuItem>
+                      {t("nav-my-profile")}
+                      </MenuItem>
                     <MenuItem
                       color="primary.high"
                       _hover={{ bg: "secondary.low" }}
                       onClick={() => router.push("/dashboard")}
                     >
-                      Mes groupes
+                      {t("nav-my-groups")}
                     </MenuItem>
                   </Flex>
                 </Box>
-                <MenuDivider />
-                <Box textAlign="center" p={4}>
-                  <Flex flexDirection="column">
-                    <Button
-                      mb={4}
-                      variant="goldenButton"
-                      onClick={() => router.push("/create-group")}
-                    >
-                      Créer un groupe
+                <MenuDivider />                
+                <Box textAlign="center" p={4} >
+                  <Flex flexDirection='column'>
+                    <Button mb={4} variant="goldenButton" onClick={() => router.push('/create-group')}>
+                      {t("create-group")}
                     </Button>
                     <Button variant="greenButton" onClick={handleLogout}>
-                      Se déconnecter
+                    {t("sign-out")}
                     </Button>
                   </Flex>
                 </Box>

@@ -6,6 +6,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { theme } from "@/theme/config";
 import Layout from "@/components/Layout";
 import { ErrorContextProvider } from "@/contexts/ErrorContext";
+import './i18n';
 
 interface MyAppProps extends AppProps {
   pageProps: {

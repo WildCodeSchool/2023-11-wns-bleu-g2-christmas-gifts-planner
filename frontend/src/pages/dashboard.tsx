@@ -17,12 +17,13 @@ import Error from "@/components/Error";
 import UnauthorizedImage from "../assets/images/Unauthorized.png";
 import GenericError from "../assets/images/GenericError.png";
 import ErrorContext from "@/contexts/ErrorContext";
+import { useTranslation } from "react-i18next";
 
 export default function Dashboard({ pageTitle }: { pageTitle: string }) {
   useEffect(() => {
     document.title = pageTitle;
   }, [pageTitle]);
-
+  const { t } = useTranslation()
   const {
     data: currentUser,
     refetch,
@@ -70,7 +71,7 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
           />
         </CardHeader>
         <Heading as="h1" size="xl" marginBlock={4}>
-          Bonjour {currentUser?.profile.firstName}
+          {t("hello")} {currentUser?.profile.firstName}
         </Heading>
         <CardBody w="95%" gap={4}>
           {(currentUser?.profile.groups &&

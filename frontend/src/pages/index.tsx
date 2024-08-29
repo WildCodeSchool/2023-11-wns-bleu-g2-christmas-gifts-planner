@@ -14,8 +14,10 @@ import {
 import { Gift, Group, UsersRound } from "lucide-react";
 import { useRouter } from "next/router";
 import { useProfileQuery } from "@/graphql/generated/schema";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { data: currentUser, client } = useProfileQuery({
     errorPolicy: "ignore",
@@ -25,7 +27,7 @@ export default function Home() {
       <Box flexDirection="column">
         <Center>
           <Heading fontSize="m">
-            Organisez vos cadeaux de Noël en Groupe avec ## TEST Deployement ##
+            {t("heading-organize")} ## TEST Deployement ##
           </Heading>
         </Center>
 
@@ -41,14 +43,13 @@ export default function Home() {
             </Center>
 
             <CardHeader mb="-40px">
-              <Heading size="sm">Etape 1 : Créez votre cercle de Noël</Heading>
+              <Heading size="sm">{t("step1")}</Heading>
             </CardHeader>
 
             <CardBody>
               <Box>
                 <Text pt="2" fontSize="sm">
-                  Commencez par créer votre groupe familial ou entre amis pour
-                  organiser les cadeaux de Noël de manière collaboratives.{" "}
+                  {t("step1-description")}{" "}
                 </Text>
               </Box>
             </CardBody>
@@ -68,16 +69,14 @@ export default function Home() {
 
             <CardHeader mb="-40px">
               <Heading size="sm">
-                Etape 2 : Invitez vos amis et votre famille
+                {t("step2")}
               </Heading>
             </CardHeader>
 
             <CardBody>
               <Box>
                 <Text pt="2" fontSize="sm">
-                  Invitez chaque membre de votre groupe à rejoindre
-                  l'application pour qu'ils puissent suggérer des idées de
-                  cadeaux.{" "}
+                {t("step2-description")}{" "}
                 </Text>
               </Box>
             </CardBody>
@@ -97,16 +96,14 @@ export default function Home() {
 
             <CardHeader mb="-40px">
               <Heading size="sm">
-                Etape 3 : Planifiez vos surprises de Noël
+               {t("step3")}
               </Heading>
             </CardHeader>
 
             <CardBody>
               <Box>
                 <Text pt="2" fontSize="sm">
-                  Créez des listes de cadeaux pour chaque membre du groupe,
-                  discutez des idées et choisissez les cadeaux parfaits pour
-                  faire de Noël une fête inoubliable.{" "}
+                  {t("step3-description")}{" "}
                 </Text>
               </Box>
             </CardBody>
@@ -123,7 +120,7 @@ export default function Home() {
                 rounded={50}
                 boxShadow="2px 2px 5px rgb(0, 0, 0)"
               >
-                Pas de compte ?
+               {t("no-account")}
               </Button>
             </Link>
 
@@ -136,7 +133,7 @@ export default function Home() {
                 rounded={50}
                 boxShadow="2px 2px 5px rgb(0, 0, 0)"
               >
-                Se connecter
+                {t("sign-in")}
               </Button>
             </Link>
           </Flex>
