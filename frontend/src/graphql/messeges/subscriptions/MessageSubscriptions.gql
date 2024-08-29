@@ -1,4 +1,4 @@
-subscription NewMessage($channelId: String!) {
+subscription NewMessage($channelId: Int!) {
   newMessage(channelId: $channelId) {
     id
     content

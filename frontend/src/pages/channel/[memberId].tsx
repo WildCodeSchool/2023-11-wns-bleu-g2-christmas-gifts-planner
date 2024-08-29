@@ -16,29 +16,34 @@ const Message = () => {
   const { data: currentUser, client } = useProfileQuery({
     errorPolicy: "ignore",
   });
-  console.log(channelMemberId);
   let { data: getMessages } = useMessagesQuery({
     variables: { channelId: parseInt(channelMemberId as string) },
   });
   const [createMessage] = useCreateMessageMutation();
 
   const oldMessages = getMessages?.messages || [];
-  useNewMessageSubscription({
-    onData: async (newMessage: any) => {
-      const getMessages = await client.readQuery({ query: MessagesDocument });
-      const oldMessages = getMessages.messages;
-      console.log(oldMessages);
-
-      const newMsgObj = newMessage.data.data.newMessage;
-
-      client.writeQuery({
-        query: MessagesDocument,
-
-        data: { messages: [...oldMessages, newMsgObj] },
-      });
+  const { data, loading, error }: any = useNewMessageSubscription({
+    variables: {
+      channelId: parseInt(channelMemberId, 10), // Converts to an integer
     },
   });
+  console.log(data || loading);
+  // useNewMessageSubscription({
+  //   onData: async (newMessage: any) => {
+  //     const getMessages = await client.readQuery({ query: MessagesDocument });
+  //     const oldMessages = getMessages.messages;
+  //     // console.log(oldMessages);
 
+  //     const newMsgObj = newMessage.data.data.newMessage;
+
+  //     client.writeQuery({
+  //       query: MessagesDocument,
+
+  //       data: { messages: [...oldMessages, newMsgObj] },
+  //     });
+  //     console.log(newMsgObj);
+  //   },
+  // });
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 

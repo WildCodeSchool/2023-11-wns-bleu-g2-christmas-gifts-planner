@@ -185,7 +185,7 @@ export type Subscription = {
 
 
 export type SubscriptionNewMessageArgs = {
-  channelId: Scalars['String'];
+  channelId: Scalars['Int'];
 };
 
 export type UpdateGroupNameInputType = {
@@ -248,7 +248,7 @@ export type MessagesQueryVariables = Exact<{
 export type MessagesQuery = { __typename?: 'Query', messages: Array<{ __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null }, channelId: { __typename?: 'Channel', id: number } }> };
 
 export type NewMessageSubscriptionVariables = Exact<{
-  channelId: Scalars['String'];
+  channelId: Scalars['Int'];
 }>;
 
 
@@ -522,7 +522,7 @@ export type MessagesQueryHookResult = ReturnType<typeof useMessagesQuery>;
 export type MessagesLazyQueryHookResult = ReturnType<typeof useMessagesLazyQuery>;
 export type MessagesQueryResult = Apollo.QueryResult<MessagesQuery, MessagesQueryVariables>;
 export const NewMessageDocument = gql`
-    subscription NewMessage($channelId: String!) {
+    subscription NewMessage($channelId: Int!) {
   newMessage(channelId: $channelId) {
     id
     content
