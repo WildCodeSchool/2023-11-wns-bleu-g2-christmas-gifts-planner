@@ -21,14 +21,19 @@ const Message = () => {
   });
   const [createMessage] = useCreateMessageMutation();
 
-  const oldMessages = getMessages?.messages || [];
-  const { data, loading, error }: any = useNewMessageSubscription({
-    variables: {
-      channelId: parseInt(channelMemberId, 10), // Converts to an integer
-    },
-  });
-  console.log(data || loading);
+  // const oldMessages = getMessages?.messages || [];
+  //working function to recive the data
+  // const { data, loading, error }: any = useNewMessageSubscription({
+  //   variables: {
+  //     channelId: parseInt(channelMemberId, 10), // Converts to an integer
+  //   },
+  // });
+  // console.log(data || loading);
+
   // useNewMessageSubscription({
+  //   variables: {
+  //     channelId: parseInt(channelMemberId, 10), // Converts to an integer
+  //   },
   //   onData: async (newMessage: any) => {
   //     const getMessages = await client.readQuery({ query: MessagesDocument });
   //     const oldMessages = getMessages.messages;
@@ -44,6 +49,35 @@ const Message = () => {
   //     console.log(newMsgObj);
   //   },
   // });
+  const oldMessages = getMessages?.messages || [];
+
+  useNewMessageSubscription({
+    variables: {
+      channelId: parseInt(channelMemberId, 10), // Ensure it's passed as an integer
+    },
+    // onData callback to handle new messages
+    onData: async (newMessage: any) => {
+      try {
+        // Read current messages from Apollo cache
+        const getMessages = await client.readQuery({ query: MessagesDocument });
+        const oldMessages = getMessages?.messages || []; // Safeguard in case getMessages is undefined
+        // Extract the new message from the incoming subscription data
+        const newMsgObj = newMessage.data.data.newMessage;
+
+        // Update Apollo cache with the new message
+        client.writeQuery({
+          query: MessagesDocument,
+          data: { messages: [...oldMessages, newMsgObj] },
+        });
+
+        console.log("New message received:", newMsgObj);
+      } catch (error) {
+        console.error("Error updating cache with new message:", error);
+      }
+    },
+  });
+  console.log("old messages", oldMessages);
+
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
