@@ -152,7 +152,7 @@ export default async function main() {
   Object.assign(message01, {
     content: "Hello Mateo, i tought about an amazing gift for pierre! a fish!",
     sent_at: "2024-07-03 18:10:31",
-    channel: 1,
+    channelId: 1,
     writtenBy: {
       id: 2,
     },
@@ -163,12 +163,23 @@ export default async function main() {
   Object.assign(message02, {
     content: "lol, Jonas!",
     sent_at: "2024-07-03 18:11:02",
-    channel: 1,
+    channelId: 1,
     writtenBy: {
       id: 3,
     },
   });
   await message02.save();
+
+  const message03 = new Message();
+  Object.assign(message03, {
+    content: "message03",
+    sent_at: "2024-07-03 18:11:02",
+    channel: 1,
+    writtenBy: {
+      id: 3,
+    },
+  });
+  await message03.save();
 
   await db.destroy();
   console.log("Database reset complete");

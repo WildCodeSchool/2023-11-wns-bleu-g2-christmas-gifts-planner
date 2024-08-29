@@ -59,7 +59,7 @@ export type LoginInputType = {
 
 export type Message = {
   __typename?: 'Message';
-  channel: Channel;
+  channelId: Channel;
   content: Scalars['String'];
   id: Scalars['Int'];
   sent_at: Scalars['String'];
@@ -183,6 +183,11 @@ export type Subscription = {
   newMessage: Message;
 };
 
+
+export type SubscriptionNewMessageArgs = {
+  channelId: Scalars['String'];
+};
+
 export type UpdateGroupNameInputType = {
   name: Scalars['String'];
 };
@@ -240,12 +245,14 @@ export type MessagesQueryVariables = Exact<{
 }>;
 
 
-export type MessagesQuery = { __typename?: 'Query', messages: Array<{ __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null }, channel: { __typename?: 'Channel', id: number } }> };
+export type MessagesQuery = { __typename?: 'Query', messages: Array<{ __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null }, channelId: { __typename?: 'Channel', id: number } }> };
 
-export type NewMessageSubscriptionVariables = Exact<{ [key: string]: never; }>;
+export type NewMessageSubscriptionVariables = Exact<{
+  channelId: Scalars['String'];
+}>;
 
 
-export type NewMessageSubscription = { __typename?: 'Subscription', newMessage: { __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } } };
+export type NewMessageSubscription = { __typename?: 'Subscription', newMessage: { __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null }, channelId: { __typename?: 'Channel', id: number } } };
 
 export type CompleteProfileMutationVariables = Exact<{
   data: CompleteProfileInputType;
@@ -480,7 +487,7 @@ export const MessagesDocument = gql`
       firstName
       lastName
     }
-    channel {
+    channelId {
       id
     }
   }
@@ -515,8 +522,8 @@ export type MessagesQueryHookResult = ReturnType<typeof useMessagesQuery>;
 export type MessagesLazyQueryHookResult = ReturnType<typeof useMessagesLazyQuery>;
 export type MessagesQueryResult = Apollo.QueryResult<MessagesQuery, MessagesQueryVariables>;
 export const NewMessageDocument = gql`
-    subscription NewMessage {
-  newMessage {
+    subscription NewMessage($channelId: String!) {
+  newMessage(channelId: $channelId) {
     id
     content
     sent_at
@@ -524,6 +531,9 @@ export const NewMessageDocument = gql`
       id
       firstName
       lastName
+    }
+    channelId {
+      id
     }
   }
 }
@@ -541,10 +551,11 @@ export const NewMessageDocument = gql`
  * @example
  * const { data, loading, error } = useNewMessageSubscription({
  *   variables: {
+ *      channelId: // value for 'channelId'
  *   },
  * });
  */
-export function useNewMessageSubscription(baseOptions?: Apollo.SubscriptionHookOptions<NewMessageSubscription, NewMessageSubscriptionVariables>) {
+export function useNewMessageSubscription(baseOptions: Apollo.SubscriptionHookOptions<NewMessageSubscription, NewMessageSubscriptionVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useSubscription<NewMessageSubscription, NewMessageSubscriptionVariables>(NewMessageDocument, options);
       }

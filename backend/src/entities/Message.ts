@@ -37,5 +37,5 @@ export default class Message extends BaseEntity {
     onDelete: "CASCADE",
   })
   @Field(() => Channel)
-  channel: Channel;
+  channelId: Channel;
 }

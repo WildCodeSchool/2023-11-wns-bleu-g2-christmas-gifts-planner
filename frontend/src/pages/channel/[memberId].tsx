@@ -50,7 +50,9 @@ const Message = () => {
       firstName: currentUser?.profile.firstName,
       lastName: currentUser?.profile.lastName,
     };
-
+    formJSON.channelId = {
+      id: parseInt(channelMemberId, 10),
+    };
     const res = await createMessage({ variables: { data: formJSON } });
   };
 

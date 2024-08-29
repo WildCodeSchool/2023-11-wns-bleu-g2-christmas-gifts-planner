@@ -8,7 +8,7 @@ query Messages($channelId: Int) {
       firstName
       lastName
     }
-    channel {
+    channelId {
       id
     }
   }
