@@ -50,34 +50,34 @@ export default function Home() {
           </Heading>
         </Center>
 {homepageCardData.map((x) => 
-        <Card
+      <Card
         key={x.step}
         mx="24px"
         mt="4%"
-        boxShadow="5px 4px 5px rgb(211, 211, 211)"
-        borderWidth="1px"
+        borderRadius={10}
+        boxShadow="3px 4px 3px rgb(211, 211, 211)"
+        border="1px solid lightgray"
       >
         <Grid templateRows="repeat(2, 1fr)" templateColumns='repeat(6, 1fr)'>
-  <GridItem rowSpan={2} colSpan={1}>
-    <Center h="100%">  
-      {x.icon}
-    </Center>
-  </GridItem>
-  <GridItem rowSpan={2} colSpan={5} p={0}>
-    <CardHeader mb="-40px" pl={0}>
-      <Heading size="sm">{t(x.step)}</Heading>
-    </CardHeader>
-    <CardBody pl={0}>
-      <Box>
-        <Text pt="2" fontSize="sm">
-          {t(x.description)}
-        </Text>
-      </Box>
-    </CardBody> 
-  </GridItem>
-</Grid>
-
-      </Card>
+          <GridItem rowSpan={2} colSpan={1}>
+            <Center h="100%">  
+              {x.icon}
+            </Center>
+          </GridItem>
+          <GridItem rowSpan={2} colSpan={5} p={0}>
+            <CardHeader mb="-40px" pl={0}>
+              <Heading size="sm">{t(x.step)}</Heading>
+            </CardHeader>
+            <CardBody pl={0}>
+              <Box>
+                <Text pt="2" fontSize="sm">
+                  {t(x.description)}
+                </Text>
+              </Box>
+            </CardBody> 
+          </GridItem>
+        </Grid>
+        </Card>
         )
 }
         <Center>
