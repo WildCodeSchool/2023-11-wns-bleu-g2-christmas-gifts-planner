@@ -48,7 +48,7 @@ export default function Home() {
           </Heading>
         </Center>
 
-        <Link href="/">
+        
           <Card
             mx="24px"
             mt="4%"
@@ -71,9 +71,8 @@ export default function Home() {
               </Box>
             </CardBody>
           </Card>
-        </Link>
 
-        <Link href="/">
+        
           <Card
             mx="24px"
             mt="4%"
@@ -98,9 +97,8 @@ export default function Home() {
               </Box>
             </CardBody>
           </Card>
-        </Link>
 
-        <Link href="/">
+        
           <Card
             mx="24px"
             mt="4%"
@@ -125,7 +123,6 @@ export default function Home() {
               </Box>
             </CardBody>
           </Card>
-        </Link>
 
         <Center>
           <Flex flexDirection="column" gap={5} mt={5}>
