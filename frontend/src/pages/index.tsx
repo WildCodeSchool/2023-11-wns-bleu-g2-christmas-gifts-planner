@@ -52,6 +52,7 @@ export default function Home() {
 {homepageCardData.map((x) => 
       <Card
         key={x.step}
+        width={{ base: "95%", md: "48rem" }}
         mx="24px"
         mt="4%"
         borderRadius={10}
