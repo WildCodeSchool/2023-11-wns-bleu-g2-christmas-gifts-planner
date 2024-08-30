@@ -1,5 +1,5 @@
 import { useCompleteProfileMutation } from "@/graphql/generated/schema";
-import { ApolloError } from "@apollo/client";
+import { ApolloError, useApolloClient } from "@apollo/client";
 import {
   Box,
   Button,
@@ -14,6 +14,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  useToast,
 } from "@chakra-ui/react";
 import { Check, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/router";
@@ -23,6 +24,7 @@ import Error from "@/components/Error";
 import UnauthorizedImage from "../assets/images/Unauthorized.png";
 import GenericErrorImage from "../assets/images/GenericError.png";
 import ErrorContext from "@/contexts/ErrorContext";
+import Loader from "@/components/Loader";
 
 export default function CompleteProfile() {
   //Get the token from the URL query params
@@ -32,9 +34,25 @@ export default function CompleteProfile() {
   // const messages = errorContext ? errorContext.messages : null;
 
   const { messages } = useContext(ErrorContext);
+  const client = useApolloClient();
 
   // Use the useCompleteProfileMutation hook to handle the mutation for completing the profile
-  const [CompleteProfile, { error }] = useCompleteProfileMutation();
+  const [CompleteProfile, { error, loading }] = useCompleteProfileMutation({
+    onCompleted: () => {
+      client.refetchQueries({
+        include: ["Profile"],
+      });
+      toast({
+        title: "Profil validé",
+        description: `Votre profil a été validé avec succes.`,
+        status: "success",
+        variant: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+      router.push("/dashboard");
+    },
+  });
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
@@ -42,13 +60,11 @@ export default function CompleteProfile() {
   const {
     validateLastName,
     validateFirstName,
-    validateEmail,
     validatePassword,
     validateConfirmPassword,
   } = useFormValidation();
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [errors, setErrors] = useState<{
@@ -58,6 +74,7 @@ export default function CompleteProfile() {
     password?: string[];
     passwordConfirmation?: string[];
   }>({});
+  const toast = useToast();
 
   const toggleShowPassword = () => setShowPassword(!showPassword);
   const toggleShowConfirmPassword = () =>
@@ -75,14 +92,6 @@ export default function CompleteProfile() {
     const newErrors = validateFirstName(e.target.value);
     return newErrors.length > 0
       ? setErrors({ ...errors, firstName: newErrors })
-      : setErrors({});
-  };
-
-  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    const newErrors = validateEmail(e.target.value);
-    return newErrors.length > 0
-      ? setErrors({ ...errors, email: newErrors })
       : setErrors({});
   };
 
@@ -119,10 +128,6 @@ export default function CompleteProfile() {
           token: token,
         },
       });
-
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 5000);
     } catch (error) {
       if (error instanceof ApolloError) {
         console.error("GraphQL Error:", error.graphQLErrors);
@@ -131,7 +136,7 @@ export default function CompleteProfile() {
       }
     }
   };
-  if (!token)
+  if (error?.message === "Invalid or expired token") {
     return (
       <Error
         image={UnauthorizedImage}
@@ -139,6 +144,8 @@ export default function CompleteProfile() {
         message={messages?.unauthorized}
       ></Error>
     );
+  }
+
   if (error) {
     return (
       <Error
@@ -148,6 +155,7 @@ export default function CompleteProfile() {
       ></Error>
     );
   }
+  if (loading) return <Loader></Loader>;
   if (token)
     return (
       <form onSubmit={handleSubmit}>
@@ -202,27 +210,6 @@ export default function CompleteProfile() {
                 />
                 {errors.firstName &&
                   errors.firstName.map((error, index) => (
-                    <FormErrorMessage key={index} color="tertiary.medium">
-                      {error}
-                    </FormErrorMessage>
-                  ))}
-              </FormControl>
-              <FormControl
-                isRequired
-                isInvalid={errors.email && errors.email.length > 0}
-                mt={3}
-              >
-                <FormLabel>E-mail</FormLabel>
-                <Input
-                  type="email"
-                  name="email"
-                  placeholder="example@mail.com"
-                  variant="goldenInput"
-                  value={email}
-                  onChange={(e) => handleChangeEmail(e)}
-                />
-                {errors.email &&
-                  errors.email.map((error, index) => (
                     <FormErrorMessage key={index} color="tertiary.medium">
                       {error}
                     </FormErrorMessage>
