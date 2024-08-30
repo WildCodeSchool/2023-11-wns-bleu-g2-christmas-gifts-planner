@@ -10,6 +10,7 @@ import {
   Grid,
   GridItem,
   Heading,
+  Image,
   Link,
   Text,
 } from "@chakra-ui/react";
@@ -17,7 +18,6 @@ import { Gift, Group, UsersRound } from "lucide-react";
 import { useRouter } from "next/router";
 import { useProfileQuery } from "@/graphql/generated/schema";
 import { useTranslation } from "react-i18next";
-
 export default function Home() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -45,15 +45,16 @@ export default function Home() {
     <>
       <Box flexDirection="column">
         <Center>
-          <Heading fontSize="m">
+          <Heading fontSize="2xl">
             {t("heading-organize")}
           </Heading>
         </Center>
+        <Image src="/Gifty-logo.svg" alt="Gifty" mt={8} w="20%" mx="40%"/>
 {homepageCardData.map((x) => 
+<Center key={x.step}>
       <Card
-        key={x.step}
-        width={{ base: "95%", md: "48rem" }}
-        mx="24px"
+        width={{base: "95%", md: "40%"  }}
+        mx={{base: "2.5%", md: "30%"  }}
         mt="4%"
         borderRadius={10}
         boxShadow="3px 4px 3px rgb(211, 211, 211)"
@@ -79,6 +80,7 @@ export default function Home() {
           </GridItem>
         </Grid>
         </Card>
+        </Center>
         )
 }
         <Center>
