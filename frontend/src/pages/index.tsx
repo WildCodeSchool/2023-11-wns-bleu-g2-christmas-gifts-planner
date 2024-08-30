@@ -31,7 +31,7 @@ export default function Home() {
   {
     icon:  <UsersRound color="rgb(161, 7, 2)" />,
     step: "step2",
-    description: "step-description"
+    description: "step2-description"
   },
   {
     icon:  <Gift color="rgb(161, 7, 2)" />,
@@ -47,83 +47,32 @@ export default function Home() {
             {t("heading-organize")} ## TEST Deployement ##
           </Heading>
         </Center>
+{homepageCardData.map((x) => 
+        <Card
+        key={x.step}
+        mx="24px"
+        mt="4%"
+        boxShadow="5px 4px 5px rgb(211, 211, 211)"
+        borderWidth="1px"
+      >
+        <Center mt="5%" mb="-18px">
+          {x.icon}
+        </Center>
 
-        
-          <Card
-            mx="24px"
-            mt="4%"
-            boxShadow="5px 4px 5px rgb(211, 211, 211)"
-            borderWidth="1px"
-          >
-            <Center mt="5%" mb="-18px">
-              <Group color="rgb(161, 7, 2)" />
-            </Center>
+        <CardHeader mb="-40px">
+          <Heading size="sm">{t(x.step)}</Heading>
+        </CardHeader>
 
-            <CardHeader mb="-40px">
-              <Heading size="sm">{t("step1")}</Heading>
-            </CardHeader>
-
-            <CardBody>
-              <Box>
-                <Text pt="2" fontSize="sm">
-                  {t("step1-description")}{" "}
-                </Text>
-              </Box>
-            </CardBody>
-          </Card>
-
-        
-          <Card
-            mx="24px"
-            mt="4%"
-            boxShadow="5px 4px 5px rgb(0, 59, 30)"
-            borderWidth="1px"
-          >
-            <Center mt="5%" mb="-18px">
-              <UsersRound color="rgb(161, 7, 2)" />
-            </Center>
-
-            <CardHeader mb="-40px">
-              <Heading size="sm">
-                {t("step2")}
-              </Heading>
-            </CardHeader>
-
-            <CardBody>
-              <Box>
-                <Text pt="2" fontSize="sm">
-                {t("step2-description")}{" "}
-                </Text>
-              </Box>
-            </CardBody>
-          </Card>
-
-        
-          <Card
-            mx="24px"
-            mt="4%"
-            boxShadow="5px 4px 5px rgb(0, 59, 30)"
-            borderWidth="1px"
-          >
-            <Center mt="5%" mb="-18px">
-              <Gift color="rgb(161, 7, 2)" />
-            </Center>
-
-            <CardHeader mb="-40px">
-              <Heading size="sm">
-               {t("step3")}
-              </Heading>
-            </CardHeader>
-
-            <CardBody>
-              <Box>
-                <Text pt="2" fontSize="sm">
-                  {t("step3-description")}{" "}
-                </Text>
-              </Box>
-            </CardBody>
-          </Card>
-
+        <CardBody>
+          <Box>
+            <Text pt="2" fontSize="sm">
+              {t(x.description)}{" "}
+            </Text>
+          </Box>
+        </CardBody>
+      </Card>
+        )
+}
         <Center>
           <Flex flexDirection="column" gap={5} mt={5}>
             <Link href="/signup">
