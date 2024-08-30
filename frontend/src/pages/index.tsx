@@ -7,8 +7,6 @@ import {
   CardHeader,
   Center,
   Flex,
-  Grid,
-  GridItem,
   Heading,
   Link,
   Text,
@@ -24,63 +22,94 @@ export default function Home() {
   const { data: currentUser, client } = useProfileQuery({
     errorPolicy: "ignore",
   });
-
-  const homepageCardData = [{
-    icon:  <Group color="rgb(161, 7, 2)" size="2.5rem" />,
-    step: "step1",
-    description: "step1-description"
-  },
-  {
-    icon:  <UsersRound color="rgb(161, 7, 2)" size="2.5rem" />,
-    step: "step2",
-    description: "step2-description"
-  },
-  {
-    icon:  <Gift color="rgb(161, 7, 2)" size="2.5rem" />,
-    step: "step3",
-    description: "step3-description"
-  }
-]
   return (
     <>
       <Box flexDirection="column">
         <Center>
           <Heading fontSize="m">
-            {t("heading-organize")}
+            {t("heading-organize")} ## TEST Deployement ##
           </Heading>
         </Center>
-{homepageCardData.map((x) => 
-      <Card
-        key={x.step}
-        width={{ base: "95%", md: "48rem" }}
-        mx="24px"
-        mt="4%"
-        borderRadius={10}
-        boxShadow="3px 4px 3px rgb(211, 211, 211)"
-        border="1px solid lightgray"
-      >
-        <Grid templateRows="repeat(2, 1fr)" templateColumns='repeat(6, 1fr)'>
-          <GridItem rowSpan={2} colSpan={1}>
-            <Center h="100%">  
-              {x.icon}
+
+        <Link href="/">
+          <Card
+            mx="24px"
+            mt="4%"
+            boxShadow="5px 4px 5px rgb(0, 59, 30)"
+            borderWidth="1px"
+          >
+            <Center mt="5%" mb="-18px">
+              <Group color="rgb(161, 7, 2)" />
             </Center>
-          </GridItem>
-          <GridItem rowSpan={2} colSpan={5} p={0}>
-            <CardHeader mb="-40px" pl={0}>
-              <Heading size="sm" fontFamily="arial">{t(x.step)}</Heading>
+
+            <CardHeader mb="-40px">
+              <Heading size="sm">{t("step1")}</Heading>
             </CardHeader>
-            <CardBody pl={0}>
+
+            <CardBody>
               <Box>
                 <Text pt="2" fontSize="sm">
-                  {t(x.description)}
+                  {t("step1-description")}{" "}
                 </Text>
               </Box>
-            </CardBody> 
-          </GridItem>
-        </Grid>
-        </Card>
-        )
-}
+            </CardBody>
+          </Card>
+        </Link>
+
+        <Link href="/">
+          <Card
+            mx="24px"
+            mt="4%"
+            boxShadow="5px 4px 5px rgb(0, 59, 30)"
+            borderWidth="1px"
+          >
+            <Center mt="5%" mb="-18px">
+              <UsersRound color="rgb(161, 7, 2)" />
+            </Center>
+
+            <CardHeader mb="-40px">
+              <Heading size="sm">
+                {t("step2")}
+              </Heading>
+            </CardHeader>
+
+            <CardBody>
+              <Box>
+                <Text pt="2" fontSize="sm">
+                {t("step2-description")}{" "}
+                </Text>
+              </Box>
+            </CardBody>
+          </Card>
+        </Link>
+
+        <Link href="/">
+          <Card
+            mx="24px"
+            mt="4%"
+            boxShadow="5px 4px 5px rgb(0, 59, 30)"
+            borderWidth="1px"
+          >
+            <Center mt="5%" mb="-18px">
+              <Gift color="rgb(161, 7, 2)" />
+            </Center>
+
+            <CardHeader mb="-40px">
+              <Heading size="sm">
+               {t("step3")}
+              </Heading>
+            </CardHeader>
+
+            <CardBody>
+              <Box>
+                <Text pt="2" fontSize="sm">
+                  {t("step3-description")}{" "}
+                </Text>
+              </Box>
+            </CardBody>
+          </Card>
+        </Link>
+
         <Center>
           <Flex flexDirection="column" gap={5} mt={5}>
             <Link href="/signup">
