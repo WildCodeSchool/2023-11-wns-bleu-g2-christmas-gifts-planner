@@ -7,6 +7,8 @@ import {
   CardHeader,
   Center,
   Flex,
+  Grid,
+  GridItem,
   Heading,
   Link,
   Text,
@@ -24,17 +26,17 @@ export default function Home() {
   });
 
   const homepageCardData = [{
-    icon:  <Group color="rgb(161, 7, 2)" />,
+    icon:  <Group color="rgb(161, 7, 2)" size="2.5rem" />,
     step: "step1",
     description: "step1-description"
   },
   {
-    icon:  <UsersRound color="rgb(161, 7, 2)" />,
+    icon:  <UsersRound color="rgb(161, 7, 2)" size="2.5rem" />,
     step: "step2",
     description: "step2-description"
   },
   {
-    icon:  <Gift color="rgb(161, 7, 2)" />,
+    icon:  <Gift color="rgb(161, 7, 2)" size="2.5rem" />,
     step: "step3",
     description: "step3-description"
   }
@@ -55,21 +57,26 @@ export default function Home() {
         boxShadow="5px 4px 5px rgb(211, 211, 211)"
         borderWidth="1px"
       >
-        <Center mt="5%" mb="-18px">
-          {x.icon}
-        </Center>
+        <Grid templateRows="repeat(2, 1fr)" templateColumns='repeat(6, 1fr)'>
+  <GridItem rowSpan={2} colSpan={1}>
+    <Center h="100%">  
+      {x.icon}
+    </Center>
+  </GridItem>
+  <GridItem rowSpan={2} colSpan={5} p={0}>
+    <CardHeader mb="-40px" pl={0}>
+      <Heading size="sm">{t(x.step)}</Heading>
+    </CardHeader>
+    <CardBody pl={0}>
+      <Box>
+        <Text pt="2" fontSize="sm">
+          {t(x.description)}
+        </Text>
+      </Box>
+    </CardBody> 
+  </GridItem>
+</Grid>
 
-        <CardHeader mb="-40px">
-          <Heading size="sm">{t(x.step)}</Heading>
-        </CardHeader>
-
-        <CardBody>
-          <Box>
-            <Text pt="2" fontSize="sm">
-              {t(x.description)}{" "}
-            </Text>
-          </Box>
-        </CardBody>
       </Card>
         )
 }
