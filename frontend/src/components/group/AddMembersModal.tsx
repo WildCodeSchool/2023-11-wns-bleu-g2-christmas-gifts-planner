@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Modal,
   ModalBody,
@@ -21,9 +22,16 @@ export default function AddMembersModal({ refetch, id }: AddMembersModalProps) {
   const initialRef = React.useRef(null);
   return (
     <>
-      <Button onClick={onOpen} variant="goldenButton">
-        Ajouter des membres
-      </Button>
+        <Box
+        display="flex"
+        justifyContent={ "center"} 
+        alignItems={ "center"}
+        height={"60px"}
+      >
+        <Button onClick={onOpen} variant="goldenButton">
+          Ajouter des membres
+        </Button>
+      </Box>
 
       <Modal
         isOpen={isOpen}
