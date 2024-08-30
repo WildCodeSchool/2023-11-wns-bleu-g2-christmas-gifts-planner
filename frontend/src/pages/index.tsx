@@ -46,7 +46,7 @@ export default function Home() {
       <Box flexDirection="column">
         <Center>
           <Heading fontSize="m">
-            {t("heading-organize")} ## TEST Deployement ##
+            {t("heading-organize")}
           </Heading>
         </Center>
 {homepageCardData.map((x) => 
