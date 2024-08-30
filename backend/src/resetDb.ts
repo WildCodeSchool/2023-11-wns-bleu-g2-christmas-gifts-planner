@@ -117,33 +117,33 @@ export default async function main() {
   await firstJonasGroup.save();
   await secondJonasGroup.save();
 
-  const mateoChannel = new Channel();
-  Object.assign(mateoChannel, {
-    name: "Mateo's channel",
-    group: firstAdminGroup,
-  });
-  await mateoChannel.save();
+  // const mateoChannel = new Channel();
+  // Object.assign(mateoChannel, {
+  //   name: "Mateo's channel",
+  //   group: firstAdminGroup,
+  // });
+  // await mateoChannel.save();
 
-  const ninaChannel = new Channel();
-  Object.assign(ninaChannel, {
-    name: "Nina's channel",
-    group: firstAdminGroup,
-  });
-  await ninaChannel.save();
+  // const ninaChannel = new Channel();
+  // Object.assign(ninaChannel, {
+  //   name: "Nina's channel",
+  //   group: firstAdminGroup,
+  // });
+  // await ninaChannel.save();
 
-  const enolaChannel = new Channel();
-  Object.assign(enolaChannel, {
-    name: "Enola's channel",
-    group: secondAdminGroup,
-  });
-  await enolaChannel.save();
+  // const enolaChannel = new Channel();
+  // Object.assign(enolaChannel, {
+  //   name: "Enola's channel",
+  //   group: secondAdminGroup,
+  // });
+  // await enolaChannel.save();
 
-  const valentinaChannel = new Channel();
-  Object.assign(valentinaChannel, {
-    name: "Valentinas's channel",
-    group: secondAdminGroup,
-  });
-  await valentinaChannel.save();
+  // const valentinaChannel = new Channel();
+  // Object.assign(valentinaChannel, {
+  //   name: "Valentinas's channel",
+  //   group: secondAdminGroup,
+  // });
+  // await valentinaChannel.save();
 
   await db.destroy();
   console.log("Database reset complete");

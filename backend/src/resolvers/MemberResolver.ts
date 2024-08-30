@@ -5,6 +5,7 @@ import { GraphQLError } from "graphql";
 import { findOrCreateUserByEmail, sendAnEmail } from "../services/userService";
 import { AddMembersInputType } from "../types/MemberTypes";
 import Channel from "../entities/Channel";
+import User from "../entities/User";
 
 /**
  * Resolver class for handling member-related operations.
@@ -33,20 +34,18 @@ export default class MemberResolver {
       throw new GraphQLError("Group not found");
     }
 
-    // Iterate over the members and create a channel for each member
     for (const member of group.members) {
-      // Check if a channel already exists for this member in this group
       const existingChannel = await Channel.findOne({
         where: { name: `${member.lastName} ${member.firstName}'s channel`, group: { id: groupId } },
       });
 
-      // If the channel doesn't exist, create a new one
       if (!existingChannel) {
         const channel = new Channel();
         Object.assign(channel, {
           name: `${member.lastName} ${member.firstName}'s channel`,
           group: group,
         });
+        
         await channel.save();
       }
     }
