@@ -20,7 +20,7 @@ const Message = () => {
     variables: { channelId: parseInt(channelMemberId as string) },
   });
   const [createMessage] = useCreateMessageMutation();
-
+  console.log("native getmessages", getMessages?.messages);
   // const oldMessages = getMessages?.messages || [];
   //working function to recive the data
   // const { data, loading, error }: any = useNewMessageSubscription({
@@ -49,34 +49,50 @@ const Message = () => {
   //     console.log(newMsgObj);
   //   },
   // });
+
   const oldMessages = getMessages?.messages || [];
 
   useNewMessageSubscription({
     variables: {
-      channelId: parseInt(channelMemberId, 10), // Ensure it's passed as an integer
+      channelId: parseInt(channelMemberId, 10),
     },
-    // onData callback to handle new messages
     onData: async (newMessage: any) => {
       try {
-        // Read current messages from Apollo cache
-        const getMessages = await client.readQuery({ query: MessagesDocument });
-        const oldMessages = getMessages?.messages || []; // Safeguard in case getMessages is undefined
-        // Extract the new message from the incoming subscription data
+        // Read the current messages from the Apollo cache
+        const getMessages = client.readQuery({
+          query: MessagesDocument,
+          variables: {
+            channelId: parseInt(channelMemberId, 10),
+          },
+        });
+        const oldMessages = getMessages?.messages || []; // Ensure default is an empty array
+
+        console.log("Old Messages from Cache:", oldMessages); // Debugging line
+
+        // Extract the new message from the subscription
         const newMsgObj = newMessage.data.data.newMessage;
 
-        // Update Apollo cache with the new message
+        // Write the updated list (old + new message) back to the cache
         client.writeQuery({
           query: MessagesDocument,
           data: { messages: [...oldMessages, newMsgObj] },
+          variables: {
+            channelId: parseInt(channelMemberId, 10),
+          },
         });
 
-        console.log("New message received:", newMsgObj);
+        console.log("New message added:", newMsgObj);
+
+        // Confirm the cache update
+        const updatedMessages = client.readQuery({ query: MessagesDocument });
+        console.log("Updated Messages from Cache:", updatedMessages?.messages);
       } catch (error) {
-        console.error("Error updating cache with new message:", error);
+        console.error("Error reading or writing cache:", error);
       }
+      return oldMessages;
     },
   });
-  console.log("old messages", oldMessages);
+  // console.log("old messages", oldMessages);
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -97,7 +113,6 @@ const Message = () => {
 
   return (
     <>
-      <h1>{channelMemberId}</h1>
       <div className="flex  just flex-col">
         <div className="  h-[75vh] overflow-y-auto">
           <div className=" p-4 ">
