@@ -22,6 +22,23 @@ export default function Home() {
   const { data: currentUser, client } = useProfileQuery({
     errorPolicy: "ignore",
   });
+
+  const homepageCardData = [{
+    icon:  <Group color="rgb(161, 7, 2)" />,
+    step: "step1",
+    description: "step1-description"
+  },
+  {
+    icon:  <UsersRound color="rgb(161, 7, 2)" />,
+    step: "step2",
+    description: "step-description"
+  },
+  {
+    icon:  <Gift color="rgb(161, 7, 2)" />,
+    step: "step3",
+    description: "step3-description"
+  }
+]
   return (
     <>
       <Box flexDirection="column">
@@ -35,7 +52,7 @@ export default function Home() {
           <Card
             mx="24px"
             mt="4%"
-            boxShadow="5px 4px 5px rgb(0, 59, 30)"
+            boxShadow="5px 4px 5px rgb(211, 211, 211)"
             borderWidth="1px"
           >
             <Center mt="5%" mb="-18px">
