@@ -1,7 +1,8 @@
 import db from "./config/db";
+import Message from "./entities/Message";
 import Group from "./entities/Group";
 import Channel from "./entities/Channel";
-import User, { hashPassword } from "./entities/User";
+import User, { UserRole, hashPassword } from "./entities/User";
 
 export async function clearDB() {
   const runner = db.createQueryRunner();
@@ -30,6 +31,7 @@ export default async function main() {
     lastName: "admin",
     email: "admin@app.com",
     password: "4dminAdmin@!",
+    role: UserRole.Admin,
   });
   await admin.save();
 
@@ -77,6 +79,26 @@ export default async function main() {
     password: "NinaLouis1+",
   });
   await userNina.save();
+
+  const message01 = new Message();
+  Object.assign(message01, {
+    content: "Hello Mateo, i tought about an amazing gift for pierre! a fish!",
+    sent_at: "2024-07-03 18:10:31",
+    writtenBy: {
+      id: 2,
+    },
+  });
+  await message01.save();
+
+  const message02 = new Message();
+  Object.assign(message02, {
+    content: "lol, Jonas!",
+    sent_at: "2024-07-03 18:11:02",
+    writtenBy: {
+      id: 3,
+    },
+  });
+  await message02.save();
 
   const firstAdminGroup = new Group();
   Object.assign(firstAdminGroup, {

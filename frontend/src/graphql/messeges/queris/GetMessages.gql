@@ -1,0 +1,12 @@
+query Messages {
+  messages {
+    id
+    content
+    sent_at
+    writtenBy {
+      id
+      firstName
+      lastName
+    }
+  }
+}

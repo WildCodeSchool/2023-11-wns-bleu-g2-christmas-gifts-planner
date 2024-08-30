@@ -3,8 +3,11 @@ import { Text } from "@chakra-ui/react";
 import React from "react";
 import GroupList from "../group/GroupList";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 export default function DashboardWhithGroup() {
+  const { t } = useTranslation();
+
   // Fetches the current user's profile and groups
   const { data: currentUser } = useProfileQuery({
     errorPolicy: "ignore",
@@ -20,7 +23,7 @@ export default function DashboardWhithGroup() {
   return (
     <>
       <Text fontSize="lg" mb={6}>
-        Vous êtes membre de {numberOfGroups}{" "}
+        {t("my-groups-list")} {numberOfGroups}{" "}
         {numberOfGroups > 1 ? "groupes" : "groupe"}
       </Text>
       {listOfGroups.groups?.map((group) => (

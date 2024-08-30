@@ -15,6 +15,7 @@ import React, { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { ApolloError } from "@apollo/client";
 import { useFormValidation } from "@/hooks/useFormValidation";
+import { useTranslation } from "react-i18next";
 
 type FormCreateGroupProps = {
   onClose: () => void;
@@ -37,6 +38,7 @@ export default function FormCreateGroup({
   const [groupName, setGroupName] = useState("");
   // These functions are used to validate the user input in the form.
   const { validateEmail, validateGroupName } = useFormValidation();
+  const { t } = useTranslation();
   const [errors, setErrors] = useState<{
     groupName?: string[];
     email?: string[];
@@ -202,11 +204,11 @@ export default function FormCreateGroup({
           isInvalid={errors.groupName && errors.groupName.length > 0}
           mt={3}
         >
-          <FormLabel>Nom du groupe</FormLabel>
+          <FormLabel>{t("group-name")}</FormLabel>
           <Input
             type="text"
             name="name"
-            placeholder="Donnez un nom à votre groupe"
+            placeholder={t("placeholder-name-your-group")}
             variant="goldenInput"
             ref={initialRef}
             value={groupName}
@@ -220,11 +222,11 @@ export default function FormCreateGroup({
             ))}
         </FormControl>
         <FormControl mt={3} isInvalid={errors.email && errors.email.length > 0}>
-          <FormLabel>Ajouter des membres</FormLabel>
+          <FormLabel>{t("add-members")}</FormLabel>
           <Flex>
             <Input
               type="email"
-              placeholder="Saisissez l'email d'un membre à ajouter"
+              placeholder={t("placeholder-add-member-email")}
               variant="goldenInput"
               value={memberEmail}
               onChange={handleChangeMemberEmail}
@@ -283,7 +285,9 @@ export default function FormCreateGroup({
 
                   <Box
                     as="button"
-                    onClick={(event) => handleRemoveMember(event, member.email)}
+                    onClick={(event: any) =>
+                      handleRemoveMember(event, member.email)
+                    }
                     ml="auto"
                   >
                     <Trash2 color="#A10702" size={18} />
@@ -296,10 +300,10 @@ export default function FormCreateGroup({
       </Box>
       <Flex justifyContent="flex-end" mt={4}>
         <Button variant="whiteRedButton" mr={3} onClick={onClose}>
-          Annuler
+          {t("cancel")}
         </Button>
         <Button type="submit" variant="greenButton">
-          Créer
+          {t("create")}
         </Button>
       </Flex>
     </form>
