@@ -66,7 +66,7 @@ export default function Home() {
           </GridItem>
           <GridItem rowSpan={2} colSpan={5} p={0}>
             <CardHeader mb="-40px" pl={0}>
-              <Heading size="sm">{t(x.step)}</Heading>
+              <Heading size="sm" fontFamily="arial">{t(x.step)}</Heading>
             </CardHeader>
             <CardBody pl={0}>
               <Box>
