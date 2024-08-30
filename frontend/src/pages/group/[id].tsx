@@ -107,7 +107,10 @@ export default function Channels() {
         </InputGroup>
         <Box my={8}>
           {filteredMembers?.map((member, index) => (
-            <Link key={member.id} href={`/channel/${member.id}`}>
+            <Link
+              key={member.id}
+              href={`/group/${groupeId?.groupById.id}/channel/${member.id}`}
+            >
               <Card
                 className="items-start pl-8"
                 key={member.id}

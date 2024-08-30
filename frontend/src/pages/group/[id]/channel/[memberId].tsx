@@ -13,6 +13,7 @@ import { FormEvent } from "react";
 const Message = () => {
   const router = useRouter();
   const channelMemberId: any = router.query?.memberId;
+  console.log("ruoter", router.query.id);
   const { data: currentUser, client } = useProfileQuery({
     errorPolicy: "ignore",
   });
