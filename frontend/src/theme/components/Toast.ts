@@ -8,8 +8,9 @@ const successVariant = definePartsStyle({
   container: {
     borderTopColor: "primary.medium",
     borderTopWidth: "4px",
-    bg: "white",
+    background: "white",
     pt: "2",
+    color: "primary.highter",
   },
   title: {
     color: "primary.medium",
@@ -22,8 +23,9 @@ const errorVariant = definePartsStyle({
   container: {
     borderTopColor: "tertiary.medium",
     borderTopWidth: "4px",
-    bg: "white",
+    background: "white",
     pt: "2",
+    color: "tertiary.highter",
   },
   title: {
     color: "tertiary.medium",

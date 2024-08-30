@@ -39,13 +39,15 @@ export default class MemberResolver {
       throw new GraphQLError("You are not the owner of this group");
     }
 
+    const existingMembersErrors: string[] = [];
+
     // Validate emails and fetch users
     if (data.members && data.members.length > 0) {
       for (const memberInput of data.members) {
         const user = await findOrCreateUserByEmail(memberInput.email);
         // Check if the user is already a member of the group
         if (groupToUpdate.members.some((member) => member.id === user.id)) {
-          throw new GraphQLError(
+          existingMembersErrors.push(
             `User with email ${memberInput.email} is already a member`
           );
         }
@@ -54,6 +56,9 @@ export default class MemberResolver {
         // Add the user to the group
         groupToUpdate.members.push(user);
       }
+    }
+    if (existingMembersErrors.length > 0) {
+      throw new GraphQLError(existingMembersErrors.join(", "));
     }
 
     await groupToUpdate.save();
