@@ -136,7 +136,6 @@ export default function FormCreateGroup({
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const formJson: any = Object.fromEntries(formData.entries());
-    formJson.members = members.map((member) => member.email);
 
     try {
       await createGroup({
@@ -146,12 +145,12 @@ export default function FormCreateGroup({
       refetch();
       onClose();
       toast({
-        title: "Groupe créé.",
-        description: `Votre groupe ${groupName} a été créé avec succes.`,
+        title: t("toast.success.group-created-title"),
+        description: t("toast.success.group-created-description", {
+          groupName,
+        }),
         status: "success",
         variant: "success",
-        duration: 9000,
-        isClosable: true,
       });
     } catch (error) {
       if (error instanceof ApolloError) {
@@ -175,17 +174,14 @@ export default function FormCreateGroup({
       } else if (
         err.message.includes("A group with this name already exists for you")
       ) {
-        newErrors.groupName = ["Ce nom de groupe existe déjà"];
+        newErrors.groupName = [t("validate-data.group-name", { groupName })];
       } else {
-        const descriptionError =
-          "Une erreur est survenue lors de la création du groupe";
+        const descriptionError = t("toast.error.create-group");
         toast({
-          title: "Erreur",
+          title: t("toast.error.generic-title"),
           description: descriptionError,
           status: "error",
           variant: "error",
-          duration: 9000,
-          isClosable: true,
         });
         newErrors.generic = [...(newErrors.generic || []), descriptionError];
       }

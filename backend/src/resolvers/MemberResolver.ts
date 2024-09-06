@@ -24,6 +24,11 @@ export default class MemberResolver {
       throw new GraphQLError("You need to be logged in");
     }
 
+    // Verify if data contains members
+    if (!data.members || data.members.length === 0) {
+      throw new GraphQLError("No members provided");
+    }
+
     // Find the group with the given ID
     const groupToUpdate = await Group.findOne({
       where: { id },

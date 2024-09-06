@@ -107,7 +107,6 @@ export default function FormAddMembers({
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const formJson: any = Object.fromEntries(formData.entries());
-    formJson.members = members.map((member) => ({ email: member.email }));
 
     try {
       await addMembers({
@@ -123,8 +122,6 @@ export default function FormAddMembers({
         description: "Les membres ont été ajoutés avec succès.",
         status: "success",
         variant: "success",
-        duration: 9000,
-        isClosable: true,
       });
     } catch (error) {
       if (error instanceof ApolloError) {
@@ -133,6 +130,7 @@ export default function FormAddMembers({
       } else {
         console.error("Error adding members to group: ", error);
       }
+      onClose();
     }
   };
   /**
@@ -153,14 +151,20 @@ export default function FormAddMembers({
               description: descriptionError,
               status: "error",
               variant: "error",
-              duration: 9000,
-              isClosable: true,
             });
             newErrors.generic = [
               ...(newErrors.generic || []),
               descriptionError,
             ];
           }
+        });
+      } else if (err.message.includes("No members provided")) {
+        const descriptionError = "Veuillez renseigner au moins un membre";
+        toast({
+          title: "Erreur",
+          description: descriptionError,
+          status: "error",
+          variant: "error",
         });
       } else {
         const descriptionError =
@@ -170,8 +174,6 @@ export default function FormAddMembers({
           description: descriptionError,
           status: "error",
           variant: "error",
-          duration: 9000,
-          isClosable: true,
         });
         newErrors.generic = [...(newErrors.generic || []), descriptionError];
       }

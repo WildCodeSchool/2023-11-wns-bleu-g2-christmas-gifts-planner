@@ -25,6 +25,7 @@ import UnauthorizedImage from "../assets/images/Unauthorized.png";
 import GenericErrorImage from "../assets/images/GenericError.png";
 import ErrorContext from "@/contexts/ErrorContext";
 import Loader from "@/components/Loader";
+import { useTranslation } from "react-i18next";
 
 export default function CompleteProfile() {
   //Get the token from the URL query params
@@ -35,6 +36,7 @@ export default function CompleteProfile() {
 
   const { messages } = useContext(ErrorContext);
   const client = useApolloClient();
+  const { t } = useTranslation();
 
   // Use the useCompleteProfileMutation hook to handle the mutation for completing the profile
   const [CompleteProfile, { error, loading }] = useCompleteProfileMutation({
@@ -43,12 +45,10 @@ export default function CompleteProfile() {
         include: ["Profile"],
       });
       toast({
-        title: "Profil validé",
-        description: `Votre profil a été validé avec succes.`,
+        title: t("toast.success.validate-profile-title"),
+        description: t("toast.success.validate-profile-description"),
         status: "success",
         variant: "success",
-        duration: 9000,
-        isClosable: true,
       });
       router.push("/dashboard");
     },
@@ -134,6 +134,12 @@ export default function CompleteProfile() {
       } else {
         console.error(error);
       }
+      toast({
+        title: t("toast.error.generic-title"),
+        description: t("toast.error.validate-profile"),
+        status: "error",
+        variant: "error",
+      });
     }
   };
   if (error?.message === "Invalid or expired token") {
@@ -146,15 +152,6 @@ export default function CompleteProfile() {
     );
   }
 
-  if (error) {
-    return (
-      <Error
-        image={GenericErrorImage}
-        alt="generic error"
-        message={messages?.generic}
-      ></Error>
-    );
-  }
   if (loading) return <Loader></Loader>;
   if (token)
     return (
@@ -170,7 +167,7 @@ export default function CompleteProfile() {
             paddingInline={{ base: "0", md: "32" }}
           >
             <CardHeader pb={0} fontWeight="bold">
-              Compléter votre profil
+              {t("complete-profile")}
             </CardHeader>
             <CardBody>
               <FormControl
@@ -178,11 +175,11 @@ export default function CompleteProfile() {
                 isInvalid={errors.lastName && errors.lastName.length > 0}
                 mt={3}
               >
-                <FormLabel>Nom</FormLabel>
+                <FormLabel>{t("lastname")}</FormLabel>
                 <Input
                   type="text"
                   name="lastName"
-                  placeholder="Votre nom"
+                  placeholder={t("placeholder.lastname")}
                   variant="goldenInput"
                   value={lastName}
                   onChange={(e) => handleChangeLastName(e)}
@@ -199,11 +196,11 @@ export default function CompleteProfile() {
                 isInvalid={errors.firstName && errors.firstName.length > 0}
                 mt={3}
               >
-                <FormLabel>Prénom</FormLabel>
+                <FormLabel>{t("firstname")}</FormLabel>
                 <Input
                   type="text"
                   name="firstName"
-                  placeholder="Votre prénom"
+                  placeholder={t("placeholder.firstname")}
                   variant="goldenInput"
                   value={firstName}
                   onChange={(e) => handleChangeFirstName(e)}
@@ -222,7 +219,7 @@ export default function CompleteProfile() {
             paddingInline={{ base: "0", md: "32" }}
           >
             <CardHeader pb={0} fontWeight="bold">
-              Configurer votre mot de passe
+              {t("password-configuration")}
             </CardHeader>
             <CardBody>
               <FormControl
@@ -230,12 +227,12 @@ export default function CompleteProfile() {
                 isInvalid={errors.password && errors.password.length > 0}
                 mt={3}
               >
-                <FormLabel>Ajouter un mot de passe</FormLabel>
+                <FormLabel>{t("password-new")}</FormLabel>
                 <InputGroup>
                   <Input
                     type={showPassword ? "text" : "password"}
                     name="password"
-                    placeholder="Votre mot de passe"
+                    placeholder={t("placeholder.password")}
                     variant="goldenInput"
                     value={password}
                     onChange={(e) => handleChangePassword(e)}
@@ -248,9 +245,7 @@ export default function CompleteProfile() {
                 </InputGroup>
                 {!errors.password ? (
                   <FormHelperText>
-                    Le mot de passe doit contenir au moins 8 caractères, une
-                    minuscule, une majuscule, un chiffre et un caractère
-                    spécial.
+                    {t("validate-data.helper-password")}
                   </FormHelperText>
                 ) : (
                   errors.password.map((error, index) => (
@@ -268,12 +263,12 @@ export default function CompleteProfile() {
                 }
                 mt={3}
               >
-                <FormLabel>Confirmer le mot de passe</FormLabel>
+                <FormLabel>{t("password-confirm")}</FormLabel>
                 <InputGroup>
                   <Input
                     type={showConfirmPassword ? "text" : "password"}
                     name="passwordConfirmation"
-                    placeholder="Confirmer votre mot de passe"
+                    placeholder={t("placeholder.password")}
                     variant="goldenInput"
                     value={passwordConfirmation}
                     onChange={(e) => handleChangePasswordConfirmation(e)}
@@ -297,9 +292,9 @@ export default function CompleteProfile() {
               </FormControl>
             </CardBody>
           </Card>
-          <Flex justify="flex-end" pr={{ base: "0", md: "10" }}>
-            <Button type="submit" variant="redButton" leftIcon={<Check />}>
-              Valider
+          <Flex justify="center">
+            <Button type="submit" variant="greenButton" leftIcon={<Check />}>
+              {t("button.validate")}
             </Button>
           </Flex>
         </Flex>

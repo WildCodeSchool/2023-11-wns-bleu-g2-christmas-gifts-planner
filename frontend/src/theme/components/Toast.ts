@@ -26,6 +26,7 @@ const errorVariant = definePartsStyle({
     background: "white",
     pt: "2",
     color: "tertiary.highter",
+    width: "24rem",
   },
   title: {
     color: "tertiary.medium",
