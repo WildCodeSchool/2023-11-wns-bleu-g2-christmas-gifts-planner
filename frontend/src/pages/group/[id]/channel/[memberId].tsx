@@ -5,75 +5,47 @@ import {
   useNewMessageSubscription,
   useProfileQuery,
 } from "@/graphql/generated/schema";
-import { Avatar } from "@chakra-ui/react";
+import { Avatar, useBoolean } from "@chakra-ui/react";
 import { SendHorizontal } from "lucide-react";
 import { useRouter } from "next/router";
-import { FormEvent } from "react";
+import { FormEvent, useRef, useState } from "react";
 
 const Message = () => {
+  const [flagName, setFlagName] = useBoolean();
+
+  const [messageInput, setMessageInput] = useState("");
+  const chatContainerRef = useRef(null);
+
   const router = useRouter();
   const channelMemberId: any = router.query?.memberId;
-  console.log("ruoter", router.query.id);
   const { data: currentUser, client } = useProfileQuery({
     errorPolicy: "ignore",
   });
+
   let { data: getMessages } = useMessagesQuery({
     variables: { channelId: parseInt(channelMemberId as string) },
   });
   const [createMessage] = useCreateMessageMutation();
-  console.log("native getmessages", getMessages?.messages);
-  // const oldMessages = getMessages?.messages || [];
-  //working function to recive the data
-  // const { data, loading, error }: any = useNewMessageSubscription({
-  //   variables: {
-  //     channelId: parseInt(channelMemberId, 10), // Converts to an integer
-  //   },
-  // });
-  // console.log(data || loading);
-
-  // useNewMessageSubscription({
-  //   variables: {
-  //     channelId: parseInt(channelMemberId, 10), // Converts to an integer
-  //   },
-  //   onData: async (newMessage: any) => {
-  //     const getMessages = await client.readQuery({ query: MessagesDocument });
-  //     const oldMessages = getMessages.messages;
-  //     // console.log(oldMessages);
-
-  //     const newMsgObj = newMessage.data.data.newMessage;
-
-  //     client.writeQuery({
-  //       query: MessagesDocument,
-
-  //       data: { messages: [...oldMessages, newMsgObj] },
-  //     });
-  //     console.log(newMsgObj);
-  //   },
-  // });
 
   const oldMessages = getMessages?.messages || [];
-
   useNewMessageSubscription({
     variables: {
       channelId: parseInt(channelMemberId, 10),
     },
     onData: async (newMessage: any) => {
       try {
-        // Read the current messages from the Apollo cache
         const getMessages = client.readQuery({
           query: MessagesDocument,
           variables: {
             channelId: parseInt(channelMemberId, 10),
           },
         });
-        const oldMessages = getMessages?.messages || []; // Ensure default is an empty array
+        const oldMessages = getMessages?.messages || [];
 
-        console.log("Old Messages from Cache:", oldMessages); // Debugging line
+        console.log("Old Messages from Cache:", oldMessages);
 
-        // Extract the new message from the subscription
         const newMsgObj = newMessage.data.data.newMessage;
 
-        // Write the updated list (old + new message) back to the cache
         client.writeQuery({
           query: MessagesDocument,
           data: { messages: [...oldMessages, newMsgObj] },
@@ -83,8 +55,10 @@ const Message = () => {
         });
 
         console.log("New message added:", newMsgObj);
-
-        // Confirm the cache update
+        const chatBox = document.getElementById("chatBox");
+        if (chatBox) {
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
         const updatedMessages = client.readQuery({ query: MessagesDocument });
         console.log("Updated Messages from Cache:", updatedMessages?.messages);
       } catch (error) {
@@ -93,7 +67,6 @@ const Message = () => {
       return oldMessages;
     },
   });
-  // console.log("old messages", oldMessages);
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -110,30 +83,62 @@ const Message = () => {
       id: parseInt(channelMemberId, 10),
     };
     const res = await createMessage({ variables: { data: formJSON } });
-  };
 
+    setMessageInput("");
+  };
+  console.log(currentUser?.profile.firstName, currentUser?.profile.lastName);
   return (
     <>
-      <div className="flex  just flex-col">
-        <div className="  h-[75vh] overflow-y-auto">
-          <div className=" p-4 ">
+      <div className=" flex flex-col  md:w-3/4 bg-white">
+        <div className="  h-[75vh] overflow-y-auto   ">
+          <div className=" p-4  " id="chatBox">
             {oldMessages.map((message: any) => (
-              <div
-                key={message.id}
-                className="flex   'justify-start' mb-4 bg-white  p-3 border-solid border-2 border-green-950 rounded-lg gap-3"
-              >
-                <Avatar
-                  name={`${message.writtenBy.firstName} ${message.writtenBy.lastName}`}
-                  // src='https://bit.ly/dan-abramov'
-                  size="sm"
-                  _hover={{
-                    cursor: "pointer",
-                  }}
-                />
-                {/* <p className="font-semibold">{ ' firstName:'+ message.writtenBy.firstName +' lastname:'+message.writtenBy.lastName}</p> */}
+              <div className=" ">
+                {message.writtenBy.firstName ==
+                  currentUser?.profile.firstName &&
+                message.writtenBy.lastName == currentUser?.profile.lastName ? (
+                  <>
+                    <div className="flex justify-end">
+                      <div
+                        key={message.id}
+                        className="  bg-sky-300  p-3  rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl gap-3   "
+                      >
+                        {/* <Avatar
+                      title={`${message.writtenBy.firstName} ${message.writtenBy.lastName}`}
+                      name={`${message.writtenBy.firstName} ${message.writtenBy.lastName}`}
+                      size="sm"
+                      _hover={{
+                        cursor: "pointer",
+                      }}
+                    /> */}
 
-                <p className="font-semibold">{message.content}</p>
-                {/* <p className="text-xs mt-1">{message.sent_at}</p> */}
+                        <p className="font-semibold ">{message.content}</p>
+                      </div>
+                    </div>
+                    <p className=" mr-2 text-end  mb-5">{message.sent_at}</p>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex justify-start gap-3  items-center">
+                      <Avatar
+                        className=""
+                        title={`${message.writtenBy.firstName} ${message.writtenBy.lastName}`}
+                        name={`${message.writtenBy.firstName} ${message.writtenBy.lastName}`}
+                        _hover={{
+                          cursor: "pointer",
+                        }}
+                      />
+                      <div
+                        key={message.id}
+                        className="flex     bg-white  p-3 border-solid border-2 border-green-950 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl gap-3 "
+                      >
+                        <p className="font-semibold">{message.content}</p>
+                      </div>
+                    </div>
+                    <p className="ml-16  mb-5">{message.sent_at}</p>
+                  </>
+                )}
+                {/* <p className=" text-center mb-5">{message.sent_at}</p> */}
               </div>
             ))}
           </div>
@@ -156,6 +161,8 @@ const Message = () => {
             name="content"
             type="text"
             className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+            value={messageInput}
+            onChange={(e) => setMessageInput(e.target.value)}
           />
           <button
             type="submit"
