@@ -111,8 +111,9 @@ const Message = () => {
                         cursor: "pointer",
                       }}
                     /> */}
-
-                        <p className="font-semibold ">{message.content}</p>
+                        <p className="text-m font-normal py-2.5 text-gray-900 ">
+                          {message.content}
+                        </p>
                       </div>
                     </div>
                     <p className=" mr-2 text-end  mb-5">{message.sent_at}</p>
@@ -130,9 +131,12 @@ const Message = () => {
                       />
                       <div
                         key={message.id}
-                        className="flex     bg-white  p-3 border-solid border-2 border-green-950 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl gap-3 "
+                        // className="flex     bg-white  p-3 border-solid border-2 border-green-950 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl gap-3 "
+                        className="flex  bg-slate-200  p-2 border-solid border-2 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl  "
                       >
-                        <p className="font-semibold">{message.content}</p>
+                        <p className="text-m font-normal py-2.5 text-gray-900 dark:text-white">
+                          {message.content}
+                        </p>
                       </div>
                     </div>
                     <p className="ml-16  mb-5">{message.sent_at}</p>
@@ -143,7 +147,10 @@ const Message = () => {
             ))}
           </div>
         </div>
-        <form onSubmit={sendMessage} className="  mt-4 ">
+        <form
+          onSubmit={sendMessage}
+          className="  mt-4  border-2 border-green-950 rounded-lg"
+        >
           <input
             name="sent_at"
             type="hidden"
