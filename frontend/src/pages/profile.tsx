@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 type WishlistItem = {
   id: string;
   name: string;
-  itemURL: string;
+  itemURL?: string | null;
 }
 
 const UserProfile = () => {
@@ -20,13 +20,17 @@ const UserProfile = () => {
     const [showOld, setShowOld] = useState<boolean>(false);
     const [showNew, setShowNew] = useState<boolean>(false);
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
-    const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
     const [updateUser] = useUpdateUserMutation();
     const [name, setName] = useState<string>('');
     const [itemURL, setItemURL] = useState<string>('');
     const toast = useToast();
     const router = useRouter()
     const { t } = useTranslation()
+    
+    const { data: currentUser } = useProfileQuery({
+      errorPolicy: "ignore",
+    });
+    const [wishlist, setWishlist] = useState<WishlistItem[]>(isDefined(currentUser) ? currentUser!.profile.wishlist : []);
     
     const addItemToWishlist = async () => {
       if (name.trim() === '') {
@@ -39,44 +43,53 @@ const UserProfile = () => {
         });
         return;
       }
-    
       const WishlistItemId = wishlist.length + 1;
       const newItem: WishlistItem = { id: WishlistItemId.toString(), name, itemURL };
-    
-
       const updatedWishlist = [...wishlist, newItem];
-    
-      setWishlist(updatedWishlist);
-
-    
+      const cleanedWishlist = updatedWishlist.map((item) => {
+        const { __typename, ...rest } = item as WishlistItem & { __typename?: string };
+        return rest;
+      });
+setWishlist(cleanedWishlist)
       try {
         await updateUser({
           variables: {
             data: {
-              wishlist: updatedWishlist,
+              email: "",
+              oldPassword: "",
+              newPassword: "",
+              firstName: "",
+              lastName: "",
+              wishlist: cleanedWishlist,
             },
             userId: currentUser!.profile.id,
           },
         });
       } catch (e: any) {
-        console.log(e.message, "ERROR FRONT");
+        console.log(e.message);
       }
     
       setName('');
       setItemURL('');
     };
-    const removeItemFromWishlist = async (id: string) => {
+    const removeItemFromWishlist = async (id: number) => {
 
-      const updatedWishlist = wishlist.filter((item) => item.id !== id);
-
-      setWishlist(updatedWishlist);
-    
+      const updatedWishlist = wishlist.filter((item) => item.id !== id.toString());
+      const cleanedWishlist = updatedWishlist.map((item) => {
+        const { __typename, ...rest } = item as WishlistItem & { __typename?: string };
+        return rest;
+      });
+      setWishlist(cleanedWishlist)
       try {
-
         await updateUser({
           variables: {
             data: {
-              wishlist: updatedWishlist,
+              email: "",
+              oldPassword: "",
+              newPassword: "",
+              firstName: "",
+              lastName: "",
+              wishlist: cleanedWishlist,
             },
             userId: currentUser!.profile.id,
           },
@@ -89,7 +102,7 @@ const UserProfile = () => {
           isClosable: true,
         });
       } catch (e: any) {
-        console.log(e.message, "ERROR FRONT");
+        console.log(e.message);
       }
     };
     
@@ -106,9 +119,7 @@ const UserProfile = () => {
       return errors;
     }
 
-    const { data: currentUser } = useProfileQuery({
-      errorPolicy: "ignore",
-    });
+
 
     const [formData, setFormData] = useState({
       email: "",
@@ -135,7 +146,7 @@ const UserProfile = () => {
           return () => clearTimeout(timer);
         }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [currentUser, error, formData, setFormData]);
+      }, [currentUser, error, formData, setFormData, wishlist]);
 
       const handleSubmitProfile = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -258,7 +269,6 @@ const UserProfile = () => {
           My Wishlist
         </Heading>
 
-        {/* Always show the form to add a new wish */}
         <VStack spacing={4} align="stretch">
           <Input
             variant="filled"
@@ -285,7 +295,6 @@ const UserProfile = () => {
           </Button>
         </VStack>
 
-        {/* Show the wishlist items */}
         {wishlist.length === 0 ? (
           <Text fontSize="lg" color="gray.600">
             Your wishlist is empty.
@@ -315,7 +324,7 @@ const UserProfile = () => {
                       colorScheme="red"
                       variant="ghost"
                       ml={4}
-                      onClick={() => removeItemFromWishlist(item.id)}
+                      onClick={() => removeItemFromWishlist(parseInt(item.id))}
                     />
                   </Flex>
                 </CardHeader>

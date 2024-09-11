@@ -186,7 +186,7 @@ export type UpdateUserInputType = {
   lastName?: Scalars['String'];
   newPassword?: Scalars['String'];
   oldPassword?: Scalars['String'];
-  wishlist?: {id: Scalars["ID"], name: Scalars['String'], itemURL: Scalars['String']}[];
+  wishlist?: {id: Scalars["ID"], name: Scalars['String'], itemURL?: Scalars['String'] | null}[];
 };
 
 export type User = {
@@ -198,7 +198,7 @@ export type User = {
   lastName?: Maybe<Scalars['String']>;
   memberGroups?: Maybe<Array<Group>>;
   role: Scalars['String'];
-  wishlist?: {id: Scalars["ID"], name: Scalars['String'], itemURL: Scalars['String']}[];
+  wishlist?: {id: Scalars["ID"], name: Scalars['String'], itemURL?: Scalars['String'] | null}[];
 };
 
 export type CreateGroupMutationVariables = Exact<{
@@ -268,7 +268,7 @@ export type UpdateUserMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string, wishlist?: {id: string, name: string, itemURL: string}[] | undefined} };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string, wishlist?: {id: string, name: string, itemURL?: string | null}[] | undefined} };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -278,7 +278,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: string };
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string, role: string, groups?: Array<{ __typename?: 'Group', id: number, name: string, members: Array<{ __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string }> }> | null, memberGroups?: Array<{ __typename?: 'Group', name: string, id: number, members: Array<{ __typename?: 'User', firstName?: string | null, email: string, lastName?: string | null }> }> | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string, role: string, groups?: Array<{ __typename?: 'Group', id: number, name: string, members: Array<{ __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string }> }> | null, memberGroups?: Array<{ __typename?: 'Group', name: string, id: number, members: Array<{ __typename?: 'User', firstName?: string | null, email: string, lastName?: string | null }> }> | null, wishlist: {id: string, name: string, itemURL?: string | null}[] } };
 
 
 export const CreateGroupDocument = gql`
@@ -639,13 +639,17 @@ export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
 export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
 export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
 export const UpdateUserDocument = gql`
-    mutation UpdateUser($data: UpdateUserInputType!, $userId: String!) {
+  mutation UpdateUser($data: UpdateUserInputType!, $userId: String!) {
   updateUser(data: $data, userId: $userId) {
     id
     firstName
     lastName
     email
-    wishlist
+    wishlist {
+      id
+      name
+      itemURL
+    }
   }
 }
     `;
@@ -714,6 +718,11 @@ export const ProfileDocument = gql`
     lastName
     email
     role
+    wishlist {
+      id
+      name
+      itemURL
+    }
     groups {
       id
       name

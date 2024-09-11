@@ -118,7 +118,8 @@ export default class UserResolver {
         existingUser.hashedPassword = await hashPassword(data.newPassword!);
       }
       if (data.wishlist) existingUser.wishlist = data.wishlist;
-      console.log(data.wishlist);
+      data.wishlist ? console.log(data.wishlist) : console.log("J'AI PAS TROUVÉ");
+      ;
       
       if (data.firstName) existingUser.firstName = data.firstName;
       if (data.lastName) existingUser.lastName = data.lastName;

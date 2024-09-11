@@ -65,9 +65,10 @@ export class WishlistItemInput {
   @Length(2, 50)
   name: string;
 
-  @Field()
+  @Field({nullable: true})
   @IsUrl()
-  itemURL: string;
+  @IsOptional()
+  itemURL?: string;
 }
 @InputType()
 export class UpdateUserInputType {
@@ -91,7 +92,7 @@ export class UpdateUserInputType {
   @Field()
   oldPassword?: string;
 
-  @Field(() => [WishlistItemInput], { nullable: true })
+  @Field(() => [WishlistItemInput])
   @IsOptional()
   wishlist?: WishlistItemInput[];
 }

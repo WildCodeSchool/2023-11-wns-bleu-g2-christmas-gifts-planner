@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import Group from "./Group";
 import Message from "./Message";
+import { IsOptional } from "class-validator";
 
 export enum UserRole {
   Admin = "admin",
@@ -24,8 +25,9 @@ class WishlistItem {
   @Field(() => String)
   name: string;
 
-  @Field(() => String)
-  itemURL: string;
+  @Field(() => String, {nullable: true})
+  @IsOptional()
+  itemURL?: string;
 }
 
 @Entity()
@@ -63,7 +65,7 @@ export default class User extends BaseEntity {
 
   @Field(() => [WishlistItem], {nullable: true})
   @Column("jsonb", {nullable: true, default:[] })
-  wishlist: WishlistItem[]
+  wishlist?: WishlistItem[]
 
   /**
    * Temporary passwords are used for new users who have not yet set up a password.
