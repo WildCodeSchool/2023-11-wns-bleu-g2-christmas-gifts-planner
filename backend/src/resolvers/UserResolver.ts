@@ -117,7 +117,10 @@ export default class UserResolver {
 
         existingUser.hashedPassword = await hashPassword(data.newPassword!);
       }
-
+      if (data.wishlist) existingUser.wishlist = data.wishlist;
+      data.wishlist ? console.log(data.wishlist) : console.log("J'AI PAS TROUVÉ");
+      ;
+      
       if (data.firstName) existingUser.firstName = data.firstName;
       if (data.lastName) existingUser.lastName = data.lastName;
       if (data.email) existingUser.email = data.email;
@@ -126,7 +129,7 @@ export default class UserResolver {
       return updatedUser;
     } catch (error: any) {
       console.error("Error updating user:", error.message);
-      throw new GraphQLError(error.message);
+      throw new GraphQLError("ERROR BACK" + error.message);
     }
   }
 

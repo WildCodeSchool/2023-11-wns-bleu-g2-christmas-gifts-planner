@@ -5,6 +5,7 @@ query Profile {
     lastName
     email
     role
+    wishlist
     groups {
       id
       name

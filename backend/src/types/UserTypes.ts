@@ -1,5 +1,5 @@
-import { IsEmail, Length, Matches, MinLength } from "class-validator";
-import { Field, InputType } from "type-graphql";
+import { IsEmail, IsOptional, IsUrl, Length, Matches, MinLength } from "class-validator";
+import { Field, ID, InputType } from "type-graphql";
 
 @InputType()
 export class NewUserInputType {
@@ -57,6 +57,20 @@ export class LoginInputType {
 }
 
 @InputType()
+export class WishlistItemInput {
+  @Field(() => ID)
+  id: string;
+
+  @Field()
+  @Length(2, 50)
+  name: string;
+
+  @Field({nullable: true})
+  @IsUrl()
+  @IsOptional()
+  itemURL?: string;
+}
+@InputType()
 export class UpdateUserInputType {
   @Field()
   @IsEmail()
@@ -77,4 +91,8 @@ export class UpdateUserInputType {
 
   @Field()
   oldPassword?: string;
+
+  @Field(() => [WishlistItemInput])
+  @IsOptional()
+  wishlist?: WishlistItemInput[];
 }
