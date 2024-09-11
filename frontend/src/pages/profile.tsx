@@ -2,12 +2,17 @@ import client from "@/graphql/client";
 import { useProfileQuery, useUpdateUserMutation } from "@/graphql/generated/schema";
 import isDefined from "@/types/isDefined";
 import isValidNotEmptyString from "@/types/isValidNotEmptyString";
-import { Box, Button, Center, Flex, FormControl, FormLabel, IconButton, Input, InputGroup, InputRightElement, Link, Spacer, Text, Tooltip, useToast } from "@chakra-ui/react";
-import { ArrowLeft, Eye, EyeOff, InfoIcon, Trash2 } from "lucide-react";
+import { Box, Button, Card, CardBody, CardHeader, Center, Flex, FormControl, FormLabel, Heading, IconButton, Input, InputGroup, InputRightElement, Link, Spacer, Text, Tooltip, useToast, VStack } from "@chakra-ui/react";
+import { ArrowLeft, Cross, Delete, DeleteIcon, Eye, EyeOff, Gift, Icon, InfoIcon, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+type WishlistItem = {
+  id: number;
+  name: string;
+  itemURL: string;
+}
 
 const UserProfile = () => {
     const [arrayOfErrors, setArrayOfErrors] = useState<string[]>([])
@@ -15,11 +20,45 @@ const UserProfile = () => {
     const [showOld, setShowOld] = useState<boolean>(false);
     const [showNew, setShowNew] = useState<boolean>(false);
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
+    const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
     const [updateUser] = useUpdateUserMutation();
+    const [name, setName] = useState<string>('');
+    const [itemURL, setItemURL] = useState<string>('');
     const toast = useToast();
     const router = useRouter()
     const { t } = useTranslation()
     
+    const addItemToWishlist = () => {
+      if (name.trim() === '') {
+        toast({
+          title: 'Input Required',
+          description: 'Please provide a name.',
+          status: 'warning',
+          duration: 3000,
+          isClosable: true,
+        });
+        return;
+      }
+  
+      const newItem: WishlistItem = {id: wishlist.length+1, name, itemURL };
+      setWishlist([...wishlist, newItem]);
+      
+      // Clear input fields after adding
+      setName('');
+      setItemURL('');
+    };
+  
+    const removeItemFromWishlist = (id: number) => {
+      setWishlist(wishlist.filter((item) => item.id !== id));
+      toast({
+        title: 'Item Removed',
+        description: 'Item has been removed from your wishlist.',
+        status: 'info',
+        duration: 3000,
+        isClosable: true,
+      });
+    };
+
     function validatePassword(p: string) {
       let errors = [];
       if (p.length < 8)
@@ -179,15 +218,90 @@ const UserProfile = () => {
             <IconButton aria-label="Back" bg="transparent" boxShadow="none" _hover={{ bg: "gray.200" }} icon={<ArrowLeft color="#22543D"/>}/>
         </Link>
         <Center>
+        <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
+        <VStack spacing={6} align="stretch">
+        <Heading as="h2" size="lg" mb={4}>
+          My Wishlist
+        </Heading>
+
+        {/* Always show the form to add a new wish */}
+        <VStack spacing={4} align="stretch">
+          <Input
+            variant="filled"
+            placeholder="Add a gift idea"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+
+          <Input
+            variant="filled"
+            placeholder="Add an image URL for the idea"
+            value={itemURL}
+            onChange={(e) => setItemURL(e.target.value)}
+          />
+
+          <Button
+            variant="solid"
+            colorScheme="teal"
+            size="md"
+            onClick={addItemToWishlist}
+            _hover={{ bg: 'teal.500' }}
+          >
+            Add to Wishlist
+          </Button>
+        </VStack>
+
+        {/* Show the wishlist items */}
+        {wishlist.length === 0 ? (
+          <Text fontSize="lg" color="gray.600">
+            Your wishlist is empty.
+          </Text>
+        ) : (
+          <VStack spacing={4} align="stretch">
+            {wishlist.map((item) => (
+              <Card key={item.id} p={4} bg="gray.50" borderWidth="1px" borderRadius="lg">
+                <CardHeader>
+                  <Flex align="center">
+                    <Gift height="24px" style={{"marginRight": "4px"}} />
+                    <Text fontWeight="bold" fontSize="md" flex="1">
+                      {item.name}
+                    </Text>
+                    <Spacer />
+                    {item.itemURL && (
+                      <Text fontSize="sm" color="blue.500">
+                        <Link href={item.itemURL} isExternal>
+                          View Gift
+                        </Link>
+                      </Text>
+                    )}
+                    <IconButton
+                      aria-label="Remove wish"
+                      icon={<DeleteIcon />}
+                      size="sm"
+                      colorScheme="red"
+                      variant="ghost"
+                      ml={4}
+                      onClick={() => removeItemFromWishlist(item.id)}
+                    />
+                  </Flex>
+                </CardHeader>
+              </Card>
+            ))}
+          </VStack>
+        )}
+      </VStack>
+        </Box>
+        </Center>
+        <Center>
             <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
                 <form onSubmit={handleSubmitProfile}>
                   <Text fontWeight="bold">{t("modify-profile")}</Text>
                     <FormControl mt={6}>
                         {/* Firstname and lastname */}
                                 <FormLabel >{t("lastname")}</FormLabel>
-                                <Input type="text" name="lastName" id="lastName" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.lastName)? currentUser!.profile.lastName : t("lastname")} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.lastName}/>                        
+                                <Input type="text" name="lastName" id="lastName" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.lastName)? currentUser!.profile.lastName! : t("lastname")} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.lastName}/>                        
                         <FormLabel mt={4} >{t("firstname")} </FormLabel>
-                                <Input type="text" name="firstName" id="firstName" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.firstName)? currentUser!.profile.firstName : t("firstname")} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.firstName}/>
+                                <Input type="text" name="firstName" id="firstName" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.firstName)? currentUser!.profile.firstName! : t("firstname")} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.firstName}/>
                                 {/* Email */}
                         {error === 2 &&
                                 <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">{t("email-already-existing")}</Text>
