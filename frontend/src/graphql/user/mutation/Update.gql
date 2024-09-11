@@ -4,5 +4,6 @@ mutation UpdateUser($data: UpdateUserInputType!, $userId: String!) {
     firstName
     lastName
     email
+    wishlist
   }
 }

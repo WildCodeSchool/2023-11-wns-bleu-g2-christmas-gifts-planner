@@ -181,11 +181,12 @@ export type UpdateGroupNameInputType = {
 };
 
 export type UpdateUserInputType = {
-  email: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  newPassword: Scalars['String'];
-  oldPassword: Scalars['String'];
+  email?: Scalars['String'];
+  firstName?: Scalars['String'];
+  lastName?: Scalars['String'];
+  newPassword?: Scalars['String'];
+  oldPassword?: Scalars['String'];
+  wishlist?: {id: Scalars["ID"], name: Scalars['String'], itemURL: Scalars['String']}[];
 };
 
 export type User = {
@@ -197,6 +198,7 @@ export type User = {
   lastName?: Maybe<Scalars['String']>;
   memberGroups?: Maybe<Array<Group>>;
   role: Scalars['String'];
+  wishlist?: {id: Scalars["ID"], name: Scalars['String'], itemURL: Scalars['String']}[];
 };
 
 export type CreateGroupMutationVariables = Exact<{
@@ -266,7 +268,7 @@ export type UpdateUserMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string } };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string, wishlist: {id: string, name: string, itemURL: string}[] | null | undefined} };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -643,6 +645,7 @@ export const UpdateUserDocument = gql`
     firstName
     lastName
     email
+    wishlist
   }
 }
     `;

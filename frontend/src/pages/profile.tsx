@@ -9,7 +9,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type WishlistItem = {
-  id: number;
+  id: string;
   name: string;
   itemURL: string;
 }
@@ -28,7 +28,7 @@ const UserProfile = () => {
     const router = useRouter()
     const { t } = useTranslation()
     
-    const addItemToWishlist = () => {
+    const addItemToWishlist = async () => {
       if (name.trim() === '') {
         toast({
           title: 'Input Required',
@@ -39,26 +39,61 @@ const UserProfile = () => {
         });
         return;
       }
-  
-      const newItem: WishlistItem = {id: wishlist.length+1, name, itemURL };
-      setWishlist([...wishlist, newItem]);
-      
-      // Clear input fields after adding
+    
+      const WishlistItemId = wishlist.length + 1;
+      const newItem: WishlistItem = { id: WishlistItemId.toString(), name, itemURL };
+    
+
+      const updatedWishlist = [...wishlist, newItem];
+    
+
+      setWishlist(updatedWishlist);
+    
+      try {
+
+        await updateUser({
+          variables: {
+            data: {
+              wishlist: updatedWishlist,
+            },
+            userId: currentUser!.profile.id,
+          },
+        });
+      } catch (e: any) {
+        console.log(e.message, "ERROR FRONT");
+      }
+    
       setName('');
       setItemURL('');
     };
-  
-    const removeItemFromWishlist = (id: number) => {
-      setWishlist(wishlist.filter((item) => item.id !== id));
-      toast({
-        title: 'Item Removed',
-        description: 'Item has been removed from your wishlist.',
-        status: 'info',
-        duration: 3000,
-        isClosable: true,
-      });
-    };
+    const removeItemFromWishlist = async (id: string) => {
 
+      const updatedWishlist = wishlist.filter((item) => item.id !== id);
+
+      setWishlist(updatedWishlist);
+    
+      try {
+
+        await updateUser({
+          variables: {
+            data: {
+              wishlist: updatedWishlist,
+            },
+            userId: currentUser!.profile.id,
+          },
+        });
+        toast({
+          title: 'Item Removed',
+          description: 'Item has been removed from your wishlist.',
+          status: 'info',
+          duration: 3000,
+          isClosable: true,
+        });
+      } catch (e: any) {
+        console.log(e.message, "ERROR FRONT");
+      }
+    };
+    
     function validatePassword(p: string) {
       let errors = [];
       if (p.length < 8)

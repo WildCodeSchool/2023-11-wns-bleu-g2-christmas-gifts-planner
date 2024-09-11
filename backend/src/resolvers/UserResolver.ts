@@ -108,6 +108,10 @@ export default class UserResolver {
       const existingUser = await User.findOneById(userId);
       if (!existingUser) throw new GraphQLError("USER_NOT_FOUND");
 
+      if (data.wishlist) {
+        existingUser.wishlist = data.wishlist;
+      }
+
       if (data.oldPassword !== "" && data.newPassword !== "") {
         const isOldPasswordValid = await verifyPassword(
           existingUser.hashedPassword,
@@ -126,7 +130,7 @@ export default class UserResolver {
       return updatedUser;
     } catch (error: any) {
       console.error("Error updating user:", error.message);
-      throw new GraphQLError(error.message);
+      throw new GraphQLError("ERROR BACK" + error.message);
     }
   }
 
