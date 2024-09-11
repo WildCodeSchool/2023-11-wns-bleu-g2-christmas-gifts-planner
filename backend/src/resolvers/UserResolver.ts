@@ -108,10 +108,6 @@ export default class UserResolver {
       const existingUser = await User.findOneById(userId);
       if (!existingUser) throw new GraphQLError("USER_NOT_FOUND");
 
-      if (data.wishlist) {
-        existingUser.wishlist = data.wishlist;
-      }
-
       if (data.oldPassword !== "" && data.newPassword !== "") {
         const isOldPasswordValid = await verifyPassword(
           existingUser.hashedPassword,
@@ -121,7 +117,9 @@ export default class UserResolver {
 
         existingUser.hashedPassword = await hashPassword(data.newPassword!);
       }
-
+      if (data.wishlist) existingUser.wishlist = data.wishlist;
+      console.log(data.wishlist);
+      
       if (data.firstName) existingUser.firstName = data.firstName;
       if (data.lastName) existingUser.lastName = data.lastName;
       if (data.email) existingUser.email = data.email;

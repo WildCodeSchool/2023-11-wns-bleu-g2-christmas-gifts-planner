@@ -46,11 +46,10 @@ const UserProfile = () => {
 
       const updatedWishlist = [...wishlist, newItem];
     
-
       setWishlist(updatedWishlist);
+
     
       try {
-
         await updateUser({
           variables: {
             data: {

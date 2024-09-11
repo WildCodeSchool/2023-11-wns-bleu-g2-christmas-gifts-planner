@@ -268,7 +268,7 @@ export type UpdateUserMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string, wishlist: {id: string, name: string, itemURL: string}[] | null | undefined} };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string, wishlist?: {id: string, name: string, itemURL: string}[] | undefined} };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
