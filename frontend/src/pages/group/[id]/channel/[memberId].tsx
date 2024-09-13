@@ -43,7 +43,7 @@ const Message = () => {
         });
         const oldMessages = getMessages?.messages || [];
 
-        console.log("Old Messages from Cache:", oldMessages);
+        // console.log("Old Messages from Cache:", oldMessages);
 
         const newMsgObj = newMessage.data.data.newMessage;
 
@@ -65,11 +65,11 @@ const Message = () => {
         // console.log("top", objDiv.scrollHeight);
 
         const updatedMessages = client.readQuery({ query: MessagesDocument });
-        console.log("Updated Messages from Cache:", updatedMessages?.messages);
+        // console.log("Updated Messages from Cache:", updatedMessages?.messages);q
       } catch (error) {
         console.error("Error reading or writing cache:", error);
       }
-      return oldMessages;
+      // return oldMessages;
     },
   });
 
@@ -91,23 +91,33 @@ const Message = () => {
 
     setMessageInput("");
   };
-  console.log(currentUser?.profile.firstName, currentUser?.profile.lastName);
+
+  const sortedMessages = [...oldMessages]; // Create a copy of the array
+
+  sortedMessages.sort((a, b) => {
+    const dateA = a.sent_at ? new Date(a.sent_at).getTime() : 0; // Handle null/undefined
+    const dateB = b.sent_at ? new Date(b.sent_at).getTime() : 0;
+
+    return dateA - dateB; // Sort by date
+  });
+
+  console.log(sortedMessages);
   return (
     <>
-      <div className=" flex flex-col   bg-white ">
-        {/* <div className="  h-[75vh] overflow-y-auto   "> */}
-        <div className=" p-3  h-[75vh] overflow-y-auto " id="chatBox">
-          {oldMessages.map((message: any) => (
-            <div className="mt-3 ">
-              {message.writtenBy.firstName == currentUser?.profile.firstName &&
-              message.writtenBy.lastName == currentUser?.profile.lastName ? (
-                <>
-                  <div className="flex justify-end">
-                    <div
-                      key={message.id}
-                      className="  bg-sky-300  px-3   rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl gap-3   "
-                    >
-                      {/* <Avatar
+      {/* <div className=" flex flex-col   bg-red-600 "> */}
+      {/* <div className="  h-[75vh] overflow-y-auto   "> */}
+      <div className=" p-3  h-[75vh] overflow-y-auto" id="chatBox">
+        {sortedMessages.map((message: any) => (
+          <div className="mt-3 ">
+            {message.writtenBy.firstName == currentUser?.profile.firstName &&
+            message.writtenBy.lastName == currentUser?.profile.lastName ? (
+              <>
+                <div className="flex justify-end">
+                  <div
+                    key={message.id}
+                    className="  bg-sky-300  px-3   rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl gap-3   "
+                  >
+                    {/* <Avatar
                       title={`${message.writtenBy.firstName} ${message.writtenBy.lastName}`}
                       name={`${message.writtenBy.firstName} ${message.writtenBy.lastName}`}
                       size="sm"
@@ -115,72 +125,72 @@ const Message = () => {
                         cursor: "pointer",
                       }}
                     /> */}
-                      <p className="text-m font-normal py-2.5 text-gray-900 ">
-                        {message.content}
-                      </p>
-                    </div>
+                    <p className="text-m font-normal py-2.5 text-gray-900 ">
+                      {message.content}
+                    </p>
                   </div>
-                  <p className=" mr-2 text-end  ">{message.sent_at}</p>
-                </>
-              ) : (
-                <>
-                  <div className="flex justify-start gap-3  items-center">
-                    <Avatar
-                      className=""
-                      title={`${message.writtenBy.firstName} ${message.writtenBy.lastName}`}
-                      name={`${message.writtenBy.firstName} ${message.writtenBy.lastName}`}
-                      _hover={{
-                        cursor: "pointer",
-                      }}
-                    />
-                    <div
-                      key={message.id}
-                      // className="flex     bg-white  p-3 border-solid border-2 border-green-950 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl gap-3 "
-                      className="flex  bg-slate-200  p-2 border-solid border-2 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl  "
-                    >
-                      <p className="text-m font-normal py-2.5 text-gray-900 dark:text-white">
-                        {message.content}
-                      </p>
-                    </div>
+                </div>
+                <p className=" mr-2 text-end  ">{message.sent_at}</p>
+              </>
+            ) : (
+              <>
+                <div className="flex justify-start gap-3  items-center">
+                  <Avatar
+                    className=""
+                    title={`${message.writtenBy.firstName} ${message.writtenBy.lastName}`}
+                    name={`${message.writtenBy.firstName} ${message.writtenBy.lastName}`}
+                    _hover={{
+                      cursor: "pointer",
+                    }}
+                  />
+                  <div
+                    key={message.id}
+                    // className="flex     bg-white  p-3 border-solid border-2 border-green-950 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl gap-3 "
+                    className="flex  bg-slate-200  p-2 border-solid border-2 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl  "
+                  >
+                    <p className="text-m font-normal py-2.5 text-gray-900 dark:text-white">
+                      {message.content}
+                    </p>
                   </div>
-                  <p className="ml-16  ">{message.sent_at}</p>
-                </>
-              )}
-              {/* <p className=" text-center mb-5">{message.sent_at}</p> */}
-            </div>
-          ))}
-        </div>
-        {/* </div> */}
-        <form
-          onSubmit={sendMessage}
-          className="  border-2 border-green-950 rounded-lg"
-        >
-          <input
-            name="sent_at"
-            type="hidden"
-            value={new Date().toLocaleString()}
-          />
-
-          <input
-            name="writtenBy"
-            value={currentUser?.profile.id}
-            type="hidden"
-            className="bg-slate-100 m-3"
-          />
-          <input
-            placeholder="message..."
-            name="content"
-            type="text"
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-            value={messageInput}
-            onChange={(e) => setMessageInput(e.target.value)}
-          />
-          <button type="submit" className="text-gray-900 absolute  right-3">
-            {" "}
-            <SendHorizontal />
-          </button>
-        </form>
+                </div>
+                <p className="ml-16  ">{message.sent_at}</p>
+              </>
+            )}
+            {/* <p className=" text-center mb-5">{message.sent_at}</p> */}
+          </div>
+        ))}
       </div>
+      {/* </div> */}
+      <form
+        onSubmit={sendMessage}
+        className="  border-2 border-green-950 rounded-lg"
+      >
+        <input
+          name="sent_at"
+          type="hidden"
+          value={new Date().toLocaleString()}
+        />
+
+        <input
+          name="writtenBy"
+          value={currentUser?.profile.id}
+          type="hidden"
+          className="bg-slate-100 m-3"
+        />
+        <input
+          placeholder="message..."
+          name="content"
+          type="text"
+          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+          value={messageInput}
+          onChange={(e) => setMessageInput(e.target.value)}
+        />
+        <button type="submit" className="text-gray-900 absolute  right-3">
+          {" "}
+          <SendHorizontal />
+        </button>
+      </form>
+      {/* </div> */}
     </>
   );
 };
