@@ -15,7 +15,6 @@ import {
   useRef,
   useState,
 } from "react";
-// const objDiv = document.getElementById("chatBox");
 
 const Message = () => {
   const [flagName, setFlagName] = useBoolean();
@@ -49,8 +48,6 @@ const Message = () => {
         });
         const oldMessages = getMessages?.messages || [];
 
-        // console.log("Old Messages from Cache:", oldMessages);
-
         const newMsgObj = newMessage.data.data.newMessage;
 
         client.writeQuery({
@@ -65,12 +62,9 @@ const Message = () => {
         if (objDiv) {
           objDiv.scrollTop = objDiv.scrollHeight + 10000000;
         }
-        // const updatedMessages = client.readQuery({ query: MessagesDocument });
-        // console.log("Updated Messages from Cache:", updatedMessages?.messages);q
       } catch (error) {
         console.error("Error reading or writing cache:", error);
       }
-      // return oldMessages;
     },
   });
 
@@ -106,7 +100,6 @@ const Message = () => {
   return (
     <>
       <div className=" flex justify-center bg-lime-300 ">
-        {/* <div className="  h-[75vh] overflow-y-auto   "> */}
         <div className="md:w-1/2">
           <div className=" p-3 h-[75vh] overflow-y-auto bg-white" id="chatBox">
             {sortedMessages.map((message: any) => (
@@ -120,14 +113,6 @@ const Message = () => {
                         key={message.id}
                         className="  bg-sky-300  px-3   rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl gap-3   "
                       >
-                        {/* <Avatar
-                      title={`${message.writtenBy.firstName} ${message.writtenBy.lastName}`}
-                      name={`${message.writtenBy.firstName} ${message.writtenBy.lastName}`}
-                      size="sm"
-                      _hover={{
-                        cursor: "pointer",
-                      }}
-                    /> */}
                         <p className="text-m font-normal py-2.5 text-gray-900 ">
                           {message.content}
                         </p>
@@ -148,7 +133,6 @@ const Message = () => {
                       />
                       <div
                         key={message.id}
-                        // className="flex     bg-white  p-3 border-solid border-2 border-green-950 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl gap-3 "
                         className="flex  bg-slate-200  p-2 border-solid border-2 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl  "
                       >
                         <p className="text-m font-normal py-2.5 text-gray-900 dark:text-white">
@@ -159,14 +143,9 @@ const Message = () => {
                     <p className="ml-16  ">{message.sent_at}</p>
                   </>
                 )}
-                {/* <p className=" text-center mb-5">{message.sent_at}</p> */}
               </div>
             ))}
-            <div className=" h-24 text-center ">
-              {/* <p className="text-zinc-400">
-            Merci de garder la discussion respectueuse pour tout le monde.
-          </p> */}
-            </div>
+            <div className=" h-24 text-center "></div>
           </div>
 
           <form
