@@ -99,7 +99,7 @@ const Message = () => {
   console.log(sortedMessages);
   return (
     <>
-      <div className=" flex justify-center bg-lime-300 ">
+      <div className=" flex justify-center ">
         <div className="md:w-1/2">
           <div className=" p-3 h-[75vh] overflow-y-auto bg-white" id="chatBox">
             {sortedMessages.map((message: any) => (
