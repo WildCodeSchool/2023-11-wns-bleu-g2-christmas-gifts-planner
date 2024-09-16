@@ -39,16 +39,17 @@ export default class LikeResolver {
         LikedBy: data.LikedBy,
       },
     });
+    console.log("data information:", data.likedMessageId);
     if (existingLike) {
       await existingLike.remove();
-      throw new GraphQLError(`Like removed`);
+      // throw new GraphQLError(`Like removed`);
+      return "like removed";
     }
     const newLike = new Like();
     // newMessage.channelId = data.channelId;
     Object.assign(newLike, data);
     await newLike.save();
     // await pubsub.publish(`NewMessage_${data.channelId.id}`, newMessage);
-    console.log("Like data", data);
     // await pubsub.publish(`NewMessage`, newMessage);
 
     return newLike;

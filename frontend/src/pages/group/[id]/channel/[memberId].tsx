@@ -16,6 +16,7 @@ import {
   useRef,
   useState,
 } from "react";
+// import { NewLikeType } from "../types/LikeType";
 
 const Message = () => {
   const [flagName, setFlagName] = useBoolean();
@@ -94,14 +95,17 @@ const Message = () => {
 
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
-    formJSON.LikedBy = parseInt(currentUser?.profile.id, 10);
+    formJSON.LikedBy = { id: parseInt(currentUser?.profile.id, 10) };
+    formJSON.likedMessageId = { id: parseInt(formJSON.likedMessageId, 10) };
 
-    console.log(formJSON);
+    console.log("form json", formJSON);
     // formJSON.channelId = {
     //   id: parseInt(channelMemberId, 10),
     // };
-    // const res = await createMessage({ variables: { data: formJSON } });
-    // console.log(res);
+    const res = await CreateDelteLike({
+      variables: { data: formJSON },
+    });
+    console.log("res", res);
     // setMessageInput("");
   };
 
@@ -113,8 +117,8 @@ const Message = () => {
 
     return dateA - dateB; // Sort by date
   });
-
-  console.log("sorted messages", sortedMessages);
+  // console.log("s.messages", sortedMessages);
+  // console.log("sorted messages", sortedMessages);
   return (
     <>
       <div className=" flex justify-center ">
@@ -127,20 +131,30 @@ const Message = () => {
                 message.writtenBy.lastName == currentUser?.profile.lastName ? (
                   <>
                     <div className="flex justify-end">
-                      <div className="flex mr-2 mt-3">
-                        <h1>
-                          {message.likes.length !== 0
-                            ? message.likes.length
-                            : null}
-                        </h1>
-                        <Heart
-                          className={
-                            message.likes.length !== 0
-                              ? "text-red-600"
-                              : "text-black"
-                          }
-                        />
-                      </div>
+                      <form onSubmit={addDeleteLike}>
+                        <button>
+                          <div className="flex mr-2 mt-3">
+                            <input
+                              type="hidden"
+                              name="likedMessageId"
+                              value={parseInt(message.id, 10)}
+                            />
+
+                            <h1>
+                              {message.likes.length !== 0
+                                ? message.likes.length
+                                : null}
+                            </h1>
+                            <Heart
+                              className={
+                                message.likes.length !== 0
+                                  ? "text-red-600"
+                                  : "text-black"
+                              }
+                            />
+                          </div>
+                        </button>
+                      </form>
                       <div
                         key={message.id}
                         className="  bg-sky-300  px-3   rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl gap-3   "
@@ -178,6 +192,7 @@ const Message = () => {
                             name="likedMessageId"
                             value={parseInt(message.id, 10)}
                           />
+
                           <div className="flex">
                             <h1>
                               {message.likes.length !== 0

@@ -42,6 +42,6 @@ export default class Message extends BaseEntity {
   channelId: Channel;
 
   @Field(() => [Like], { nullable: true })
-  @OneToMany(() => Like, (like) => like.LikedBy)
+  @OneToMany(() => Like, (like) => like.likedMessageId)
   likes: Like[];
 }
