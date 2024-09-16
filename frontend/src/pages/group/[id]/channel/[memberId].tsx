@@ -60,7 +60,7 @@ const Message = () => {
 
         const objDiv = document.getElementById("chatBox");
         if (objDiv) {
-          objDiv.scrollTop = objDiv.scrollHeight + 10000000;
+          objDiv.scrollTop = objDiv.scrollHeight;
         }
       } catch (error) {
         console.error("Error reading or writing cache:", error);
