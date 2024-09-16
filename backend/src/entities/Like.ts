@@ -5,43 +5,29 @@ import {
   Column,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import User from "./User";
 import Channel from "./Channel";
-import Like from "./Like";
+import Message from "./Message";
 
 @Entity()
 @ObjectType()
-export default class Message extends BaseEntity {
+export default class Like extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
   id: number;
-
-  @Length(1, undefined)
-  @Column()
-  @Field()
-  content: string;
-
-  @Column()
-  @Field()
-  sent_at: string;
 
   @ManyToOne(() => User, (User) => User.id, {
     cascade: true,
     onDelete: "CASCADE",
   })
   @Field(() => User)
-  writtenBy: User;
+  LikedBy: User;
 
-  @ManyToOne(() => Channel, (channel) => channel.id, {
+  @ManyToOne(() => Message, (Message) => Message.id, {
     onDelete: "CASCADE",
   })
-  @Field(() => Channel)
-  channelId: Channel;
-
-  @Field(() => [Like], { nullable: true })
-  @OneToMany(() => Like, (like) => like.LikedBy)
-  likes: Like[];
+  @Field(() => Message)
+  likedMessageId: Message;
 }

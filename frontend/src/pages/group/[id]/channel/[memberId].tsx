@@ -4,9 +4,10 @@ import {
   useMessagesQuery,
   useNewMessageSubscription,
   useProfileQuery,
+  useCreateDelteLikeMutation,
 } from "@/graphql/generated/schema";
 import { Avatar, useBoolean } from "@chakra-ui/react";
-import { SendHorizontal } from "lucide-react";
+import { Heart, SendHorizontal } from "lucide-react";
 import { useRouter } from "next/router";
 import {
   FormEvent,
@@ -32,6 +33,7 @@ const Message = () => {
     variables: { channelId: parseInt(channelMemberId as string) },
   });
   const [createMessage] = useCreateMessageMutation();
+  const [CreateDelteLike] = useCreateDelteLikeMutation();
 
   const oldMessages = getMessages?.messages || [];
   useNewMessageSubscription({
@@ -87,6 +89,22 @@ const Message = () => {
     setMessageInput("");
   };
 
+  const addDeleteLike = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target as HTMLFormElement);
+    const formJSON: any = Object.fromEntries(formData.entries());
+    formJSON.LikedBy = parseInt(currentUser?.profile.id, 10);
+
+    console.log(formJSON);
+    // formJSON.channelId = {
+    //   id: parseInt(channelMemberId, 10),
+    // };
+    // const res = await createMessage({ variables: { data: formJSON } });
+    // console.log(res);
+    // setMessageInput("");
+  };
+
   const sortedMessages = [...oldMessages]; // Create a copy of the array
 
   sortedMessages.sort((a, b) => {
@@ -96,7 +114,7 @@ const Message = () => {
     return dateA - dateB; // Sort by date
   });
 
-  console.log(sortedMessages);
+  console.log("sorted messages", sortedMessages);
   return (
     <>
       <div className=" flex justify-center ">
@@ -109,6 +127,20 @@ const Message = () => {
                 message.writtenBy.lastName == currentUser?.profile.lastName ? (
                   <>
                     <div className="flex justify-end">
+                      <div className="flex mr-2 mt-3">
+                        <h1>
+                          {message.likes.length !== 0
+                            ? message.likes.length
+                            : null}
+                        </h1>
+                        <Heart
+                          className={
+                            message.likes.length !== 0
+                              ? "text-red-600"
+                              : "text-black"
+                          }
+                        />
+                      </div>
                       <div
                         key={message.id}
                         className="  bg-sky-300  px-3   rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl gap-3   "
@@ -139,6 +171,29 @@ const Message = () => {
                           {message.content}
                         </p>
                       </div>
+                      <form action="" onSubmit={addDeleteLike}>
+                        <button>
+                          <input
+                            type="hidden"
+                            name="likedMessageId"
+                            value={parseInt(message.id, 10)}
+                          />
+                          <div className="flex">
+                            <h1>
+                              {message.likes.length !== 0
+                                ? message.likes.length
+                                : null}
+                            </h1>
+                            <Heart
+                              className={
+                                message.likes.length !== 0
+                                  ? "text-red-600"
+                                  : "text-black"
+                              }
+                            />
+                          </div>
+                        </button>
+                      </form>
                     </div>
                     <p className="ml-16  ">{message.sent_at}</p>
                   </>

@@ -1,0 +1,11 @@
+mutation CreateDelteLike($data: NewLikeType!) {
+  createDelteLike(data: $data) {
+    id
+    LikedBy {
+      id
+    }
+    likedMessageId {
+      id
+    }
+  }
+}

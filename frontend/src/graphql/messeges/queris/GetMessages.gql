@@ -11,5 +11,8 @@ query Messages($channelId: Int) {
     channelId {
       id
     }
+    likes {
+      id
+    }
   }
 }

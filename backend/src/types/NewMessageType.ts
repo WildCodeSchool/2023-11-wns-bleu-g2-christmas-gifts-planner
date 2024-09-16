@@ -1,10 +1,6 @@
-import { IsEmail, Matches, MinLength } from "class-validator";
 import { Field, InputType } from "type-graphql";
-import User, { UserRole } from "../entities/User";
-import Message from "../entities/Message";
-import { ObjectId } from "./ObjectIdType";
 import { Author } from "./Author";
-import Channel from "../entities/Channel";
+import { ObjectId } from "./ObjectIdType";
 
 @InputType()
 export class NewMessageInputType {

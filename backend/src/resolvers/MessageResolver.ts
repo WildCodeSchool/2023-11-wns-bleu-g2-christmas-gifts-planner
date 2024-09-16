@@ -1,38 +1,37 @@
 import {
   Arg,
-  Args,
-  Authorized,
-  Ctx,
+  Int,
   Mutation,
+  PubSub,
+  PubSubEngine,
   Query,
   Resolver,
   Root,
   Subscription,
-  PubSub,
-  PubSubEngine,
-  Int,
 } from "type-graphql";
 import Message from "../entities/Message";
 import { NewMessageInputType } from "../types/NewMessageType";
-import { AfterInsert, InsertEvent } from "typeorm";
-import User from "../entities/User";
-import { ObjectId } from "../types/ObjectIdType";
+import { NewLikeType } from "../types/LikeType";
 
 @Resolver(Message)
 export default class MessageResolver {
   @Query(() => [Message])
   async messages(
     @Arg("userId", { nullable: true }) id?: number,
-    @Arg("channelId", () => Int, { nullable: true }) channelId?: number
+    @Arg("channelId", () => Int, { nullable: true }) channelId?: number,
+    @Arg("likes", () => Int, { nullable: true }) likedBy?: number
   ) {
     return Message.find({
-      relations: { writtenBy: true, channelId: true },
+      relations: { writtenBy: true, channelId: true, likes: true },
       where: {
         writtenBy: {
           id: id,
         },
         channelId: {
           id: channelId,
+        },
+        likes: {
+          id: likedBy,
         },
       },
     });
