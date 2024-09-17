@@ -179,7 +179,7 @@ export type Query = {
 
 
 export type QueryLikesArgs = {
-  messageId?: InputMaybe<Scalars['Int']>;
+  likedMessageId?: InputMaybe<Scalars['Int']>;
   userId?: InputMaybe<Scalars['Float']>;
 };
 
@@ -208,7 +208,13 @@ export type QueryMessagesArgs = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  newLike: Like;
   newMessage: Message;
+};
+
+
+export type SubscriptionNewLikeArgs = {
+  likedMessageId: Scalars['Int'];
 };
 
 
@@ -235,6 +241,7 @@ export type User = {
   groups?: Maybe<Array<Group>>;
   id: Scalars['ID'];
   lastName?: Maybe<Scalars['String']>;
+  likes?: Maybe<Array<Like>>;
   memberGroups?: Maybe<Array<Group>>;
   role: Scalars['String'];
 };
