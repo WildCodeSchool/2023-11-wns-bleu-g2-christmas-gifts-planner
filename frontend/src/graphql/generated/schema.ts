@@ -267,6 +267,13 @@ export type CreateDelteLikeMutationVariables = Exact<{
 
 export type CreateDelteLikeMutation = { __typename?: 'Mutation', createDelteLike: { __typename?: 'Like', id: number, LikedBy: { __typename?: 'User', id: string }, likedMessageId: { __typename?: 'Message', id: number } } };
 
+export type NewLikeSubscriptionVariables = Exact<{
+  likedMessageId: Scalars['Int'];
+}>;
+
+
+export type NewLikeSubscription = { __typename?: 'Subscription', newLike: { __typename?: 'Like', id: number, LikedBy: { __typename?: 'User', id: string }, likedMessageId: { __typename?: 'Message', id: number } } };
+
 export type AddMemberToGroupMutationVariables = Exact<{
   data: AddMembersInputType;
   groupId: Scalars['Int'];
@@ -470,6 +477,42 @@ export function useCreateDelteLikeMutation(baseOptions?: Apollo.MutationHookOpti
 export type CreateDelteLikeMutationHookResult = ReturnType<typeof useCreateDelteLikeMutation>;
 export type CreateDelteLikeMutationResult = Apollo.MutationResult<CreateDelteLikeMutation>;
 export type CreateDelteLikeMutationOptions = Apollo.BaseMutationOptions<CreateDelteLikeMutation, CreateDelteLikeMutationVariables>;
+export const NewLikeDocument = gql`
+    subscription NewLike($likedMessageId: Int!) {
+  newLike(likedMessageId: $likedMessageId) {
+    id
+    LikedBy {
+      id
+    }
+    likedMessageId {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useNewLikeSubscription__
+ *
+ * To run a query within a React component, call `useNewLikeSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useNewLikeSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewLikeSubscription({
+ *   variables: {
+ *      likedMessageId: // value for 'likedMessageId'
+ *   },
+ * });
+ */
+export function useNewLikeSubscription(baseOptions: Apollo.SubscriptionHookOptions<NewLikeSubscription, NewLikeSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<NewLikeSubscription, NewLikeSubscriptionVariables>(NewLikeDocument, options);
+      }
+export type NewLikeSubscriptionHookResult = ReturnType<typeof useNewLikeSubscription>;
+export type NewLikeSubscriptionResult = Apollo.SubscriptionResult<NewLikeSubscription>;
 export const AddMemberToGroupDocument = gql`
     mutation AddMemberToGroup($data: AddMembersInputType!, $groupId: Int!) {
   addMemberToGroup(data: $data, groupId: $groupId) {

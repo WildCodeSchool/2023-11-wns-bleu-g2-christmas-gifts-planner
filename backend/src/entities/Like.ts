@@ -30,4 +30,10 @@ export default class Like extends BaseEntity {
   })
   @Field(() => Message)
   likedMessageId: Message;
+
+  @ManyToOne(() => Channel, (channel) => channel.id, {
+    onDelete: "CASCADE",
+  })
+  @Field(() => Message)
+  channelId: Message;
 }

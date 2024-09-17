@@ -8,4 +8,7 @@ export class NewLikeType {
 
   @Field(() => ObjectId)
   likedMessageId: ObjectId;
+
+  @Field(() => ObjectId)
+  channelId: ObjectId;
 }

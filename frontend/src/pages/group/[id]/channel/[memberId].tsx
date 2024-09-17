@@ -5,6 +5,7 @@ import {
   useNewMessageSubscription,
   useProfileQuery,
   useCreateDelteLikeMutation,
+  useNewLikeSubscription,
 } from "@/graphql/generated/schema";
 import { Avatar, useBoolean } from "@chakra-ui/react";
 import { Heart, SendHorizontal } from "lucide-react";
@@ -70,7 +71,40 @@ const Message = () => {
       }
     },
   });
+  // useNewLikeSubscription({
+  //   variables: {
+  //     likedMessageId: parseInt(channelMemberId, 10),
+  //   },
+  //   onData: async (newLike: any) => {
+  //     // try {
+  //     //   const getMessages = client.readQuery({
+  //     //     query: MessagesDocument,
+  //     //     variables: {
+  //     //       channelId: parseInt(channelMemberId, 10),
+  //     //     },
+  //     //   });
+  //     //   const oldMessages = getMessages?.messages || [];
 
+  //     //   const newMsgObj = newMessage.data.data.newMessage;
+
+  //     //   client.writeQuery({
+  //     //     query: MessagesDocument,
+  //     //     data: { messages: [...oldMessages, newMsgObj] },
+  //     //     variables: {
+  //     //       channelId: parseInt(channelMemberId, 10),
+  //     //     },
+  //     //   });
+
+  //     //   const objDiv = document.getElementById("chatBox");
+  //     //   if (objDiv) {
+  //     //     objDiv.scrollTop = objDiv.scrollHeight;
+  //     //   }
+  //     // } catch (error) {
+  //     //   console.error("Error reading or writing cache:", error);
+  //     // }
+  //     console.log("newLike", newLike.data.data);
+  //   },
+  // });
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -97,6 +131,7 @@ const Message = () => {
     const formJSON: any = Object.fromEntries(formData.entries());
     formJSON.LikedBy = { id: parseInt(currentUser?.profile.id, 10) };
     formJSON.likedMessageId = { id: parseInt(formJSON.likedMessageId, 10) };
+    formJSON.channelId = { id: parseInt(channelMemberId, 10) };
 
     console.log("form json", formJSON);
     // formJSON.channelId = {
@@ -105,7 +140,7 @@ const Message = () => {
     const res = await CreateDelteLike({
       variables: { data: formJSON },
     });
-    console.log("res", res);
+    // console.log("res", res);
     // setMessageInput("");
   };
 
@@ -118,7 +153,7 @@ const Message = () => {
     return dateA - dateB; // Sort by date
   });
   // console.log("s.messages", sortedMessages);
-  // console.log("sorted messages", sortedMessages);
+  console.log("sorted messages", sortedMessages);
   return (
     <>
       <div className=" flex justify-center ">
@@ -132,8 +167,13 @@ const Message = () => {
                   <>
                     <div className="flex justify-end">
                       <form onSubmit={addDeleteLike}>
-                        <button>
+                        <button type="submit">
                           <div className="flex mr-2 mt-3">
+                            <input
+                              type="hidden"
+                              name="channelId"
+                              value={parseInt(message.channelId, 10)}
+                            />
                             <input
                               type="hidden"
                               name="likedMessageId"
@@ -186,7 +226,12 @@ const Message = () => {
                         </p>
                       </div>
                       <form action="" onSubmit={addDeleteLike}>
-                        <button>
+                        <button type="submit">
+                          <input
+                            type="hidden"
+                            name="channelId"
+                            value={parseInt(message.channelId, 10)}
+                          />
                           <input
                             type="hidden"
                             name="likedMessageId"

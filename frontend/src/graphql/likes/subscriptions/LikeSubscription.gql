@@ -1,0 +1,11 @@
+subscription NewLike($likedMessageId: Int!) {
+  newLike(likedMessageId: $likedMessageId) {
+    id
+    LikedBy {
+      id
+    }
+    likedMessageId {
+      id
+    }
+  }
+}
