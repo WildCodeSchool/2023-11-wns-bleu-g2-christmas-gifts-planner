@@ -75,38 +75,36 @@ const Message = () => {
     variables: {
       channelId: parseInt(channelMemberId, 10),
     },
+
     onData: async (newLike: any) => {
       console.log("newLike", newLike.data.data);
-      refetch();
+      // refetch();
 
-      // try {
-      //   const getMessages = client.readQuery({
-      //     query: MessagesDocument,
-      //     variables: {
-      //       channelId: parseInt(channelMemberId, 10),
-      //     },
-      //   });
-      //   const oldMessages = getMessages?.messages || [];
+      try {
+        const oldLikes = getMessages?.messages || [];
 
-      //   const newMsgObj = newLike.data.data.newMessage;
-      //   console.log(newMsgObj);
-      //   client.writeQuery({
-      //     query: MessagesDocument,
-      //     data: { messages: [...oldMessages, newMsgObj] },
-      //     variables: {
-      //       channelId: parseInt(channelMemberId, 10),
-      //     },
-      //   });
-      // } catch (error) {
-      //   console.error("Error reading or writing cache:", error);
-      // }
+        const newLikeObj = newLike.data.data;
+        console.log("subscribtion newMsgObj", newLikeObj);
+        client.writeQuery({
+          query: MessagesDocument,
+          data: { messages: [...oldLikes, newLikeObj] },
+          variables: {
+            channelId: parseInt(channelMemberId, 10),
+          },
+        });
+      } catch (error) {
+        console.error("Error reading or writing cache:", error);
+      }
     },
   });
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
+    console.log("ff", formJSON);
+    if (formJSON.content === "") {
+      return null;
+    }
 
     formJSON.writtenBy = {
       id: parseInt(formJSON.writtenBy, 10),
@@ -151,6 +149,7 @@ const Message = () => {
   });
   // console.log("s.messages", sortedMessages);
   // console.log("sorted messages", sortedMessages);
+
   return (
     <>
       <div className=" flex justify-center ">
@@ -164,7 +163,11 @@ const Message = () => {
                   <>
                     <div className="flex justify-end">
                       <form onSubmit={addDeleteLike}>
-                        <button type="submit">
+                        <button
+                          type="submit"
+                          className=" transition ease-in-out delay-150 text-black hover:-translate-y-1 hover:scale-110  duration-300"
+                          // className=" transition ease-in-out delay-150 text-black hover:-translate-y-1 hover:scale-110 hover:text-red-600 duration-300"
+                        >
                           <div className="flex mr-2 mt-3">
                             <input
                               type="hidden"
@@ -223,7 +226,10 @@ const Message = () => {
                         </p>
                       </div>
                       <form action="" onSubmit={addDeleteLike}>
-                        <button type="submit">
+                        <button
+                          type="submit"
+                          className=" transition ease-in-out delay-150 text-black hover:-translate-y-1 hover:scale-110  duration-300"
+                        >
                           <input
                             type="hidden"
                             name="channelId"
