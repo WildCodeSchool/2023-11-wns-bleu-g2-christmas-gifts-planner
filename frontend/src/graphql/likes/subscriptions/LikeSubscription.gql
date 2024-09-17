@@ -1,8 +1,9 @@
-subscription NewLike($likedMessageId: Int!) {
-  newLike(likedMessageId: $likedMessageId) {
+subscription NewLike($channelId: Int!) {
+  newLike(channelId: $channelId) {
     id
     LikedBy {
       id
+      firstName
     }
     likedMessageId {
       id

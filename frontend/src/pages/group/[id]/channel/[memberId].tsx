@@ -31,7 +31,7 @@ const Message = () => {
     errorPolicy: "ignore",
   });
 
-  let { data: getMessages } = useMessagesQuery({
+  let { data: getMessages, refetch } = useMessagesQuery({
     variables: { channelId: parseInt(channelMemberId as string) },
   });
   const [createMessage] = useCreateMessageMutation();
@@ -71,40 +71,37 @@ const Message = () => {
       }
     },
   });
-  // useNewLikeSubscription({
-  //   variables: {
-  //     likedMessageId: parseInt(channelMemberId, 10),
-  //   },
-  //   onData: async (newLike: any) => {
-  //     // try {
-  //     //   const getMessages = client.readQuery({
-  //     //     query: MessagesDocument,
-  //     //     variables: {
-  //     //       channelId: parseInt(channelMemberId, 10),
-  //     //     },
-  //     //   });
-  //     //   const oldMessages = getMessages?.messages || [];
+  useNewLikeSubscription({
+    variables: {
+      channelId: parseInt(channelMemberId, 10),
+    },
+    onData: async (newLike: any) => {
+      console.log("newLike", newLike.data.data);
+      refetch();
 
-  //     //   const newMsgObj = newMessage.data.data.newMessage;
+      // try {
+      //   const getMessages = client.readQuery({
+      //     query: MessagesDocument,
+      //     variables: {
+      //       channelId: parseInt(channelMemberId, 10),
+      //     },
+      //   });
+      //   const oldMessages = getMessages?.messages || [];
 
-  //     //   client.writeQuery({
-  //     //     query: MessagesDocument,
-  //     //     data: { messages: [...oldMessages, newMsgObj] },
-  //     //     variables: {
-  //     //       channelId: parseInt(channelMemberId, 10),
-  //     //     },
-  //     //   });
-
-  //     //   const objDiv = document.getElementById("chatBox");
-  //     //   if (objDiv) {
-  //     //     objDiv.scrollTop = objDiv.scrollHeight;
-  //     //   }
-  //     // } catch (error) {
-  //     //   console.error("Error reading or writing cache:", error);
-  //     // }
-  //     console.log("newLike", newLike.data.data);
-  //   },
-  // });
+      //   const newMsgObj = newLike.data.data.newMessage;
+      //   console.log(newMsgObj);
+      //   client.writeQuery({
+      //     query: MessagesDocument,
+      //     data: { messages: [...oldMessages, newMsgObj] },
+      //     variables: {
+      //       channelId: parseInt(channelMemberId, 10),
+      //     },
+      //   });
+      // } catch (error) {
+      //   console.error("Error reading or writing cache:", error);
+      // }
+    },
+  });
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -133,7 +130,7 @@ const Message = () => {
     formJSON.likedMessageId = { id: parseInt(formJSON.likedMessageId, 10) };
     formJSON.channelId = { id: parseInt(channelMemberId, 10) };
 
-    console.log("form json", formJSON);
+    // console.log("form json", formJSON);
     // formJSON.channelId = {
     //   id: parseInt(channelMemberId, 10),
     // };
@@ -153,7 +150,7 @@ const Message = () => {
     return dateA - dateB; // Sort by date
   });
   // console.log("s.messages", sortedMessages);
-  console.log("sorted messages", sortedMessages);
+  // console.log("sorted messages", sortedMessages);
   return (
     <>
       <div className=" flex justify-center ">

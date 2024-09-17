@@ -11,18 +11,15 @@ import {
 } from "type-graphql";
 import Like from "../entities/Like";
 import { NewLikeType } from "../types/LikeType";
-import { GraphQLError } from "graphql";
-import { In } from "typeorm";
 
 @Resolver(Like)
 export default class LikeResolver {
   @Query(() => [Like])
   async Likes(
-    @Arg("userId", { nullable: true }) id?: number,
+    @Arg("userId", { nullable: true }) LikedBy?: number,
     @Arg("likedMessageId", () => Int, { nullable: true })
-    @Arg("channelId", () => Int, { nullable: true })
     likedMessageId?: number,
-    LikedBy?: number,
+    @Arg("channelId", () => Int, { nullable: true })
     channelId?: number
   ) {
     return Like.find({
@@ -57,6 +54,8 @@ export default class LikeResolver {
     if (existingLike) {
       await existingLike.remove();
       // throw new GraphQLError(`Like removed`);
+      await pubsub.publish(`NewLike_${data.channelId.id}`, "like removed");
+
       return "like removed";
     }
     const newLike = new Like();

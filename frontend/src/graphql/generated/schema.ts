@@ -55,6 +55,7 @@ export type Group = {
 export type Like = {
   __typename?: 'Like';
   LikedBy: User;
+  channelId: Message;
   id: Scalars['Int'];
   likedMessageId: Message;
 };
@@ -144,6 +145,7 @@ export type NewGroupInputType = {
 
 export type NewLikeType = {
   LikedBy: ObjectId;
+  channelId: ObjectId;
   likedMessageId: ObjectId;
 };
 
@@ -167,7 +169,6 @@ export type ObjectId = {
 
 export type Query = {
   __typename?: 'Query';
-  AllLikes: Array<Like>;
   Likes: Array<Like>;
   channel?: Maybe<Channel>;
   channels: Array<Channel>;
@@ -179,6 +180,7 @@ export type Query = {
 
 
 export type QueryLikesArgs = {
+  channelId?: InputMaybe<Scalars['Int']>;
   likedMessageId?: InputMaybe<Scalars['Int']>;
   userId?: InputMaybe<Scalars['Float']>;
 };
@@ -214,7 +216,7 @@ export type Subscription = {
 
 
 export type SubscriptionNewLikeArgs = {
-  likedMessageId: Scalars['Int'];
+  channelId: Scalars['Int'];
 };
 
 
@@ -265,14 +267,14 @@ export type CreateDelteLikeMutationVariables = Exact<{
 }>;
 
 
-export type CreateDelteLikeMutation = { __typename?: 'Mutation', createDelteLike: { __typename?: 'Like', id: number, LikedBy: { __typename?: 'User', id: string }, likedMessageId: { __typename?: 'Message', id: number } } };
+export type CreateDelteLikeMutation = { __typename?: 'Mutation', createDelteLike: { __typename?: 'Like', id: number, LikedBy: { __typename?: 'User', id: string }, likedMessageId: { __typename?: 'Message', id: number }, channelId: { __typename?: 'Message', id: number } } };
 
 export type NewLikeSubscriptionVariables = Exact<{
-  likedMessageId: Scalars['Int'];
+  channelId: Scalars['Int'];
 }>;
 
 
-export type NewLikeSubscription = { __typename?: 'Subscription', newLike: { __typename?: 'Like', id: number, LikedBy: { __typename?: 'User', id: string }, likedMessageId: { __typename?: 'Message', id: number } } };
+export type NewLikeSubscription = { __typename?: 'Subscription', newLike: { __typename?: 'Like', id: number, LikedBy: { __typename?: 'User', id: string, firstName?: string | null }, likedMessageId: { __typename?: 'Message', id: number } } };
 
 export type AddMemberToGroupMutationVariables = Exact<{
   data: AddMembersInputType;
@@ -448,6 +450,9 @@ export const CreateDelteLikeDocument = gql`
     likedMessageId {
       id
     }
+    channelId {
+      id
+    }
   }
 }
     `;
@@ -478,11 +483,12 @@ export type CreateDelteLikeMutationHookResult = ReturnType<typeof useCreateDelte
 export type CreateDelteLikeMutationResult = Apollo.MutationResult<CreateDelteLikeMutation>;
 export type CreateDelteLikeMutationOptions = Apollo.BaseMutationOptions<CreateDelteLikeMutation, CreateDelteLikeMutationVariables>;
 export const NewLikeDocument = gql`
-    subscription NewLike($likedMessageId: Int!) {
-  newLike(likedMessageId: $likedMessageId) {
+    subscription NewLike($channelId: Int!) {
+  newLike(channelId: $channelId) {
     id
     LikedBy {
       id
+      firstName
     }
     likedMessageId {
       id
@@ -503,7 +509,7 @@ export const NewLikeDocument = gql`
  * @example
  * const { data, loading, error } = useNewLikeSubscription({
  *   variables: {
- *      likedMessageId: // value for 'likedMessageId'
+ *      channelId: // value for 'channelId'
  *   },
  * });
  */
