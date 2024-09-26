@@ -1,29 +1,27 @@
 import {
   MessagesDocument,
+  useCreateDelteLikeMutation,
   useCreateMessageMutation,
+  useLikesQuery,
   useMessagesQuery,
+  useNewLikeSubscription,
   useNewMessageSubscription,
   useProfileQuery,
-  useCreateDelteLikeMutation,
-  useNewLikeSubscription,
 } from "@/graphql/generated/schema";
-import { Avatar, useBoolean } from "@chakra-ui/react";
-import { Heart, SendHorizontal } from "lucide-react";
-import { useRouter } from "next/router";
 import {
-  FormEvent,
-  HtmlHTMLAttributes,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-// import { NewLikeType } from "../types/LikeType";
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Avatar,
+} from "@chakra-ui/react";
+import { Box, Heart, SendHorizontal } from "lucide-react";
+import { useRouter } from "next/router";
+import { FormEvent, useState } from "react";
 
 const Message = () => {
-  const [flagName, setFlagName] = useBoolean();
-
   const [messageInput, setMessageInput] = useState("");
-  const chatContainerRef = useRef(null);
 
   const router = useRouter();
   const channelMemberId: any = router.query?.memberId;
@@ -31,7 +29,38 @@ const Message = () => {
     errorPolicy: "ignore",
   });
 
-  let { data: getMessages, refetch } = useMessagesQuery({
+  let { data: getRatings } = useLikesQuery({
+    variables: { channelId: parseInt(channelMemberId as string) },
+  });
+  console.log("getRatings", getRatings?.Likes);
+
+  function getTopLikedMessages(likesArray: any[]): any[] {
+    const messageLikes: { [key: number]: { content: string; count: number } } =
+      {};
+
+    likesArray.forEach((like: any) => {
+      const messageId = like.likedMessageId.id;
+      const messageContent = like.likedMessageId.content;
+
+      if (!messageLikes[messageId]) {
+        messageLikes[messageId] = {
+          content: messageContent,
+          count: 0,
+        };
+      }
+
+      messageLikes[messageId].count += 1;
+    });
+
+    const topMessages = Object.values(messageLikes).sort(
+      (a, b) => b.count - a.count
+    );
+    // console.log("topMessages", topMessages.slice(0, 3));
+    return topMessages.slice(0, 3);
+  }
+  const topLikedMessages = getTopLikedMessages(getRatings?.Likes || []);
+  console.log("topLikedMessages", topLikedMessages);
+  let { data: getMessages } = useMessagesQuery({
     variables: { channelId: parseInt(channelMemberId as string) },
   });
   const [createMessage] = useCreateMessageMutation();
@@ -79,7 +108,6 @@ const Message = () => {
     onData: async (newLike: any) => {
       console.log("newLike", newLike.data.data);
       // refetch();
-
       try {
         const oldLikes = getMessages?.messages || [];
 
@@ -147,11 +175,28 @@ const Message = () => {
 
     return dateA - dateB; // Sort by date
   });
-  // console.log("s.messages", sortedMessages);
-  // console.log("sorted messages", sortedMessages);
 
   return (
     <>
+      <h1 className="text-center">Top Gifts!</h1>
+      <Accordion allowToggle>
+        {/* <div className="  h-8 bg-red-600"> */}
+        {topLikedMessages.map((m, idx) => (
+          <AccordionItem key={idx}>
+            <h2>
+              <AccordionButton>
+                <h1 className="flex gap-2 ">
+                  {m.count}
+                  <Heart />
+                </h1>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>{m.content}</AccordionPanel>
+          </AccordionItem>
+        ))}
+        {/* </div> */}
+      </Accordion>
       <div className=" flex justify-center ">
         <div className="md:w-1/2">
           <div className=" p-3 h-[75vh] overflow-y-auto bg-white" id="chatBox">

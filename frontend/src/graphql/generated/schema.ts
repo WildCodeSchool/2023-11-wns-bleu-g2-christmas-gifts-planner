@@ -54,10 +54,10 @@ export type Group = {
 
 export type Like = {
   __typename?: 'Like';
-  LikedBy: User;
-  channelId: Message;
-  id: Scalars['Int'];
-  likedMessageId: Message;
+  LikedBy?: Maybe<User>;
+  channelId?: Maybe<Message>;
+  id?: Maybe<Scalars['Int']>;
+  likedMessageId?: Maybe<Message>;
 };
 
 export type LoginInputType = {
@@ -267,14 +267,21 @@ export type CreateDelteLikeMutationVariables = Exact<{
 }>;
 
 
-export type CreateDelteLikeMutation = { __typename?: 'Mutation', createDelteLike: { __typename?: 'Like', id: number, LikedBy: { __typename?: 'User', id: string }, likedMessageId: { __typename?: 'Message', id: number }, channelId: { __typename?: 'Message', id: number } } };
+export type CreateDelteLikeMutation = { __typename?: 'Mutation', createDelteLike: { __typename?: 'Like', id?: number | null, LikedBy?: { __typename?: 'User', id: string } | null, likedMessageId?: { __typename?: 'Message', id: number } | null, channelId?: { __typename?: 'Message', id: number } | null } };
+
+export type LikesQueryVariables = Exact<{
+  channelId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type LikesQuery = { __typename?: 'Query', Likes: Array<{ __typename?: 'Like', id?: number | null, likedMessageId?: { __typename?: 'Message', id: number, content: string } | null, LikedBy?: { __typename?: 'User', id: string } | null }> };
 
 export type NewLikeSubscriptionVariables = Exact<{
   channelId: Scalars['Int'];
 }>;
 
 
-export type NewLikeSubscription = { __typename?: 'Subscription', newLike: { __typename?: 'Like', id: number, LikedBy: { __typename?: 'User', id: string, firstName?: string | null }, likedMessageId: { __typename?: 'Message', id: number } } };
+export type NewLikeSubscription = { __typename?: 'Subscription', newLike: { __typename?: 'Like', id?: number | null, LikedBy?: { __typename?: 'User', id: string, firstName?: string | null } | null, likedMessageId?: { __typename?: 'Message', id: number } | null } };
 
 export type AddMemberToGroupMutationVariables = Exact<{
   data: AddMembersInputType;
@@ -296,7 +303,7 @@ export type MessagesQueryVariables = Exact<{
 }>;
 
 
-export type MessagesQuery = { __typename?: 'Query', messages: Array<{ __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null }, channelId: { __typename?: 'Channel', id: number }, likes?: Array<{ __typename?: 'Like', id: number }> | null }> };
+export type MessagesQuery = { __typename?: 'Query', messages: Array<{ __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null }, channelId: { __typename?: 'Channel', id: number }, likes?: Array<{ __typename?: 'Like', id?: number | null }> | null }> };
 
 export type NewMessageSubscriptionVariables = Exact<{
   channelId: Scalars['Int'];
@@ -482,6 +489,48 @@ export function useCreateDelteLikeMutation(baseOptions?: Apollo.MutationHookOpti
 export type CreateDelteLikeMutationHookResult = ReturnType<typeof useCreateDelteLikeMutation>;
 export type CreateDelteLikeMutationResult = Apollo.MutationResult<CreateDelteLikeMutation>;
 export type CreateDelteLikeMutationOptions = Apollo.BaseMutationOptions<CreateDelteLikeMutation, CreateDelteLikeMutationVariables>;
+export const LikesDocument = gql`
+    query Likes($channelId: Int) {
+  Likes(channelId: $channelId) {
+    id
+    likedMessageId {
+      id
+      content
+    }
+    LikedBy {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useLikesQuery__
+ *
+ * To run a query within a React component, call `useLikesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLikesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLikesQuery({
+ *   variables: {
+ *      channelId: // value for 'channelId'
+ *   },
+ * });
+ */
+export function useLikesQuery(baseOptions?: Apollo.QueryHookOptions<LikesQuery, LikesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LikesQuery, LikesQueryVariables>(LikesDocument, options);
+      }
+export function useLikesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LikesQuery, LikesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LikesQuery, LikesQueryVariables>(LikesDocument, options);
+        }
+export type LikesQueryHookResult = ReturnType<typeof useLikesQuery>;
+export type LikesLazyQueryHookResult = ReturnType<typeof useLikesLazyQuery>;
+export type LikesQueryResult = Apollo.QueryResult<LikesQuery, LikesQueryVariables>;
 export const NewLikeDocument = gql`
     subscription NewLike($channelId: Int!) {
   newLike(channelId: $channelId) {
