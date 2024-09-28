@@ -35,6 +35,11 @@ const colors = {
     highter: "#600401",
     hightest: "#410301",
   },
+  generic: {
+    low: "#f0f0f0",
+    medium: "#c0c0c0",
+    high: "#787878",
+  },
   background: {
     default: "#F9F6F1",
   },
