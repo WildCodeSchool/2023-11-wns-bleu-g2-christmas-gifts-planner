@@ -11,6 +11,7 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
+  useToast,
 } from "@chakra-ui/react";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
@@ -35,13 +36,15 @@ export default function Navbar() {
     errorPolicy: "ignore",
   });
   const { groupId, ownerId } = useGroupContext();
-  console.log("groupId: ", groupId);
+
   const isOwner =
     currentUser?.profile?.id &&
     ownerId &&
     currentUser.profile.id.toString() === ownerId.toString();
-  console.log("isOwner: ", isOwner);
+
   const [deleteGroup] = useDeleteGroupMutation();
+  const toast = useToast();
+
   const handleLogin = () => {
     router.push("/login");
   };
@@ -71,6 +74,12 @@ export default function Navbar() {
       if (groupId !== null) {
         await deleteGroup({ variables: { groupId: groupId } });
         router.push("/dashboard");
+        toast({
+          title: "Groupe supprimé",
+          description: "Le groupe a été supprimé avec succès.",
+          status: "success",
+          variant: "success",
+        });
       } else {
         console.error("groupId is null");
       }
