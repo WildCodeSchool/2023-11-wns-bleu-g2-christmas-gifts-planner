@@ -89,6 +89,7 @@
     "error": {
       "create-group": "An error occurred while creating the group",
       "generic-title": "Error",
+      "generic-description": "An error occurred",
       "validate-profile": "An error occurred during profile validation"
     },
     "success": {

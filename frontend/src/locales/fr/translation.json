@@ -89,6 +89,7 @@
     "error": {
       "create-group": "Une erreur est survenue lors de la création du groupe",
       "generic-title": "Erreur",
+      "generic-description": "Une erreur est survenue",
       "validate-profile": "Une erreur est survenue lors de la validation du profil"
     },
     "success": {

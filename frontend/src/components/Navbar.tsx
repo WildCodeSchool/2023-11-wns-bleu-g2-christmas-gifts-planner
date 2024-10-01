@@ -94,6 +94,12 @@ export default function Navbar({
       router.push("/dashboard");
     } catch (error) {
       console.error("Failed to delete group", error);
+      toast({
+        title: t("toast.error.generic-title"),
+        description: t("toast.error.generic-description"),
+        status: "error",
+        variant: "error",
+      });
     }
   };
 
