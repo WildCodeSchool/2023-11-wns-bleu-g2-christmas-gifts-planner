@@ -1,5 +1,6 @@
 export interface GroupContextProps {
-  groupId: number | null;
-  ownerId: number | null;
-  setGroupData: (groupId: number, ownerId: number) => void;
+  groupId: string;
+  ownerId: string;
+  groupName: string;
+  setGroupData: (groupId: string, ownerId: string, groupName: string) => void;
 }

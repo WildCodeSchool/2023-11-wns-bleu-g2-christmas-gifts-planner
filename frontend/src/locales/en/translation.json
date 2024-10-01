@@ -1,8 +1,15 @@
 {
   "add-members": "Add members",
   "add-valid-email": "Please add a valid email adress.",
+  "alert": {
+    "delete-group": "Are you sure you want to delete this group ?",
+    "delete-group-title": "Delete group"
+  },
   "already-have-an-account": "Already registered ?",
   "button": {
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "delete-group": "Delete the group",
     "validate": "Validate"
   },
   "cancel": "Cancel",
@@ -85,6 +92,8 @@
       "validate-profile": "An error occurred during profile validation"
     },
     "success": {
+      "delete-group-description": "Your group {{groupName}} has been successfully deleted.",
+      "delete-group-title": "Group deleted",
       "group-created-description": "Your group {{groupName}} has been successfully created.",
       "group-created-title": "Group created",
       "validate-profile-title": "Profile validated",

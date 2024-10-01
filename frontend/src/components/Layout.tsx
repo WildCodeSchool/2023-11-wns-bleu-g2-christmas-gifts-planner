@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { Box } from "@chakra-ui/react";
+import { useProfileQuery } from "@/graphql/generated/schema";
 
 export default function Layout({
   children,
@@ -11,6 +12,9 @@ export default function Layout({
   children: ReactNode;
   pageTitle: string;
 }) {
+  const { data: currentUser, refetch } = useProfileQuery({
+    errorPolicy: "ignore",
+  });
   return (
     <>
       <Head>
@@ -23,7 +27,7 @@ export default function Layout({
         <link rel="icon" href="/gifty-logo.svg" />
       </Head>
       <Box display="flex" flexDirection="column" minHeight="100vh">
-        <Navbar />
+        <Navbar onGroupDeleted={refetch} />
         <Box as="main" flex="1">
           {children}
         </Box>

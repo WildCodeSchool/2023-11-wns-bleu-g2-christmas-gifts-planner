@@ -2,16 +2,16 @@ import AddMembersModal from "@/components/group/AddMembersModal";
 import {
   useChangeGroupNameMutation,
   useGroupByIdQuery,
+  useProfileQuery,
 } from "@/graphql/generated/schema";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Avatar,
   Box,
   Flex,
   Heading,
-  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
@@ -19,7 +19,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { X, Check, Pen, SearchIcon } from "lucide-react";
-import { AddIcon } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
 import { useGroupContext } from "@/contexts/GroupContext";
 
@@ -27,16 +26,26 @@ export default function Channels() {
   const router = useRouter();
   const { t } = useTranslation();
   const id = router.query?.id as string;
-  const { data: groupeId, refetch } = useGroupByIdQuery({
+  const { data: groupId, refetch } = useGroupByIdQuery({
     variables: { groupId: Number(id) },
   });
   const [searchMember, setSearchMember] = useState("");
   const [editingGroupName, setEditingGroupName] = useState(false);
   const [ChangeGroupName] = useChangeGroupNameMutation();
-  const [groupName, setGroupName] = useState(groupeId?.groupById?.name || "");
+  const [groupName, setGroupName] = useState("");
   const { setGroupData } = useGroupContext();
+  const { data: currentUser } = useProfileQuery({
+    errorPolicy: "ignore",
+  });
+  const isOwner = groupId?.groupById.owner.id === currentUser?.profile.id;
 
-  const members = groupeId?.groupById.members;
+  useEffect(() => {
+    if (groupId?.groupById) {
+      setGroupName(groupId.groupById.name);
+    }
+  }, [groupId]);
+
+  const members = groupId?.groupById.members;
   const filteredMembers = members?.filter(
     (member) =>
       member.firstName?.toLowerCase().includes(searchMember.toLowerCase()) ||
@@ -57,15 +66,15 @@ export default function Channels() {
   const updateGroupName = async () => {
     try {
       await ChangeGroupName({
-        variables: { groupId: Number(id), data: { name: groupName } },
+        variables: { groupId: Number(id), data: { name: groupName || "" } },
       });
       setEditingGroupName(!editingGroupName);
     } catch (error) {
       console.log("error: ", error);
     }
   };
-  if (groupeId?.groupById.owner.id !== undefined) {
-    setGroupData(Number(id), Number(groupeId.groupById.owner.id));
+  if (groupId?.groupById.owner.id !== undefined) {
+    setGroupData(id, groupId.groupById.owner.id, groupName);
   }
   return (
     <>
@@ -84,10 +93,9 @@ export default function Channels() {
           justifyContent={"center"}
           gap={4}
         >
-          {editingGroupName ? (
+          {editingGroupName && isOwner ? (
             <Heading size="lg" my={4}>
               <Input
-                defaultValue={groupeId?.groupById.name}
                 value={groupName}
                 onChange={handleChangeGroupName}
                 fontFamily={"heading"}
@@ -98,37 +106,39 @@ export default function Channels() {
             </Heading>
           ) : (
             <Heading size="lg" my={4}>
-              {groupeId?.groupById.name || t("group-name")}
+              {groupId?.groupById.name || t("group-name")}
             </Heading>
           )}
-          <Box>
-            {editingGroupName ? (
-              <Box display={"flex"}>
+          {isOwner && (
+            <Box>
+              {editingGroupName ? (
+                <Box display={"flex"}>
+                  <Box
+                    as="button"
+                    className="genericButton"
+                    onClick={() => groupId && updateGroupName()}
+                  >
+                    <Check />
+                  </Box>
+                  <Box
+                    as="button"
+                    className="genericButton"
+                    onClick={() => groupId && handleEdit()}
+                  >
+                    <X />
+                  </Box>
+                </Box>
+              ) : (
                 <Box
                   as="button"
                   className="genericButton"
-                  onClick={() => groupeId && updateGroupName()}
+                  onClick={() => groupId && handleEdit()}
                 >
-                  <Check />
+                  <Pen />
                 </Box>
-                <Box
-                  as="button"
-                  className="genericButton"
-                  onClick={() => groupeId && handleEdit()}
-                >
-                  <X />
-                </Box>
-              </Box>
-            ) : (
-              <Box
-                as="button"
-                className="genericButton"
-                onClick={() => groupeId && handleEdit()}
-              >
-                <Pen />
-              </Box>
-            )}
-          </Box>
+              )}
+            </Box>
+          )}
         </Box>
         <Flex justifyContent="center" my={8}>
           <Stack direction="row" spacing={4}>

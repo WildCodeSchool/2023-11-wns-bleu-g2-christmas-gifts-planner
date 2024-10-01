@@ -26,8 +26,13 @@ import {
 import i18n from "@/pages/i18n";
 import { useTranslation } from "react-i18next";
 import { useGroupContext } from "@/contexts/GroupContext";
+import ConfirmModal from "./ConfirmModal";
 
-export default function Navbar() {
+export default function Navbar({
+  onGroupDeleted,
+}: {
+  onGroupDeleted: () => void;
+}) {
   const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
   const [language, setLanguage] = useState("FR");
@@ -35,7 +40,7 @@ export default function Navbar() {
   const { data: currentUser } = useProfileQuery({
     errorPolicy: "ignore",
   });
-  const { groupId, ownerId } = useGroupContext();
+  const { groupId, ownerId, groupName } = useGroupContext();
 
   const isOwner =
     currentUser?.profile?.id &&
@@ -72,11 +77,14 @@ export default function Navbar() {
   const handleDeleteGroup = async () => {
     try {
       if (groupId !== null) {
-        await deleteGroup({ variables: { groupId: groupId } });
+        await deleteGroup({ variables: { groupId: Number(groupId) } });
         router.push("/dashboard");
+        onGroupDeleted();
         toast({
-          title: "Groupe supprimé",
-          description: "Le groupe a été supprimé avec succès.",
+          title: t("toast.success.delete-group-title"),
+          description: t("toast.success.delete-group-description", {
+            groupName,
+          }),
           status: "success",
           variant: "success",
         });
@@ -197,23 +205,25 @@ export default function Navbar() {
                 </Box>
                 <MenuDivider />
                 <Box textAlign="center" p={4}>
-                  <Flex flexDirection="column">
+                  <Flex flexDirection="column" gap={4}>
                     <Button
-                      mb={4}
                       variant="goldenButton"
                       onClick={() => router.push("/create-group")}
                     >
                       {t("create-group")}
                     </Button>
-                    {isOwner && (
-                      <Button
-                        mb={4}
-                        variant="redButton"
-                        onClick={handleDeleteGroup}
-                      >
-                        {t("button.delete-group")}
-                      </Button>
-                    )}
+                    {isOwner &&
+                      router.query.id?.toString() === groupId?.toString() && (
+                        <ConfirmModal
+                          handleClick={handleDeleteGroup}
+                          openAlertAction={t("button.delete-group")}
+                          content={t("alert.delete-group")}
+                          title={t("alert.delete-group-title")}
+                          primaryAction={t("button.delete")}
+                          secondaryAction={t("button.cancel")}
+                          variant={["redButton", "whiteRedButton", "redButton"]}
+                        />
+                      )}
 
                     <Button variant="greenButton" onClick={handleLogout}>
                       {t("sign-out")}

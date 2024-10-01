@@ -1,10 +1,16 @@
 {
   "add-members": "Ajouter des membres",
   "add-valid-email": "Veuillez entrer une adresse e-mail valide.",
+  "alert": {
+    "delete-group": "Êtes-vous sûr de vouloir supprimer ce groupe ?",
+    "delete-group-title": "Supprimer le groupe"
+  },
   "already-have-an-account": "Déjà inscrit ?",
   "button": {
-    "validate": "Valider",
-    "delete-group": "Supprimer le groupe"
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "delete-group": "Supprimer le groupe",
+    "validate": "Valider"
   },
   "cancel": "Annuler",
   "character-limit": "Le mot de passe doit faire minimum 8 caractères",
@@ -86,6 +92,8 @@
       "validate-profile": "Une erreur est survenue lors de la validation du profil"
     },
     "success": {
+      "delete-group-description": "Votre groupe {{groupName}} a bien été supprimé.",
+      "delete-group-title": "Groupe supprimé",
       "group-created-description": "Votre groupe {{groupName}} a été créé avec succès.",
       "group-created-title": "Groupe créé",
       "validate-profile-title": "Profil validé",
