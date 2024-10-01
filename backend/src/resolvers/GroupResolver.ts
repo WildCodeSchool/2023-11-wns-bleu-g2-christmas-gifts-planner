@@ -168,4 +168,39 @@ export default class GroupResolver {
       where: { id },
     });
   }
+
+  /**
+   * Mutation resolver for delete the group.
+   */
+  @Authorized()
+  @Mutation(() => String)
+  async deleteGroup(
+    @Arg("groupId", () => Int) id: number,
+    @Ctx() ctx: ContextType
+  ) {
+    // Check if the current user is logged in
+    if (!ctx.currentUser) {
+      throw new GraphQLError("you need to be logged in");
+    }
+
+    // Find the group with the given ID
+    const groupToDelete = await Group.findOne({
+      where: { id },
+    });
+
+    // Throw an error if the group is not found
+    if (!groupToDelete) {
+      throw new GraphQLError("Group not found");
+    }
+
+    // Check if the current user is the owner of the group
+    if (groupToDelete.owner.id !== ctx.currentUser.id) {
+      throw new GraphQLError("You are not the owner of this group");
+    }
+
+    // Delete the group
+    await Group.delete(id);
+
+    return "Group deleted successfully";
+  }
 }

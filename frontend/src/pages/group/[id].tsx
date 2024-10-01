@@ -21,6 +21,7 @@ import {
 import { X, Check, Pen, SearchIcon } from "lucide-react";
 import { AddIcon } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
+import { useGroupContext } from "@/contexts/GroupContext";
 
 export default function Channels() {
   const router = useRouter();
@@ -33,6 +34,7 @@ export default function Channels() {
   const [editingGroupName, setEditingGroupName] = useState(false);
   const [ChangeGroupName] = useChangeGroupNameMutation();
   const [groupName, setGroupName] = useState(groupeId?.groupById?.name || "");
+  const { setGroupData } = useGroupContext();
 
   const members = groupeId?.groupById.members;
   const filteredMembers = members?.filter(
@@ -62,6 +64,9 @@ export default function Channels() {
       console.log("error: ", error);
     }
   };
+  if (groupeId?.groupById.owner.id !== undefined) {
+    setGroupData(Number(id), Number(groupeId.groupById.owner.id));
+  }
   return (
     <>
       <Box
@@ -135,18 +140,7 @@ export default function Channels() {
                 color="white"
               />
             ))}
-            <IconButton
-              icon={<AddIcon />}
-              aria-label="Add Member"
-              borderRadius="full"
-              bg="transparent"
-              border="1px solid #084F2D"
-              size={"lg"}
-              _hover={{
-                textDecoration: "none",
-                bg: "secondary.medium",
-              }}
-            />
+            <AddMembersModal refetch={refetch} id={id} />
           </Stack>
         </Flex>
         <InputGroup
@@ -210,7 +204,6 @@ export default function Channels() {
           ))}
         </Box>
       </Box>
-      <AddMembersModal refetch={refetch} id={id} />
     </>
   );
 }

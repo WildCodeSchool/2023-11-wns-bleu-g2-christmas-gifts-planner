@@ -7,6 +7,7 @@ import { theme } from "@/theme/config";
 import Layout from "@/components/Layout";
 import { ErrorContextProvider } from "@/contexts/ErrorContext";
 import "./i18n";
+import { GroupContextProvider } from "@/contexts/GroupContext";
 
 interface MyAppProps extends AppProps {
   pageProps: {
@@ -33,9 +34,11 @@ export default function App({ Component, pageProps }: MyAppProps) {
         }}
       >
         <ErrorContextProvider>
-          <Layout pageTitle={pageProps.pageTitle}>
-            <Component {...pageProps} />
-          </Layout>
+          <GroupContextProvider>
+            <Layout pageTitle={pageProps.pageTitle}>
+              <Component {...pageProps} />
+            </Layout>
+          </GroupContextProvider>
         </ErrorContextProvider>
       </ChakraProvider>
     </ApolloProvider>

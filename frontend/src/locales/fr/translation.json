@@ -3,7 +3,8 @@
   "add-valid-email": "Veuillez entrer une adresse e-mail valide.",
   "already-have-an-account": "Déjà inscrit ?",
   "button": {
-    "validate": "Valider"
+    "validate": "Valider",
+    "delete-group": "Supprimer le groupe"
   },
   "cancel": "Annuler",
   "character-limit": "Le mot de passe doit faire minimum 8 caractères",
