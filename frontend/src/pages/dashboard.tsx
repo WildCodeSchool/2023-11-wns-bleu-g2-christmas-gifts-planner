@@ -7,7 +7,7 @@ import {
   Heading,
   CardBody,
 } from "@chakra-ui/react";
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import DashboardWhithoutGroup from "@/components/dashboard/DashboardWithoutGroup";
 import { useProfileQuery } from "@/graphql/generated/schema";
 import DashboardWhithGroup from "@/components/dashboard/DashboardWithGroup";
@@ -16,14 +16,14 @@ import Loader from "@/components/Loader";
 import Error from "@/components/Error";
 import UnauthorizedImage from "../assets/images/Unauthorized.png";
 import GenericError from "../assets/images/GenericError.png";
-import ErrorContext from "@/contexts/ErrorContext";
 import { useTranslation } from "react-i18next";
+import { useErrorContext } from "@/contexts/ErrorContext";
 
 export default function Dashboard({ pageTitle }: { pageTitle: string }) {
   useEffect(() => {
     document.title = pageTitle;
   }, [pageTitle]);
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const {
     data: currentUser,
     refetch,
@@ -33,7 +33,7 @@ export default function Dashboard({ pageTitle }: { pageTitle: string }) {
     errorPolicy: "ignore",
   });
 
-  const { messages } = useContext(ErrorContext);
+  const { messages } = useErrorContext();
 
   if (loading) return <Loader></Loader>;
   if (error) {

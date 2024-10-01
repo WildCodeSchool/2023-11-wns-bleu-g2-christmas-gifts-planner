@@ -9,7 +9,6 @@ export default function Error({
 }: {
   image: string | StaticImageData;
   alt: string;
-  // message: string | undefined;
   message: string;
 }) {
   return (
