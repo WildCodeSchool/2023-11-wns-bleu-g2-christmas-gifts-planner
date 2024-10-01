@@ -18,25 +18,22 @@ import {
 } from "@chakra-ui/react";
 import { Check, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/router";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import Error from "@/components/Error";
 import UnauthorizedImage from "../assets/images/Unauthorized.png";
-import GenericErrorImage from "../assets/images/GenericError.png";
-import ErrorContext from "@/contexts/ErrorContext";
 import Loader from "@/components/Loader";
 import { useTranslation } from "react-i18next";
+import { useErrorContext } from "@/contexts/ErrorContext";
 
 export default function CompleteProfile() {
   //Get the token from the URL query params
   const router = useRouter();
   const token = router.query.token as string;
-  // const errorContext = useContext(ErrorContext);
-  // const messages = errorContext ? errorContext.messages : null;
 
-  const { messages } = useContext(ErrorContext);
-  const client = useApolloClient();
+  const { messages } = useErrorContext();
   const { t } = useTranslation();
+  const client = useApolloClient();
 
   // Use the useCompleteProfileMutation hook to handle the mutation for completing the profile
   const [CompleteProfile, { error, loading }] = useCompleteProfileMutation({
