@@ -92,7 +92,7 @@ export default function Channels() {
               align="center"
               width={{ base: "95%", md: "48rem" }}
               m="auto"
-              h="190px"
+              h={ isMobile? "190px": "315px"}
               // paddingBlock="1rem"
               marginBlock="3rem"
               bg="white"
