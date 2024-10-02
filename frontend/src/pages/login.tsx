@@ -52,7 +52,7 @@ const Login = () => {
 					bg="transparent"
 					boxShadow="none"
           _hover={{ bg: "gray.200" }}
-          icon={<ArrowLeft color="#22543D"/>}
+          icon={<ArrowLeft color="#003B1E"/>}
         />
         </Link>
       <Heading as="h1" fontSize='6xl' fontWeight="bold" mt={8} textAlign="center" color="green.800">{t("welcome-back")}</Heading>
@@ -72,7 +72,7 @@ const Login = () => {
           <form onSubmit={handleSubmit}>
             <FormControl>
             <FormLabel fontSize={14} fontWeight="bold" mb={1} color="green.800">{t("email-adress")}</FormLabel>
-              <Input isRequired autoComplete="" type="email" id="email" name="email" borderRadius={15} borderColor="green.800" />
+              <Input isRequired autoComplete="" variant="goldenInput" type="email" id="email" name="email" borderRadius={15} borderColor="green.800" />
               {error === 1 && (
                 <Text position="absolute" mt={1} fontSize={14} fontWeight="bold" color="red.700">{t("email-adress-invalid")}</Text>
               )}
@@ -83,6 +83,7 @@ const Login = () => {
                 id="password"
                 isRequired
                 type='password'
+                variant="goldenInput"
                 borderRadius={15}
                 borderColor="green.800"
               />
