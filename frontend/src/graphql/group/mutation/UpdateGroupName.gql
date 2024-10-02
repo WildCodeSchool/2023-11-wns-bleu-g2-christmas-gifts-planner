@@ -1,0 +1,6 @@
+mutation ChangeGroupName($data: UpdateGroupNameInputType!, $groupId: Int!) {
+  changeGroupName(data: $data, groupId: $groupId) {
+    id
+    name
+  }
+}

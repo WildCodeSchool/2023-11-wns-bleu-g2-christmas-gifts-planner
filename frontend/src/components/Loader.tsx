@@ -10,7 +10,6 @@ export default function Loader() {
         m="auto"
         paddingBlock={10}
         marginBlock={4}
-        bg={"secondary.lowest"}
       >
         <Spinner
           speed="0.7s"
