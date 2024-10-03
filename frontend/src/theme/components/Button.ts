@@ -13,6 +13,7 @@ const whiteGoldenButton = defineStyle({
 
   _hover: {
     background: "secondary.medium",
+    color: "black",
   },
 });
 

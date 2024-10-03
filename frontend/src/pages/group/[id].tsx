@@ -1,61 +1,148 @@
 import AddMembersModal from "@/components/group/AddMembersModal";
-import { useGroupByIdQuery } from "@/graphql/generated/schema";
+import {
+  useChangeGroupNameMutation,
+  useGroupByIdQuery,
+  useProfileQuery,
+} from "@/graphql/generated/schema";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Avatar,
   Box,
   Flex,
   Heading,
-  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
   Stack,
   Text,
+  useMediaQuery,
 } from "@chakra-ui/react";
-import { SearchIcon } from "lucide-react";
-import { AddIcon } from "@chakra-ui/icons";
+import { X, Check, Pen, SearchIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useGroupContext } from "@/contexts/GroupContext";
 
 export default function Channels() {
   const router = useRouter();
   const { t } = useTranslation();
   const id = router.query?.id as string;
-  const [searchMember, setSearchMember] = useState("");
-  const { data: groupeId, refetch } = useGroupByIdQuery({
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
+  const { data: groupId, refetch } = useGroupByIdQuery({
     variables: { groupId: Number(id) },
   });
-  console.log("groupeId: ", groupeId);
-  const members = groupeId?.groupById.members;
-  console.log("members: ", members);
+  const [searchMember, setSearchMember] = useState("");
+  const [editingGroupName, setEditingGroupName] = useState(false);
+  const [ChangeGroupName] = useChangeGroupNameMutation();
+  const [groupName, setGroupName] = useState("");
+  const { setGroupData } = useGroupContext();
+  const { data: currentUser } = useProfileQuery({
+    errorPolicy: "ignore",
+  });
+  const isOwner = groupId?.groupById.owner.id === currentUser?.profile.id;
+
+  useEffect(() => {
+    if (groupId?.groupById) {
+      setGroupName(groupId.groupById.name);
+    }
+  }, [groupId]);
+
+  const members = groupId?.groupById.members;
   const filteredMembers = members?.filter(
     (member) =>
       member.firstName?.toLowerCase().includes(searchMember.toLowerCase()) ||
       member.lastName?.toLowerCase().includes(searchMember.toLowerCase())
   );
-  console.log("filteredMembers: ", filteredMembers);
   const avatarColors = [
     "primary.medium",
     "secondary.high",
     "tertiary.medium",
     "orange.500",
   ];
+  const handleEdit = () => {
+    setEditingGroupName(!editingGroupName);
+  };
+  const handleChangeGroupName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGroupName(e.target.value);
+  };
+  const updateGroupName = async () => {
+    try {
+      await ChangeGroupName({
+        variables: { groupId: Number(id), data: { name: groupName || "" } },
+      });
+      setEditingGroupName(!editingGroupName);
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
+  if (groupId?.groupById.owner.id !== undefined) {
+    setGroupData(id, groupId.groupById.owner.id, groupName);
+  }
   return (
     <>
       <Box
         p="4"
         mx="2"
         bg={"white"}
-        height={"full"}
+        height={isMobile ? "690px": "780px"}
         boxShadow={"0px -2px #00000025"}
         borderRadius={"xl"}
+        overflowY="auto"
+        maxHeight={isMobile ? "690px" : "780px"}
       >
-        <Box textAlign="center" mb="4">
-          <Heading size="lg" my={4}>
-            {groupeId?.groupById.name || t("group-name")}
-          </Heading>
+        <Box
+          mb="4"
+          display="flex"
+          alignItems="center"
+          justifyContent={"center"}
+          gap={4}
+        >
+          {editingGroupName && isOwner ? (
+            <Heading size="lg" my={4}>
+              <Input
+                value={groupName}
+                onChange={handleChangeGroupName}
+                fontFamily={"heading"}
+                fontSize={"30px"}
+                width="auto"
+                variant="genericInput"
+              />
+            </Heading>
+          ) : (
+            <Heading size="lg" my={4}>
+              {groupId?.groupById.name || t("group-name")}
+            </Heading>
+          )}
+          {isOwner && (
+            <Box>
+              {editingGroupName ? (
+                <Box display={"flex"}>
+                  <Box
+                    as="button"
+                    className="genericButton"
+                    onClick={() => groupId && updateGroupName()}
+                  >
+                    <Check />
+                  </Box>
+                  <Box
+                    as="button"
+                    className="genericButton"
+                    onClick={() => groupId && handleEdit()}
+                  >
+                    <X />
+                  </Box>
+                </Box>
+              ) : (
+                <Box
+                  as="button"
+                  className="genericButton"
+                  onClick={() => groupId && handleEdit()}
+                >
+                  <Pen />
+                </Box>
+              )}
+            </Box>
+          )}
         </Box>
         <Flex justifyContent="center" my={8}>
           <Stack direction="row" spacing={4}>
@@ -67,18 +154,7 @@ export default function Channels() {
                 color="white"
               />
             ))}
-            <IconButton
-              icon={<AddIcon />}
-              aria-label="Add Member"
-              borderRadius="full"
-              bg="transparent"
-              border="1px solid #084F2D"
-              size={"lg"}
-              _hover={{
-                textDecoration: "none",
-                bg: "secondary.medium",
-              }}
-            />
+            <AddMembersModal refetch={refetch} id={id} />
           </Stack>
         </Flex>
         <InputGroup
@@ -104,28 +180,35 @@ export default function Channels() {
             onChange={(e) => setSearchMember(e.target.value)}
           />
         </InputGroup>
-        <Box my={8}>
+        <Box  justifyContent={'center'}>
           {filteredMembers?.map((member, index) => (
             <Card
-              className="items-start pl-8"
+              className="items-center"
               key={member.id}
               align="center"
               width={{ base: "95%", md: "48rem" }}
               m="auto"
-              h="100%"
-              paddingBlock="1rem"
-              marginBlock="1rem"
-              bg="secondary.lowest"
+              h={ isMobile? "190px": "315px"}
+              marginBlock="3rem"
+              bg="white"
               boxShadow={"lg"}
               borderRadius={"lg"}
+              position={"relative"}
             >
-              <Flex align="center" pr={2}>
+              <Flex justify={"center"} width={'fit-content'} mb={16}>
                 <Avatar
+                  size="lg"
                   name={member.firstName + " " + member.lastName}
                   bg={avatarColors[index % avatarColors.length]}
                   color="white"
                   mr="4"
+                  position="absolute" 
+                  top="-10%" 
+                  left="50%" 
+                  transform="translateX(-50%)" 
                 />
+              </Flex>
+                <Flex align="center" pr={2} mb={16}>
                 <Box>
                   <Text
                     as="b"
@@ -133,16 +216,27 @@ export default function Channels() {
                     flexWrap="wrap"
                     color={"primary.medium"}
                   >
-                   {t("present-ideas")}{" "}
+                    {t("present-ideas")}{" "}
                     {member.firstName + " " + member.lastName}
                   </Text>
                 </Box>
               </Flex>
+              <Flex align="end" pr={2}>
+                <Box>
+                  <Text
+                    size="sm"
+                    flexWrap="wrap"
+                    color={"primary.medium"}
+                  >
+                    {member.email}
+                  </Text>
+                </Box>
+              </Flex>
+
             </Card>
           ))}
         </Box>
       </Box>
-      <AddMembersModal refetch={refetch} id={id} />
     </>
   );
 }

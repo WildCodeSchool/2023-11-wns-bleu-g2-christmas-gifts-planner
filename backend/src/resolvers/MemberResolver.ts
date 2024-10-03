@@ -64,46 +64,63 @@ export default class MemberResolver {
     @Arg("data", { validate: true }) data: AddMembersInputType,
     @Ctx() ctx: ContextType
   ) {
-    // Check if the current user is logged in
+   
     if (!ctx.currentUser) {
       throw new GraphQLError("You need to be logged in");
     }
 
-    // Find the group with the given ID
+    // Verify if data contains members
+    if (!data.members || data.members.length === 0) {
+      throw new GraphQLError("No members provided");
+    }
+
+    // Verify if data contains members
+    if (!data.members || data.members.length === 0) {
+      throw new GraphQLError("No members provided");
+    }
+
+    
     const groupToUpdate = await Group.findOne({
       where: { id },
     });
 
-    // Throw an error if the group is not found
+    
     if (!groupToUpdate) {
       throw new GraphQLError("Group not found");
     }
 
-    // Check if the current user is the owner of the group
+    
     if (groupToUpdate.owner.id !== ctx.currentUser.id) {
       throw new GraphQLError("You are not the owner of this group");
     }
 
-    // Validate emails and fetch users
+  
+
+    const existingMembersErrors: string[] = [];
+
+    
     if (data.members && data.members.length > 0) {
       for (const memberInput of data.members) {
         const user = await findOrCreateUserByEmail(memberInput.email);
-        // Check if the user is already a member of the group
+       
         if (groupToUpdate.members.some((member) => member.id === user.id)) {
-          throw new GraphQLError(
+          existingMembersErrors.push(
             `User with email ${memberInput.email} is already a member`
           );
         }
-        // Send an email to the user informing them that they have been added to a group.
+        
         sendAnEmail(groupToUpdate, user, id);
-        // Add the user to the group
+        
         groupToUpdate.members.push(user);
       }
+    }
+    if (existingMembersErrors.length > 0) {
+      throw new GraphQLError(existingMembersErrors.join(", "));
     }
 
     await groupToUpdate.save();
 
-    // Return the updated group
+    
     return Group.findOne({
       where: { id },
     });

@@ -15,7 +15,29 @@ const goldenInput = definePartsStyle({
     _focusVisible: {
       border: "2px solid",
       borderColor: "secondary.medium",
-      bg: "background.default",
+      bg: "white",
+    },
+    _invalid: {
+      borderColor: "tertiary.medium",
+    },
+    _placeholder: {
+      fontSize: "sm",
+    },
+  },
+});
+const genericInput = definePartsStyle({
+  field: {
+    border: "1px solid",
+    borderColor: "generic.low",
+    rounded: 50,
+    bg: "inherit",
+    _hover: {
+      borderColor: "generic.high",
+    },
+    _focusVisible: {
+      border: "2px solid",
+      borderColor: "generic.medium",
+      bg: "white",
     },
     _invalid: {
       borderColor: "tertiary.medium",
@@ -27,5 +49,5 @@ const goldenInput = definePartsStyle({
 });
 
 export const inputTheme = defineMultiStyleConfig({
-  variants: { goldenInput },
+  variants: { goldenInput, genericInput },
 });

@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardBody, Text } from "@chakra-ui/react";
+import { Box, Card, CardBody, Text } from "@chakra-ui/react";
 import Image, { StaticImageData } from "next/image";
 
 export default function Error({
@@ -19,11 +19,14 @@ export default function Error({
         m="auto"
         paddingBlock={10}
         marginBlock={4}
-        bg={"secondary.lowest"}
       >
         <CardBody>
-          <Image src={image} alt={alt}></Image>
-          <Text>{message}</Text>
+          <Box maxWidth={{ base: "80%", md: "50%" }} margin={"auto"}>
+            <Image src={image} alt={alt}></Image>
+          </Box>
+          <Text fontSize={"xl"} textAlign="center">
+            {message}
+          </Text>
         </CardBody>
       </Card>
     </>

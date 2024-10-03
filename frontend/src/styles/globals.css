@@ -14,3 +14,13 @@ body {
 #__next {
   height: 100%;
 }
+
+.genericButton {
+  border: solid 1px transparent;
+  border-radius: 6px;
+  padding: 6px;
+  transition: all 0.2s;
+}
+.genericButton:hover {
+  background-color: #f0f0f0;
+}
