@@ -1,18 +1,17 @@
-import { createContext, useMemo } from "react";
+import { createContext, useMemo, ReactNode, useContext } from "react";
+import { ErrorContextType } from "../types/ErrorContextType";
 
-interface ErrorContextType {
+const ErrorContext = createContext<ErrorContextType>({
   messages: {
-    notFound: string;
-    notExist: string;
-    unauthorized: string;
-    result: string;
-  };
-}
+    notFound: "",
+    notExist: "",
+    unauthorized: "",
+    result: "",
+    generic: "",
+  },
+});
 
-const ErrorContext = createContext<ErrorContextType | null>(null);
-export default ErrorContext;
-
-import { ReactNode } from "react";
+export const useErrorContext = () => useContext(ErrorContext);
 
 export function ErrorContextProvider({ children }: { children: ReactNode }) {
   const messages = {
@@ -22,11 +21,9 @@ export function ErrorContextProvider({ children }: { children: ReactNode }) {
     result: "Oups, il semble qu'il n'y ait pas de résultats",
     generic: "Une erreur s'est produite. Veuillez réessayer plus tard",
   };
-  const MessagesErrorContextValue = useMemo(() => {
-    return { messages };
-  }, []);
+
   return (
-    <ErrorContext.Provider value={MessagesErrorContextValue}>
+    <ErrorContext.Provider value={{ messages }}>
       {children}
     </ErrorContext.Provider>
   );

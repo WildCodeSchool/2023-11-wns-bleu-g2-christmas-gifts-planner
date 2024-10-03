@@ -24,7 +24,9 @@ export default class ChannelResolver {
     const isMember = group.members.some(
       (member) => member.id === ctx.currentUser?.id
     );
-    if (!isMember) {
+    const isOwner = group.owner.id === ctx.currentUser?.id;
+
+    if (!isMember && !isOwner) {
       throw new GraphQLError("You are not a member of this group");
     }
 

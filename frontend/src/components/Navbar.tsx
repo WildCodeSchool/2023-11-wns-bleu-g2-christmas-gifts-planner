@@ -11,21 +11,45 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
+  useToast,
 } from "@chakra-ui/react";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useState } from "react";
-import { useProfileQuery, useLogoutMutation } from "@/graphql/generated/schema";
+import {
+  useProfileQuery,
+  useLogoutMutation,
+  useDeleteGroupMutation,
+  useGroupByIdQuery,
+} from "@/graphql/generated/schema";
 import i18n from "@/pages/i18n";
 import { useTranslation } from "react-i18next";
+import { useGroupContext } from "@/contexts/GroupContext";
+import ConfirmModal from "./ConfirmModal";
 
-export default function Navbar() {
+export default function Navbar({
+  onGroupDeleted,
+}: {
+  onGroupDeleted: () => void;
+}) {
   const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
-  const currentRoute = router.pathname;
   const [language, setLanguage] = useState("FR");
   const { t } = useTranslation();
+  const { data: currentUser } = useProfileQuery({
+    errorPolicy: "ignore",
+  });
+  const { groupId, ownerId, groupName } = useGroupContext();
+
+  const isOwner =
+    currentUser?.profile?.id &&
+    ownerId &&
+    currentUser.profile.id.toString() === ownerId.toString();
+
+  const [deleteGroup] = useDeleteGroupMutation();
+  const toast = useToast();
+
   const handleLogin = () => {
     router.push("/login");
   };
@@ -39,10 +63,6 @@ export default function Navbar() {
     }
   };
 
-  const { data: currentUser } = useProfileQuery({
-    errorPolicy: "ignore",
-  });
-
   const [logout] = useLogoutMutation();
 
   const handleLogout = async () => {
@@ -51,6 +71,35 @@ export default function Navbar() {
       router.push("/login");
     } catch (error) {
       console.error("Failed to logout", error);
+    }
+  };
+
+  const handleDeleteGroup = async () => {
+    try {
+      if (groupId !== null) {
+        await deleteGroup({ variables: { groupId: Number(groupId) } });
+        router.push("/dashboard");
+        onGroupDeleted();
+        toast({
+          title: t("toast.success.delete-group-title"),
+          description: t("toast.success.delete-group-description", {
+            groupName,
+          }),
+          status: "success",
+          variant: "success",
+        });
+      } else {
+        console.error("groupId is null");
+      }
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Failed to delete group", error);
+      toast({
+        title: t("toast.error.generic-title"),
+        description: t("toast.error.generic-description"),
+        status: "error",
+        variant: "error",
+      });
     }
   };
 
@@ -162,14 +211,26 @@ export default function Navbar() {
                 </Box>
                 <MenuDivider />
                 <Box textAlign="center" p={4}>
-                  <Flex flexDirection="column">
+                  <Flex flexDirection="column" gap={4}>
                     <Button
-                      mb={4}
                       variant="goldenButton"
                       onClick={() => router.push("/create-group")}
                     >
                       {t("create-group")}
                     </Button>
+                    {isOwner &&
+                      router.query.id?.toString() === groupId?.toString() && (
+                        <ConfirmModal
+                          handleClick={handleDeleteGroup}
+                          openAlertAction={t("button.delete-group")}
+                          content={t("alert.delete-group")}
+                          title={t("alert.delete-group-title")}
+                          primaryAction={t("button.delete")}
+                          secondaryAction={t("button.cancel")}
+                          variant={["redButton", "whiteRedButton", "redButton"]}
+                        />
+                      )}
+
                     <Button variant="greenButton" onClick={handleLogout}>
                       {t("sign-out")}
                     </Button>

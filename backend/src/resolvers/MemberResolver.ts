@@ -1,14 +1,59 @@
-import { Arg, Authorized, Ctx, Int, Mutation } from "type-graphql";
+import { Arg, Authorized, Ctx, Int, Mutation, Query } from "type-graphql";
 import Group from "../entities/Group";
 import { ContextType } from "../types/ContextType";
 import { GraphQLError } from "graphql";
 import { findOrCreateUserByEmail, sendAnEmail } from "../services/userService";
 import { AddMembersInputType } from "../types/MemberTypes";
+import Channel from "../entities/Channel";
+import User from "../entities/User";
 
 /**
  * Resolver class for handling member-related operations.
  */
 export default class MemberResolver {
+
+  @Authorized()
+  @Query(() => [User])
+  async getMembersByGroupId(
+    @Arg("groupId") groupId: number,
+    @Ctx() ctx: ContextType
+  ) {
+    // Check if the current user is logged in
+    if (!ctx.currentUser) {
+      throw new GraphQLError("You need to be logged in");
+    }
+
+    // Find the group with the given ID and load its members
+    const group = await Group.findOne({
+      where: { id: groupId },
+      relations: { members: true },
+    });
+
+    // Throw an error if the group is not found
+    if (!group) {
+      throw new GraphQLError("Group not found");
+    }
+
+    for (const member of group.members) {
+      const existingChannel = await Channel.findOne({
+        where: { name: `${member.lastName} ${member.firstName}'s channel`, group: { id: groupId } },
+      });
+
+      if (!existingChannel) {
+        const channel = new Channel();
+        Object.assign(channel, {
+          name: `${member.lastName} ${member.firstName}'s channel`,
+          group: group,
+        });
+        
+        await channel.save();
+      }
+    }
+
+    // Return the list of members
+    return group.members;
+  }
+
   /**
    * Adds a member to a group.
    */
@@ -22,6 +67,11 @@ export default class MemberResolver {
     // Check if the current user is logged in
     if (!ctx.currentUser) {
       throw new GraphQLError("You need to be logged in");
+    }
+
+    // Verify if data contains members
+    if (!data.members || data.members.length === 0) {
+      throw new GraphQLError("No members provided");
     }
 
     // Find the group with the given ID
@@ -39,13 +89,15 @@ export default class MemberResolver {
       throw new GraphQLError("You are not the owner of this group");
     }
 
+    const existingMembersErrors: string[] = [];
+
     // Validate emails and fetch users
     if (data.members && data.members.length > 0) {
       for (const memberInput of data.members) {
         const user = await findOrCreateUserByEmail(memberInput.email);
         // Check if the user is already a member of the group
         if (groupToUpdate.members.some((member) => member.id === user.id)) {
-          throw new GraphQLError(
+          existingMembersErrors.push(
             `User with email ${memberInput.email} is already a member`
           );
         }
@@ -54,6 +106,9 @@ export default class MemberResolver {
         // Add the user to the group
         groupToUpdate.members.push(user);
       }
+    }
+    if (existingMembersErrors.length > 0) {
+      throw new GraphQLError(existingMembersErrors.join(", "));
     }
 
     await groupToUpdate.save();

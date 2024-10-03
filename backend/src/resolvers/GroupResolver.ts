@@ -7,6 +7,8 @@ import {
 import { ContextType } from "../types/ContextType";
 import { GraphQLError } from "graphql";
 import { findOrCreateUserByEmail, sendAnEmail } from "../services/userService";
+import Channel from "../entities/Channel";
+import User from "../entities/User";
 
 /**
  * Resolver class for handling group-related operations.
@@ -91,8 +93,18 @@ export default class GroupResolver {
         const user = await findOrCreateUserByEmail(email);
 
         members.push(user);
+        newGroup.members = members.filter(member => member !== null) as User[]; // Add the members to the group
+        const channel = new Channel();
+        Object.assign(channel, {
+        name: `${user?.lastName} ${user?.firstName}'s channel`,
+        group: newGroup,
+      });
+      console.log(channel);
+      
+      await channel.save();
       }
-      newGroup.members = members; // Add the members to the group
+  
+  
     }
 
     // Save the new group to the database and return it
@@ -167,5 +179,40 @@ export default class GroupResolver {
     return Group.findOne({
       where: { id },
     });
+  }
+
+  /**
+   * Mutation resolver for delete the group.
+   */
+  @Authorized()
+  @Mutation(() => String)
+  async deleteGroup(
+    @Arg("groupId", () => Int) id: number,
+    @Ctx() ctx: ContextType
+  ) {
+    // Check if the current user is logged in
+    if (!ctx.currentUser) {
+      throw new GraphQLError("you need to be logged in");
+    }
+
+    // Find the group with the given ID
+    const groupToDelete = await Group.findOne({
+      where: { id },
+    });
+
+    // Throw an error if the group is not found
+    if (!groupToDelete) {
+      throw new GraphQLError("Group not found");
+    }
+
+    // Check if the current user is the owner of the group
+    if (groupToDelete.owner.id !== ctx.currentUser.id) {
+      throw new GraphQLError("You are not the owner of this group");
+    }
+
+    // Delete the group
+    await Group.delete(id);
+
+    return "Group deleted successfully";
   }
 }
