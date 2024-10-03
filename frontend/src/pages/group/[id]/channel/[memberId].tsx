@@ -16,7 +16,7 @@ import {
   AccordionPanel,
   Avatar,
 } from "@chakra-ui/react";
-import { Box, Heart, SendHorizontal } from "lucide-react";
+import { Heart, SendHorizontal } from "lucide-react";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 
@@ -25,6 +25,7 @@ const Message = () => {
 
   const router = useRouter();
   const channelMemberId: any = router.query?.memberId;
+  console.log("router.query", router.query);
   const { data: currentUser, client } = useProfileQuery({
     errorPolicy: "ignore",
   });
@@ -32,7 +33,6 @@ const Message = () => {
   let { data: getRatings } = useLikesQuery({
     variables: { channelId: parseInt(channelMemberId as string) },
   });
-  console.log("getRatings", getRatings?.Likes);
 
   function getTopLikedMessages(likesArray: any[]): any[] {
     const messageLikes: { [key: number]: { content: string; count: number } } =
@@ -55,11 +55,9 @@ const Message = () => {
     const topMessages = Object.values(messageLikes).sort(
       (a, b) => b.count - a.count
     );
-    // console.log("topMessages", topMessages.slice(0, 3));
     return topMessages.slice(0, 3);
   }
   const topLikedMessages = getTopLikedMessages(getRatings?.Likes || []);
-  console.log("topLikedMessages", topLikedMessages);
   let { data: getMessages } = useMessagesQuery({
     variables: { channelId: parseInt(channelMemberId as string) },
   });
@@ -106,13 +104,10 @@ const Message = () => {
     },
 
     onData: async (newLike: any) => {
-      console.log("newLike", newLike.data.data);
-      // refetch();
       try {
         const oldLikes = getMessages?.messages || [];
 
         const newLikeObj = newLike.data.data;
-        console.log("subscribtion newMsgObj", newLikeObj);
         client.writeQuery({
           query: MessagesDocument,
           data: { messages: [...oldLikes, newLikeObj] },
@@ -129,7 +124,6 @@ const Message = () => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
-    console.log("ff", formJSON);
     if (formJSON.content === "") {
       return null;
     }
@@ -180,7 +174,6 @@ const Message = () => {
     <>
       <h1 className="text-center">Top Gifts!</h1>
       <Accordion allowToggle>
-        {/* <div className="  h-8 bg-red-600"> */}
         {topLikedMessages.map((m, idx) => (
           <AccordionItem key={idx}>
             <h2>
@@ -195,7 +188,6 @@ const Message = () => {
             <AccordionPanel pb={4}>{m.content}</AccordionPanel>
           </AccordionItem>
         ))}
-        {/* </div> */}
       </Accordion>
       <div className=" flex justify-center ">
         <div className="md:w-1/2">

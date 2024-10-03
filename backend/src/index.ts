@@ -10,6 +10,7 @@ import env from "./env";
 
 import { useServer } from "graphql-ws/lib/use/ws";
 import { WebSocketServer } from "ws";
+import { ContextType } from "./types/ContextType";
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -18,12 +19,10 @@ const { SERVER_PORT: port } = env;
 
 // Creating the WebSocket server
 const wsServer = new WebSocketServer({
-  // This is the `httpServer` we created in a previous step.
   server: httpServer,
   // Pass a different path here if app.use
   // serves expressMiddleware at a different path
   path: "/",
-  // path: '/',
 });
 
 // Hand in the schema we just created and have the
@@ -32,7 +31,7 @@ const wsServer = new WebSocketServer({
 const serverCleanup = useServer({ schema }, wsServer);
 const main = async () => {
   await db.initialize();
-  const server = new ApolloServer({
+  const server = new ApolloServer<ContextType>({
     schema,
     plugins: [
       // Proper shutdown for the HTTP server.
