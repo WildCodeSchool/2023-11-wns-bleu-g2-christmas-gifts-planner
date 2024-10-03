@@ -87,7 +87,7 @@ export default function Channels() {
         height={isMobile ? "690px": "780px"}
         boxShadow={"0px -2px #00000025"}
         borderRadius={"xl"}
-        overflowY="auto" // Permet le défilement vertical
+        overflowY="auto"
         maxHeight={isMobile ? "690px" : "780px"}
       >
         <Box
@@ -189,7 +189,6 @@ export default function Channels() {
               width={{ base: "95%", md: "48rem" }}
               m="auto"
               h={ isMobile? "190px": "315px"}
-              // paddingBlock="1rem"
               marginBlock="3rem"
               bg="white"
               boxShadow={"lg"}
