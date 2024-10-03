@@ -8,10 +8,13 @@ import {
   Box,
   Text,
   FormErrorMessage,
+  useToast,
 } from "@chakra-ui/react";
 import { useCreateGroupMutation } from "@/graphql/generated/schema";
 import React, { useState } from "react";
-import { Plus, X } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
+import { ApolloError } from "@apollo/client";
+import { useFormValidation } from "@/hooks/useFormValidation";
 import { useTranslation } from "react-i18next";
 
 type FormCreateGroupProps = {
@@ -32,10 +35,18 @@ export default function FormCreateGroup({
   const [members, setMembers] = useState<{ email: string; color: string }[]>(
     []
   );
+  const [groupName, setGroupName] = useState("");
+  // These functions are used to validate the user input in the form.
+  const { validateEmail, validateGroupName } = useFormValidation();
   const { t } = useTranslation();
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<{
+    groupName?: string[];
+    email?: string[];
+    generic?: string[];
+  }>({});
   const [isHovered, setIsHovered] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
+  const toast = useToast();
 
   // Colors used to display the members of the group
   const colors = [
@@ -48,29 +59,53 @@ export default function FormCreateGroup({
   ];
 
   /**
-   * Handles form submission, sends a mutation to create a new group
-   * and refreshes the list of groups using refetch.
-   * @param {React.FormEvent<HTMLFormElement>} e - The form event.
+   * Handles the change event of the group name input field.
+   * It sets the groupName state and resets the groupName error if the input is valid.
    */
-
-  const handleChange = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => setMemberEmail(event.target.value);
-
-  const validateEmail = (email: string) => {
-    //
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(email).toLowerCase());
+  const handleChangeGroupName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newGroupName = e.target.value;
+    setGroupName(newGroupName);
+    if (newGroupName.length >= 2) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        groupName: [],
+        generic: [],
+      }));
+    }
   };
+
+  /**
+   * Handles the change event of the member email input field.
+   * It sets the memberEmail state and resets the email error if the input is valid.
+   */
+  const handleChangeMemberEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newMemberEmail = e.target.value;
+    setMemberEmail(newMemberEmail);
+    // Check if the input is a valid email or empty
+    const isValidEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(
+      newMemberEmail
+    );
+    const isEmpty = newMemberEmail === "";
+    if (isValidEmail || isEmpty) {
+      setErrors((prevErrors) => ({
+        // Reset the email error if the input is valid
+        ...prevErrors,
+        email: [],
+      }));
+    }
+  };
+  /**
+   * Handles the click event of the add member button.
+   * It validates the input email and adds it to the list of members if it is valid.
+   */
   const handleAddMember = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (!validateEmail(memberEmail)) {
-      setError(t("add-valid-email"));
-      return;
-    }
-    if (members.some((member) => member.email === memberEmail)) {
-      setError(t("email-already-added"));
-      return;
+    const newErrors = validateEmail(
+      memberEmail,
+      members.map((member) => member.email)
+    );
+    if (newErrors.length > 0) {
+      return setErrors({ ...errors, email: newErrors });
     }
     if (
       memberEmail.trim() !== "" &&
@@ -82,8 +117,7 @@ export default function FormCreateGroup({
       };
       setMembers([...members, newMember]);
       setMemberEmail("");
-      setError("");
-
+      setErrors({});
       // Change the color of the next member to be added
       setColorIndex((colorIndex + 1) % colors.length);
     }
@@ -102,7 +136,6 @@ export default function FormCreateGroup({
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const formJson: any = Object.fromEntries(formData.entries());
-    formJson.members = members.map((member) => member.email);
 
     try {
       await createGroup({
@@ -111,9 +144,49 @@ export default function FormCreateGroup({
       // Refresh the list of groups after creating the new group.
       refetch();
       onClose();
+      toast({
+        title: t("toast.success.group-created-title"),
+        description: t("toast.success.group-created-description", {
+          groupName,
+        }),
+        status: "success",
+        variant: "success",
+      });
     } catch (error) {
-      console.error(error);
+      if (error instanceof ApolloError) {
+        console.error("GraphQL Error:", error.graphQLErrors);
+        handleGraphQLError(error);
+      } else {
+        console.error(error);
+      }
     }
+  };
+
+  /**
+   * Handle GraphQL errors that can occur during the creation of a group.
+   */
+  const handleGraphQLError = (error: ApolloError) => {
+    const newErrors: { [key: string]: string[] } = {};
+    // Iterate over each error returned by the GraphQL server.
+    error.graphQLErrors.forEach((err) => {
+      if (err.message.includes("Argument Validation Error")) {
+        newErrors.groupName = validateGroupName(groupName);
+      } else if (
+        err.message.includes("A group with this name already exists for you")
+      ) {
+        newErrors.groupName = [t("validate-data.group-name", { groupName })];
+      } else {
+        const descriptionError = t("toast.error.create-group");
+        toast({
+          title: t("toast.error.generic-title"),
+          description: descriptionError,
+          status: "error",
+          variant: "error",
+        });
+        newErrors.generic = [...(newErrors.generic || []), descriptionError];
+      }
+    });
+    setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
   };
 
   return (
@@ -122,18 +195,29 @@ export default function FormCreateGroup({
       className="h-full flex flex-col justify-between"
     >
       <Box>
-        <FormControl isRequired mt={3}>
+        <FormControl
+          isRequired
+          isInvalid={errors.groupName && errors.groupName.length > 0}
+          mt={3}
+        >
           <FormLabel>{t("group-name")}</FormLabel>
           <Input
-            type="name"
+            type="text"
             name="name"
-            id="name"
             placeholder={t("placeholder-name-your-group")}
             variant="goldenInput"
             ref={initialRef}
+            value={groupName}
+            onChange={handleChangeGroupName}
           />
+          {errors.groupName &&
+            errors.groupName.map((error, index) => (
+              <FormErrorMessage key={index} color="tertiary.medium">
+                {error}
+              </FormErrorMessage>
+            ))}
         </FormControl>
-        <FormControl mt={3} isInvalid={!!error}>
+        <FormControl mt={3} isInvalid={errors.email && errors.email.length > 0}>
           <FormLabel>{t("add-members")}</FormLabel>
           <Flex>
             <Input
@@ -141,7 +225,7 @@ export default function FormCreateGroup({
               placeholder={t("placeholder-add-member-email")}
               variant="goldenInput"
               value={memberEmail}
-              onChange={handleChange}
+              onChange={handleChangeMemberEmail}
             />
             <Button
               variant="transparentButton"
@@ -157,9 +241,12 @@ export default function FormCreateGroup({
             </Button>
           </Flex>
 
-          {error && (
-            <FormErrorMessage color="tertiary.medium">{error}</FormErrorMessage>
-          )}
+          {errors.email &&
+            errors.email.map((error, index) => (
+              <FormErrorMessage key={index} color="tertiary.medium">
+                {error}
+              </FormErrorMessage>
+            ))}
         </FormControl>
         <Box
           mt={6}
@@ -169,6 +256,20 @@ export default function FormCreateGroup({
           borderColor="secondary.low"
           h={150}
           overflowY="auto"
+          sx={{
+            "::-webkit-scrollbar": {
+              width: "0.9rem",
+            },
+            "::-webkit-scrollbar-thumb": {
+              backgroundColor: "secondary.low",
+              borderRadius: "1rem",
+              border: "0.4rem solid transparent",
+              backgroundClip: "padding-box",
+            },
+            "::-webkit-scrollbar-track": {
+              marginBlock: "1.2rem",
+            },
+          }}
         >
           {members.length ? (
             <Box display="flex" flexDirection="column" gap={2}>
@@ -180,10 +281,12 @@ export default function FormCreateGroup({
 
                   <Box
                     as="button"
-                    onClick={(event : any) => handleRemoveMember(event, member.email)}
+                    onClick={(event: any) =>
+                      handleRemoveMember(event, member.email)
+                    }
                     ml="auto"
                   >
-                    <X color="#A10702" size={20} />
+                    <Trash2 color="#A10702" size={18} />
                   </Box>
                 </Box>
               ))}

@@ -1,14 +1,17 @@
 import AddMembersModal from "@/components/group/AddMembersModal";
-import { useGroupByIdQuery } from "@/graphql/generated/schema";
+import {
+  useChangeGroupNameMutation,
+  useGroupByIdQuery,
+  useProfileQuery,
+} from "@/graphql/generated/schema";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Avatar,
   Box,
   Flex,
   Heading,
-  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
@@ -16,34 +19,65 @@ import {
   Text,
   useMediaQuery,
 } from "@chakra-ui/react";
-import { SearchIcon } from "lucide-react";
-import { AddIcon } from "@chakra-ui/icons";
+import { X, Check, Pen, SearchIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useGroupContext } from "@/contexts/GroupContext";
 
 export default function Channels() {
   const router = useRouter();
   const { t } = useTranslation();
   const id = router.query?.id as string;
-  const [searchMember, setSearchMember] = useState("");
   const [isMobile] = useMediaQuery("(max-width: 768px)");
-  const { data: groupeId, refetch } = useGroupByIdQuery({
+  const { data: groupId, refetch } = useGroupByIdQuery({
     variables: { groupId: Number(id) },
   });
-  console.log("groupeId: ", groupeId);
-  const members = groupeId?.groupById.members;
-  console.log("members: ", members);
+  const [searchMember, setSearchMember] = useState("");
+  const [editingGroupName, setEditingGroupName] = useState(false);
+  const [ChangeGroupName] = useChangeGroupNameMutation();
+  const [groupName, setGroupName] = useState("");
+  const { setGroupData } = useGroupContext();
+  const { data: currentUser } = useProfileQuery({
+    errorPolicy: "ignore",
+  });
+  const isOwner = groupId?.groupById.owner.id === currentUser?.profile.id;
+
+  useEffect(() => {
+    if (groupId?.groupById) {
+      setGroupName(groupId.groupById.name);
+    }
+  }, [groupId]);
+
+  const members = groupId?.groupById.members;
   const filteredMembers = members?.filter(
     (member) =>
       member.firstName?.toLowerCase().includes(searchMember.toLowerCase()) ||
       member.lastName?.toLowerCase().includes(searchMember.toLowerCase())
   );
-  console.log("filteredMembers: ", filteredMembers);
   const avatarColors = [
     "primary.medium",
     "secondary.high",
     "tertiary.medium",
     "orange.500",
   ];
+  const handleEdit = () => {
+    setEditingGroupName(!editingGroupName);
+  };
+  const handleChangeGroupName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGroupName(e.target.value);
+  };
+  const updateGroupName = async () => {
+    try {
+      await ChangeGroupName({
+        variables: { groupId: Number(id), data: { name: groupName || "" } },
+      });
+      setEditingGroupName(!editingGroupName);
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
+  if (groupId?.groupById.owner.id !== undefined) {
+    setGroupData(id, groupId.groupById.owner.id, groupName);
+  }
   return (
     <>
       <Box
@@ -56,11 +90,73 @@ export default function Channels() {
         overflowY="auto" // Permet le défilement vertical
         maxHeight={isMobile ? "690px" : "780px"}
       >
-        <Box textAlign="center" mb="4">
-          <Heading size="lg" my={4}>
-            {groupeId?.groupById.name || t("group-name")}
-          </Heading>
+        <Box
+          mb="4"
+          display="flex"
+          alignItems="center"
+          justifyContent={"center"}
+          gap={4}
+        >
+          {editingGroupName && isOwner ? (
+            <Heading size="lg" my={4}>
+              <Input
+                value={groupName}
+                onChange={handleChangeGroupName}
+                fontFamily={"heading"}
+                fontSize={"30px"}
+                width="auto"
+                variant="genericInput"
+              />
+            </Heading>
+          ) : (
+            <Heading size="lg" my={4}>
+              {groupId?.groupById.name || t("group-name")}
+            </Heading>
+          )}
+          {isOwner && (
+            <Box>
+              {editingGroupName ? (
+                <Box display={"flex"}>
+                  <Box
+                    as="button"
+                    className="genericButton"
+                    onClick={() => groupId && updateGroupName()}
+                  >
+                    <Check />
+                  </Box>
+                  <Box
+                    as="button"
+                    className="genericButton"
+                    onClick={() => groupId && handleEdit()}
+                  >
+                    <X />
+                  </Box>
+                </Box>
+              ) : (
+                <Box
+                  as="button"
+                  className="genericButton"
+                  onClick={() => groupId && handleEdit()}
+                >
+                  <Pen />
+                </Box>
+              )}
+            </Box>
+          )}
         </Box>
+        <Flex justifyContent="center" my={8}>
+          <Stack direction="row" spacing={4}>
+            {members?.map((member, index) => (
+              <Avatar
+                key={member.id}
+                name={member.firstName + " " + member.lastName}
+                bg={avatarColors[index % avatarColors.length]}
+                color="white"
+              />
+            ))}
+            <AddMembersModal refetch={refetch} id={id} />
+          </Stack>
+        </Flex>
         <InputGroup
           my={8}
           width={{ base: "95%", md: "48rem" }}
@@ -121,7 +217,7 @@ export default function Channels() {
                     flexWrap="wrap"
                     color={"primary.medium"}
                   >
-                   {t("present-ideas")}{" "}
+                    {t("present-ideas")}{" "}
                     {member.firstName + " " + member.lastName}
                   </Text>
                 </Box>
@@ -142,7 +238,6 @@ export default function Channels() {
           ))}
         </Box>
       </Box>
-      <AddMembersModal refetch={refetch} id={id} />
     </>
   );
 }
