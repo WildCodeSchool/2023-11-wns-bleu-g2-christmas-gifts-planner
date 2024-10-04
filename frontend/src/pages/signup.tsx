@@ -1,6 +1,6 @@
 import client from "@/graphql/client";
 import { useLoginMutation, useSignupMutation } from "@/graphql/generated/schema";
-import { Box, Button, Center, FormControl, Grid, GridItem, Heading, IconButton, Input, InputGroup, Link, Text, Tooltip, useToast } from '@chakra-ui/react';
+import { Button, Card, Center, FormControl, Grid, GridItem, Heading, IconButton, Input, InputGroup, Link, Text, Tooltip, useToast } from '@chakra-ui/react';
 import { ArrowLeft, InfoIcon } from "lucide-react";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
@@ -93,29 +93,31 @@ export default function Signup() {
 					bg="transparent"
 					boxShadow="none"
           _hover={{ bg: "gray.200" }}
-          icon={<ArrowLeft color="#22543D"/>}
+          icon={<ArrowLeft color="#003B1E"/>}
         />
         </Link>
-      <Heading as="h1" fontSize='6xl' fontWeight="bold" mt={8} textAlign="center" color="green.800">{t("create-account")}</Heading>
+      <Heading as="h1" fontSize='6xl' fontWeight="bold" mt={8} textAlign="center" color="primary.high">{t("create-account")}</Heading>
       <Center>
-      <Box
+      <Card
         mx="24px"
         mt="8px"
         p={4}
         maxW="500px"
         w="90%"
         data-testid="card"
-        bgColor="transparent"
-        border="none"
-        boxShadow="none"
+        bgColor="#FFFEF9"
+        border="1px solid gray"
+        borderRadius={15}
+        boxShadow="1px 1px 3px 1px gray"
       >
 
 <form onSubmit={handleSubmit}>
-  <FormControl bgColor="#FFFEF9">
+  <FormControl>
       {/* Firstname and lastname */}
       <Grid templateColumns="repeat(2, 1fr)" gap={4} mt={4}>
         <GridItem>
           <Input
+          variant="goldenInput"
             type="text"
             name="firstName"
             id="firstName"
@@ -130,6 +132,7 @@ export default function Signup() {
         </GridItem>
         <GridItem>
           <Input
+          variant="goldenInput"
             type="text"
             name="lastName"
             id="lastName"
@@ -152,6 +155,7 @@ export default function Signup() {
         id="email" 
         data-testid="label-email" 
         name="email" 
+        variant="goldenInput"
         placeholder={t("email-adress")}
         my={6}
         borderRadius={15}
@@ -174,6 +178,7 @@ export default function Signup() {
           id="password" 
           isRequired
           type='password'
+          variant="goldenInput"
           placeholder={t("password")}
           borderRadius={15}
 					borderColor={error === 1 || error === 4 ? "red.700" : "green.600"}
@@ -184,6 +189,7 @@ export default function Signup() {
           name="passwordConfirmation" zIndex={0}
           id="passwordConfirmation" 
           isRequired
+          variant="goldenInput"
           type={'password'}
           placeholder={t("confirm-password")}
           borderRadius={15}
@@ -191,15 +197,15 @@ export default function Signup() {
           />
         </InputGroup>
 		    <Center>
-          <Button variant="goldenButton" type="submit" mt={8}>
+          <Button variant="goldenButton" type="submit" mt={4} px={6}>
             {t("sign-up2")}
           </Button>
 		    </Center>
       </FormControl>
     </form>
-  </Box>
+			<Text mt={4} fontSize={12}>{t("already-have-an-account")} <Link href='/login'  _hover={{ bg: "gray.200" }}  p={1} borderRadius="md" color="gray">{t("sign-in")}</Link></Text>
+  </Card>
   </Center>
-			<Text ml={16} mt={4} fontSize={12}>{t("already-have-an-account")} <Link href='/login'  _hover={{ bg: "gray.200" }}  p={1} borderRadius="md" color="gray">{t("sign-in")}</Link></Text>
 </>
   );
 }

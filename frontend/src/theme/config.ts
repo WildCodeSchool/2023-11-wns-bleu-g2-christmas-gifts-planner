@@ -1,8 +1,8 @@
 import { extendTheme } from "@chakra-ui/react";
-import { buttonTheme } from "./components/Button";
 import { menuItemTheme } from "./components/MenuItem";
 import "@fontsource/amatic-sc";
 import "@fontsource/open-sans";
+import { buttonTheme } from "./components/Button";
 import { inputTheme } from "./components/Input";
 import { formTheme } from "./components/Form";
 import { toastTheme } from "./components/Toast";

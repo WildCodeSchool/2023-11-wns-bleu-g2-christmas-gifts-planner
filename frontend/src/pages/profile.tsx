@@ -185,15 +185,15 @@ const UserProfile = () => {
                     <FormControl mt={6}>
                         {/* Firstname and lastname */}
                                 <FormLabel >{t("lastname")}</FormLabel>
-                                <Input type="text" name="lastName" id="lastName" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.lastName)? currentUser!.profile.lastName : t("lastname")} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.lastName}/>                        
+                                <Input type="text" name="lastName" id="lastName" variant="goldenInput" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.lastName)? currentUser!.profile.lastName! : t("lastname")} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.lastName}/>                        
                         <FormLabel mt={4} >{t("firstname")} </FormLabel>
-                                <Input type="text" name="firstName" id="firstName" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.firstName)? currentUser!.profile.firstName : t("firstname")} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.firstName}/>
+                                <Input type="text" name="firstName" id="firstName" variant="goldenInput" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.firstName)? currentUser!.profile.firstName! : t("firstname")} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.firstName}/>
                                 {/* Email */}
                         {error === 2 &&
                                 <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">{t("email-already-existing")}</Text>
                                 }
                                 <FormLabel mt={4}>{t("email-adress")}</FormLabel>
-                        <Input type='email' id="email" data-testid="label-email" name="email" placeholder={isValidNotEmptyString(currentUser?.profile.email) ? currentUser!.profile.email : t("email-adress")} borderRadius={20} borderColor={error === 2 ? "red.700" : "green.600"} onChange={handleChange} value={formData.email}/>
+                        <Input type='email' id="email" data-testid="label-email" name="email" variant="goldenInput" placeholder={isValidNotEmptyString(currentUser?.profile.email) ? currentUser!.profile.email : t("email-adress")} borderRadius={20} borderColor={error === 2 ? "red.700" : "green.600"} onChange={handleChange} value={formData.email}/>
                          </FormControl>
                          <Flex w="100%" justifyContent="flex-end">
                          <Button variant="greenButton" mt={6} type="submit">
@@ -211,7 +211,7 @@ const UserProfile = () => {
                          <FormControl mt={6}>
                          <FormLabel >{t("current-password")} </FormLabel>
                          <InputGroup size='md'>
-                            <Input name="oldPassword" id="oldPassword" fontSize={14} type={showOld ? "text":'password'} placeholder={t("old-password")} borderRadius={15} borderColor={error === 3 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <Input name="oldPassword" id="oldPassword" fontSize={14} type={showOld ? "text":'password'} variant="goldenInput" placeholder={t("old-password")} borderRadius={15} borderColor={error === 3 ? "red.700" : "green.600"} onChange={handleChange}/>
                             <InputRightElement>
                             <IconButton
                               aria-label={showOld ? t("hide-password") : t("show-password")}
@@ -228,7 +228,7 @@ const UserProfile = () => {
                         {/* New Password and confirm Password */}
                         <FormLabel mt={6}>{t("new-password")} </FormLabel>
                         <InputGroup size='md' >
-                            <Input name="newPassword" id="newPassword" fontSize={14} type={showNew ? "text":'password'} placeholder={t("new-password")} borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <Input name="newPassword" id="newPassword" fontSize={14} type={showNew ? "text":'password'} variant="goldenInput" placeholder={t("new-password")} borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
                             <InputRightElement>
                             <IconButton
                               aria-label={showNew ? t("hide-password") : t("show-password")}
@@ -250,7 +250,7 @@ const UserProfile = () => {
                         </InputGroup>
                         <FormLabel mt={6} >{t("confirm-password")}</FormLabel>
                         <InputGroup size='md'  zIndex={0}>
-                            <Input name="passwordConfirmation" zIndex={0} fontSize={14} id="passwordConfirmation"  type={showConfirm ? "text":'password'} placeholder={t("confirm-new-password")} borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <Input name="passwordConfirmation" zIndex={0} fontSize={14} id="passwordConfirmation" variant="goldenInput" type={showConfirm ? "text":'password'} placeholder={t("confirm-new-password")} borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
                             <InputRightElement>
                             <IconButton
                               aria-label={showConfirm ? t("hide-password") : t("show-password")}
