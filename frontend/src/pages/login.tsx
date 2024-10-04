@@ -1,6 +1,6 @@
 import client from "@/graphql/client";
 import { useLoginMutation, useProfileQuery } from "@/graphql/generated/schema";
-import { Box, Button, Center, Flex, FormControl, FormLabel, Heading, IconButton, Image, Input, Link, Text } from "@chakra-ui/react";
+import { Box, Button, Card, Center, Flex, FormControl, FormLabel, Grid, GridItem, Heading, IconButton, Image, Input, Link, Show, Text } from "@chakra-ui/react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
@@ -47,65 +47,151 @@ const Login = () => {
   return (
     <>
     <Link href='/'>
-        <IconButton
-          aria-label="Back"
-					bg="transparent"
-					boxShadow="none"
-          _hover={{ bg: "gray.200" }}
-          icon={<ArrowLeft color="#003B1E"/>}
-        />
-        </Link>
-      <Heading as="h1" fontSize='6xl' fontWeight="bold" mt={8} textAlign="center" color="green.800">{t("welcome-back")}</Heading>
-      <Image src="/Gifty-logo.svg" alt="Gifty" mt={8} w="20%" mx="40%"/>
-      <Center>    
-      <Box
-        mx="24px"
-        mt="8px"
-        p={4}
-        maxW="500px"
-        w="90%"
-        data-testid="card"
-        bgColor="transparent"
-        border="none"
-        boxShadow="none"
-      >
-          <form onSubmit={handleSubmit}>
-            <FormControl>
-            <FormLabel fontSize={14} fontWeight="bold" mb={1} color="green.800">{t("email-adress")}</FormLabel>
-              <Input isRequired autoComplete="" variant="goldenInput" type="email" id="email" name="email" borderRadius={15} borderColor="green.800" />
-              {error === 1 && (
-                <Text position="absolute" mt={1} fontSize={14} fontWeight="bold" color="red.700">{t("email-adress-invalid")}</Text>
-              )}
-              
-              <FormLabel mt={6} fontSize={14} fontWeight="bold" mb={1} color="green.800">{t("password")}</FormLabel>
-              <Input
-                name="password"
-                id="password"
-                isRequired
-                type='password'
-                variant="goldenInput"
-                borderRadius={15}
-                borderColor="green.800"
-              />
-              {error === 2 && (
-                <Text position="absolute" mt={1} fontSize={14} fontWeight="bold" color="red.700">{t("incorrect-password")}</Text>
-              )}
-                <Flex justify="flex-end">
-                <Link color="gray.400" fontSize={12}  _hover={{ bg: "gray.200" }} p={1} borderRadius="md">{t("forgot-password")}</Link>
-                </Flex>
-              <Center>
-            <Button type="submit" my={4} variant="goldenButton" py={5} px={6}>
-              <Text fontSize={18}>{t("sign-in")}</Text>
-            </Button>
-            </Center>
-            </FormControl>
-          </form>
-        </Box>
+  <IconButton
+    aria-label="Back"
+    bg="transparent"
+    boxShadow="none"
+    _hover={{ bg: "gray.200" }}
+    icon={<ArrowLeft color="#003B1E" />}
+  />
+</Link>
+
+<Grid
+  templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
+  mt={4}
+  alignItems="center"
+>
+  <GridItem>
+    <Heading
+      as="h1"
+      fontSize={{base: "6xl", md: "76", lg: "96" }}
+      fontWeight="bold"
+      mt={{ base: 4, md: 8 }}
+      ml={8}
+      textAlign="center"
+      color="green.800"
+    >
+      {t("welcome-back")}
+    </Heading>
+    <Show above="md">
+      <Center>
+      <Image src="/images/Gifts-rafiki.svg" alt="GiftsRafiki" />
       </Center>
-      <Box ml={6} mt={16}>
-              <Text>{t("not-signed-up")} <Link href="/signup" color="gray.400">{t("sign-up1")}</Link></Text>
-            </Box>
-    </>
+    </Show>
+  </GridItem>
+  <GridItem>
+    <Center>
+      <Card
+        mx={{ base: "12px", md: "24px" }}
+        mt={{ base: "16px", md: "8px" }}
+        p={4}
+        maxW="800px"
+        w={{ base: "100%", md: "90%" }}
+        data-testid="card"
+        bgColor="#FFFEF9"
+        border="1px solid gray"
+        borderRadius={15}
+        boxShadow="1px 1px 3px 1px gray"
+      >
+        <Image src="/Gifty-logo.svg" alt="Gifty" mt={4} mx="35%" />
+        <form onSubmit={handleSubmit}>
+          <FormControl>
+            <FormLabel
+              fontSize={14}
+              fontWeight="bold"
+              mb={1}
+              color="green.800"
+            >
+              {t("email-adress")}
+            </FormLabel>
+            <Input
+              isRequired
+              autoComplete=""
+              variant="goldenInput"
+              type="email"
+              id="email"
+              name="email"
+              borderRadius={15}
+              borderColor="green.800"
+            />
+            {error === 1 && (
+              <Text
+                position="absolute"
+                mt={1}
+                fontSize={14}
+                fontWeight="bold"
+                color="red.700"
+              >
+                {t("email-adress-invalid")}
+              </Text>
+            )}
+
+            <FormLabel
+              mt={6}
+              fontSize={14}
+              fontWeight="bold"
+              mb={1}
+              color="green.800"
+            >
+              {t("password")}
+            </FormLabel>
+            <Input
+              name="password"
+              id="password"
+              isRequired
+              type="password"
+              variant="goldenInput"
+              borderRadius={15}
+              borderColor="green.800"
+            />
+            {error === 2 && (
+              <Text
+                position="absolute"
+                mt={1}
+                fontSize={14}
+                fontWeight="bold"
+                color="red.700"
+              >
+                {t("incorrect-password")}
+              </Text>
+            )}
+            <Flex justify="flex-end">
+              <Link
+                color="gray.400"
+                fontSize={12}
+                _hover={{ bg: "gray.200" }}
+                p={1}
+                borderRadius="md"
+              >
+                {t("forgot-password")}
+              </Link>
+            </Flex>
+            <Center>
+              <Button
+                type="submit"
+                my={4}
+                variant="goldenButton"
+                py={5}
+                px={6}
+              >
+                <Text fontSize={18}>{t("sign-in")}</Text>
+              </Button>
+            </Center>
+          </FormControl>
+        </form>
+    <Box ml={6} mt={16}>
+      <Text>
+        {t("not-signed-up")}{" "}
+        <Link href="/signup" color="gray.400">
+          {t("sign-up1")}
+        </Link>
+      </Text>
+    </Box>
+      </Card>
+    </Center>
+  </GridItem>
+</Grid>
+</>
 );
 }
 export default Login;
