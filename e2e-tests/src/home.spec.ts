@@ -23,7 +23,5 @@ test("can view users in db", async ({ page }) => {
 
   await page.waitForSelector('[data-testid="label-email"]');
   const inputElement = page.locator('[data-testid="label-email"]');
-  await expect(inputElement).toHaveAttribute('placeholder', 'Adresse mail') 
-  || expect(inputElement).toHaveAttribute('placeholder', 'Email adress');
-
+  await expect(inputElement).toHaveAttribute('placeholder', 'Adresse mail');
 });
