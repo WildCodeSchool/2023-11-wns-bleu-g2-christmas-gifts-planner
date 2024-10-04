@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import Group from "./Group";
 import Message from "./Message";
+import Like from "./Like";
 
 export enum UserRole {
   Admin = "admin",
@@ -80,6 +81,10 @@ export default class User extends BaseEntity {
 
   @OneToMany(() => Message, (Message) => Message.writtenBy)
   messages: Message[];
+
+  @Field(() => [Like], { nullable: true })
+  @OneToMany(() => Like, (like) => like.LikedBy)
+  likes: Like[];
 }
 
 const hashingOptions = {

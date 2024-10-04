@@ -1,5 +1,5 @@
-query Messages {
-  messages {
+query Messages($channelId: Int) {
+  messages(channelId: $channelId) {
     id
     content
     sent_at
@@ -7,6 +7,12 @@ query Messages {
       id
       firstName
       lastName
+    }
+    channelId {
+      id
+    }
+    likes {
+      id
     }
   }
 }

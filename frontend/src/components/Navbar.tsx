@@ -104,7 +104,7 @@ export default function Navbar({
   };
 
   return (
-    <Box as="nav" bg="primary.high" color="white" padding="4" mb={4}>
+    <Box as="nav" bg="primary.high" color="white" padding="4">
       <Flex justifyContent="space-between" alignItems="center">
         <Link href="/" passHref>
           <Image

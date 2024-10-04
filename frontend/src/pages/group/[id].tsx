@@ -5,6 +5,7 @@ import {
   useProfileQuery,
 } from "@/graphql/generated/schema";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import {
   Card,
@@ -84,7 +85,7 @@ export default function Channels() {
         p="4"
         mx="2"
         bg={"white"}
-        height={isMobile ? "690px": "780px"}
+        height={isMobile ? "690px" : "780px"}
         boxShadow={"0px -2px #00000025"}
         borderRadius={"xl"}
         overflowY="auto"
@@ -180,60 +181,60 @@ export default function Channels() {
             onChange={(e) => setSearchMember(e.target.value)}
           />
         </InputGroup>
-        <Box  justifyContent={'center'}>
+        <Box justifyContent={"center"}>
           {filteredMembers?.map((member, index) => (
-            <Card
-              className="items-center"
+            <Link
               key={member.id}
-              align="center"
-              width={{ base: "95%", md: "48rem" }}
-              m="auto"
-              h={ isMobile? "190px": "315px"}
-              marginBlock="3rem"
-              bg="white"
-              boxShadow={"lg"}
-              borderRadius={"lg"}
-              position={"relative"}
+              href={`/group/${groupId?.groupById.id}/channel/${member.id}`}
             >
-              <Flex justify={"center"} width={'fit-content'} mb={16}>
-                <Avatar
-                  size="lg"
-                  name={member.firstName + " " + member.lastName}
-                  bg={avatarColors[index % avatarColors.length]}
-                  color="white"
-                  mr="4"
-                  position="absolute" 
-                  top="-10%" 
-                  left="50%" 
-                  transform="translateX(-50%)" 
-                />
-              </Flex>
+              <Card
+                className="items-center"
+                key={member.id}
+                align="center"
+                width={{ base: "95%", md: "48rem" }}
+                m="auto"
+                h={isMobile ? "190px" : "315px"}
+                marginBlock="3rem"
+                bg="white"
+                boxShadow={"lg"}
+                borderRadius={"lg"}
+                position={"relative"}
+              >
+                <Flex justify={"center"} width={"fit-content"} mb={16}>
+                  <Avatar
+                    size="lg"
+                    name={member.firstName + " " + member.lastName}
+                    bg={avatarColors[index % avatarColors.length]}
+                    color="white"
+                    mr="4"
+                    position="absolute"
+                    top="-10%"
+                    left="50%"
+                    transform="translateX(-50%)"
+                  />
+                </Flex>
                 <Flex align="center" pr={2} mb={16}>
-                <Box>
-                  <Text
-                    as="b"
-                    size="md"
-                    flexWrap="wrap"
-                    color={"primary.medium"}
-                  >
-                    {t("present-ideas")}{" "}
-                    {member.firstName + " " + member.lastName}
-                  </Text>
-                </Box>
-              </Flex>
-              <Flex align="end" pr={2}>
-                <Box>
-                  <Text
-                    size="sm"
-                    flexWrap="wrap"
-                    color={"primary.medium"}
-                  >
-                    {member.email}
-                  </Text>
-                </Box>
-              </Flex>
-
-            </Card>
+                  <Box>
+                    <Text
+                      as="b"
+                      size="md"
+                      flexWrap="wrap"
+                      color={"primary.medium"}
+                    >
+                      {t("present-ideas")}{" "}
+                      {member.firstName + " " + member.lastName}
+                    </Text>
+                  </Box>
+                </Flex>
+                <Flex align="end" pr={2}>
+                  <Box>
+                    <Text size="sm" flexWrap="wrap" color={"primary.medium"}>
+                      {member.email}
+                    </Text>
+                  </Box>
+                </Flex>
+              </Card>
+            </Link>
           ))}
         </Box>
       </Box>

@@ -5,9 +5,12 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import Group from "./Group";
+import Message from "./Message";
+import Like from "./Like";
 
 @Entity()
 @ObjectType()
@@ -24,4 +27,10 @@ export default class Channel extends BaseEntity {
   @Field(() => Group)
   @ManyToOne(() => Group, (group) => group.channels)
   group: Group;
+
+  @OneToMany(() => Message, (message) => message, { cascade: true })
+  messages: Message[];
+
+  @OneToMany(() => Like, (like) => like, { cascade: true })
+  likes: Like[];
 }

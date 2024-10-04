@@ -3,6 +3,7 @@ import Message from "./entities/Message";
 import Group from "./entities/Group";
 import Channel from "./entities/Channel";
 import User, { UserRole, hashPassword } from "./entities/User";
+import { NewMessageInputType } from "./types/NewMessageType";
 
 export async function clearDB() {
   const runner = db.createQueryRunner();
@@ -80,26 +81,6 @@ export default async function main() {
   });
   await userNina.save();
 
-  const message01 = new Message();
-  Object.assign(message01, {
-    content: "Hello Mateo, i tought about an amazing gift for pierre! a fish!",
-    sent_at: "2024-07-03 18:10:31",
-    writtenBy: {
-      id: 2,
-    },
-  });
-  await message01.save();
-
-  const message02 = new Message();
-  Object.assign(message02, {
-    content: "lol, Jonas!",
-    sent_at: "2024-07-03 18:11:02",
-    writtenBy: {
-      id: 3,
-    },
-  });
-  await message02.save();
-
   const firstAdminGroup = new Group();
   Object.assign(firstAdminGroup, {
     name: "My best family group",
@@ -173,6 +154,39 @@ export default async function main() {
     group: firstJonasGroup,
   });
   await mateoChannel2.save();
+
+  const message01 = new Message();
+  Object.assign(message01, {
+    content: "Hello Mateo, i tought about an amazing gift for pierre! a fish!",
+    sent_at: "2024-07-03 18:10:31",
+    channelId: 1,
+    writtenBy: {
+      id: 2,
+    },
+  });
+  await message01.save();
+
+  const message02 = new Message();
+  Object.assign(message02, {
+    content: "lol, Jonas!",
+    sent_at: "2024-07-03 18:11:02",
+    channelId: 1,
+    writtenBy: {
+      id: 3,
+    },
+  });
+  await message02.save();
+
+  const message03 = new Message();
+  Object.assign(message03, {
+    content: "message03",
+    sent_at: "2024-07-03 18:11:02",
+    channel: 1,
+    writtenBy: {
+      id: 3,
+    },
+  });
+  await message03.save();
 
   await db.destroy();
   console.log("Database reset complete");

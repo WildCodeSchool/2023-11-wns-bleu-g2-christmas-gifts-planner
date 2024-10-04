@@ -5,7 +5,10 @@ import jwt from "jsonwebtoken";
 import env from "../env";
 import User from "../entities/User";
 
-export const authChecker: AuthChecker<ContextType> = async ({ context }, roles) => {
+export const authChecker: AuthChecker<ContextType> = async (
+  { context },
+  roles
+) => {
   const { headers } = context.req;
   const tokenInCookie = cookie.parse(headers.cookie ?? "").token;
   const tokenInAuthHeaders = headers.authorization?.split(" ")[1];
@@ -20,6 +23,6 @@ export const authChecker: AuthChecker<ContextType> = async ({ context }, roles) 
   if (currentUser === null) return false;
 
   context.currentUser = currentUser;
-  
+
   return true;
 };

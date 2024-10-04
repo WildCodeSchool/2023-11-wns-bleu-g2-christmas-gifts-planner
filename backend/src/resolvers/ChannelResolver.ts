@@ -15,15 +15,17 @@ export default class ChannelResolver {
 
     const group = await Group.findOne({
       where: { id: groupId },
-      relations: { members: true },  
+      relations: { members: true },
     });
     if (!group) {
       throw new GraphQLError("Group not found");
     }
 
-    const isMember = group.members.some(member => member.id === (ctx.currentUser?.id));
+    const isMember = group.members.some(
+      (member) => member.id === ctx.currentUser?.id
+    );
     const isOwner = group.owner.id === ctx.currentUser?.id;
-    
+
     if (!isMember && !isOwner) {
       throw new GraphQLError("You are not a member of this group");
     }
