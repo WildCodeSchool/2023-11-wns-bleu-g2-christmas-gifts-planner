@@ -11,7 +11,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useCreateGroupMutation } from "@/graphql/generated/schema";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { ApolloError } from "@apollo/client";
 import { useFormValidation } from "@/hooks/useFormValidation";
@@ -31,7 +31,7 @@ export default function FormCreateGroup({
    * Creates a new group using the useCreateGroupMutation hook.
    */
   const [createGroup] = useCreateGroupMutation();
-  const [memberEmail, setMemberEmail] = React.useState("");
+  const [memberEmail, setMemberEmail] = useState("");
   const [members, setMembers] = useState<{ email: string; color: string }[]>(
     []
   );
@@ -136,6 +136,8 @@ export default function FormCreateGroup({
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const formJson: any = Object.fromEntries(formData.entries());
+    const memberEmails = members.map((member) => member.email);
+    formJson.members = memberEmails;
 
     try {
       await createGroup({

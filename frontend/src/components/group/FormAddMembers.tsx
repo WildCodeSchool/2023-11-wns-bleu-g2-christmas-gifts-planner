@@ -107,6 +107,13 @@ export default function FormAddMembers({
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const formJson: any = Object.fromEntries(formData.entries());
+    const memberEmails = members.map((member) => {
+      const memberEmail = {
+        email: member.email,
+      };
+      return memberEmail;
+    });
+    formJson.members = memberEmails;
 
     try {
       await addMembers({
