@@ -11,7 +11,7 @@ import {
 import Group from "./Group";
 import Message from "./Message";
 import Like from "./Like";
-
+import User from "./User";
 @Entity()
 @ObjectType()
 export default class Channel extends BaseEntity {
@@ -33,4 +33,9 @@ export default class Channel extends BaseEntity {
 
   @OneToMany(() => Like, (like) => like, { cascade: true })
   likes: Like[];
+
+  @ManyToOne(() => User, (user) => user, { cascade: true })
+  receiver: User[];
+
+
 }
