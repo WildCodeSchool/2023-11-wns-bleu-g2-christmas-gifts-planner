@@ -30,6 +30,7 @@ export type Channel = {
   group: Group;
   id: Scalars['Int'];
   name: Scalars['String'];
+  receiver: User;
 };
 
 export type CompleteProfileInputType = {
@@ -80,6 +81,7 @@ export type Mutation = {
   addMemberToGroup: Group;
   changeGroupName: Group;
   completeProfile: Scalars['String'];
+  createChannels: Array<Channel>;
   createDelteLike: Like;
   createGroup: Group;
   createMessage: Message;
@@ -106,6 +108,11 @@ export type MutationChangeGroupNameArgs = {
 export type MutationCompleteProfileArgs = {
   data: CompleteProfileInputType;
   token: Scalars['String'];
+};
+
+
+export type MutationCreateChannelsArgs = {
+  groupId: Scalars['Float'];
 };
 
 
@@ -178,6 +185,7 @@ export type Query = {
   Likes: Array<Like>;
   channel?: Maybe<Channel>;
   channels: Array<Channel>;
+  getMembersByGroupId: Array<User>;
   groupById: Group;
   groups: Array<Group>;
   messages: Array<Message>;
@@ -203,6 +211,11 @@ export type QueryChannelsArgs = {
 };
 
 
+export type QueryGetMembersByGroupIdArgs = {
+  groupId: Scalars['Float'];
+};
+
+
 export type QueryGroupByIdArgs = {
   groupId: Scalars['Int'];
 };
@@ -210,6 +223,7 @@ export type QueryGroupByIdArgs = {
 
 export type QueryMessagesArgs = {
   channelId?: InputMaybe<Scalars['Int']>;
+  groupId?: InputMaybe<Scalars['Float']>;
   likes?: InputMaybe<Scalars['Int']>;
   userId?: InputMaybe<Scalars['Float']>;
 };
@@ -253,6 +267,20 @@ export type User = {
   memberGroups?: Maybe<Array<Group>>;
   role: Scalars['String'];
 };
+
+export type CreateChannelsMutationVariables = Exact<{
+  groupId: Scalars['Float'];
+}>;
+
+
+export type CreateChannelsMutation = { __typename?: 'Mutation', createChannels: Array<{ __typename?: 'Channel', id: number, name: string }> };
+
+export type ChannelsQueryVariables = Exact<{
+  groupId: Scalars['Float'];
+}>;
+
+
+export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename?: 'Channel', id: number, name: string, group: { __typename?: 'Group', id: number, name: string }, receiver: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } }> };
 
 export type CreateGroupMutationVariables = Exact<{
   data: NewGroupInputType;
@@ -374,6 +402,85 @@ export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string, role: string, groups?: Array<{ __typename?: 'Group', id: number, name: string, members: Array<{ __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string }> }> | null, memberGroups?: Array<{ __typename?: 'Group', name: string, id: number, members: Array<{ __typename?: 'User', firstName?: string | null, email: string, lastName?: string | null }> }> | null } };
 
 
+export const CreateChannelsDocument = gql`
+    mutation CreateChannels($groupId: Float!) {
+  createChannels(groupId: $groupId) {
+    id
+    name
+  }
+}
+    `;
+export type CreateChannelsMutationFn = Apollo.MutationFunction<CreateChannelsMutation, CreateChannelsMutationVariables>;
+
+/**
+ * __useCreateChannelsMutation__
+ *
+ * To run a mutation, you first call `useCreateChannelsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateChannelsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createChannelsMutation, { data, loading, error }] = useCreateChannelsMutation({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useCreateChannelsMutation(baseOptions?: Apollo.MutationHookOptions<CreateChannelsMutation, CreateChannelsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateChannelsMutation, CreateChannelsMutationVariables>(CreateChannelsDocument, options);
+      }
+export type CreateChannelsMutationHookResult = ReturnType<typeof useCreateChannelsMutation>;
+export type CreateChannelsMutationResult = Apollo.MutationResult<CreateChannelsMutation>;
+export type CreateChannelsMutationOptions = Apollo.BaseMutationOptions<CreateChannelsMutation, CreateChannelsMutationVariables>;
+export const ChannelsDocument = gql`
+    query Channels($groupId: Float!) {
+  channels(groupId: $groupId) {
+    id
+    name
+    group {
+      id
+      name
+    }
+    receiver {
+      id
+      firstName
+      lastName
+    }
+  }
+}
+    `;
+
+/**
+ * __useChannelsQuery__
+ *
+ * To run a query within a React component, call `useChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useChannelsQuery({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useChannelsQuery(baseOptions: Apollo.QueryHookOptions<ChannelsQuery, ChannelsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ChannelsQuery, ChannelsQueryVariables>(ChannelsDocument, options);
+      }
+export function useChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChannelsQuery, ChannelsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ChannelsQuery, ChannelsQueryVariables>(ChannelsDocument, options);
+        }
+export type ChannelsQueryHookResult = ReturnType<typeof useChannelsQuery>;
+export type ChannelsLazyQueryHookResult = ReturnType<typeof useChannelsLazyQuery>;
+export type ChannelsQueryResult = Apollo.QueryResult<ChannelsQuery, ChannelsQueryVariables>;
 export const CreateGroupDocument = gql`
     mutation CreateGroup($data: NewGroupInputType!) {
   createGroup(data: $data) {
