@@ -87,12 +87,18 @@
   "success-signed-up": "Vous êtes bien enregistré.e",
   "toast": {
     "error": {
+      "add-member": "Une erreur est survenue lors de l'ajout des membres au groupe",
+      "add-member-exist": "L'utilisateur avec l'email {{email}} est déjà membre du groupe",
+      "add-member-provided": "Veuillez renseigner au moins un membre",
+      "add-member-title": "Erreur d'ajout de membre",
       "create-group": "Une erreur est survenue lors de la création du groupe",
       "generic-title": "Erreur",
       "generic-description": "Une erreur est survenue",
       "validate-profile": "Une erreur est survenue lors de la validation du profil"
     },
     "success": {
+      "add-member-description": "Les membres ont bien été ajoutés avec succès.",
+      "add-member-title": "Membres ajoutés",
       "delete-group-description": "Votre groupe {{groupName}} a bien été supprimé.",
       "delete-group-title": "Groupe supprimé",
       "group-created-description": "Votre groupe {{groupName}} a été créé avec succès.",
@@ -104,6 +110,7 @@
   "unauthorized-password": "Ce mot de passe n'est pas autorisé",
   "validate-data": {
     "email-already-used": "Cet e-mail est déjà ajouté.",
+    "email-list": "Ajoutez l'email dans la liste",
     "email-type": "L'adresse e-mail doit être au format 'nom@domaine.com'.",
     "firstname-length": "Le prénom doit contenir au moins 2 caractères.",
     "firstname-type": "Le prénom ne doit contenir que des lettres.",
