@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import Group from "./Group";
 import Message from "./Message";
+import Channel from "./Channel";
 import Like from "./Like";
 
 export enum UserRole {
@@ -85,6 +86,9 @@ export default class User extends BaseEntity {
   @Field(() => [Like], { nullable: true })
   @OneToMany(() => Like, (like) => like.LikedBy)
   likes: Like[];
+
+  @OneToMany(() => Channel, (Channel) => Channel.receiver)
+  channels: Channel[];
 }
 
 const hashingOptions = {

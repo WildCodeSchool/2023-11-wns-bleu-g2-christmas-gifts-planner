@@ -3,6 +3,7 @@ import {
   useChangeGroupNameMutation,
   useGroupByIdQuery,
   useProfileQuery,
+  useChannelsQuery,
 } from "@/graphql/generated/schema";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -36,6 +37,10 @@ export default function Channels() {
   const { data: groupId, refetch } = useGroupByIdQuery({
     variables: { groupId: Number(id) },
   });
+  const { data: channels } = useChannelsQuery({
+    variables: { groupId: Number(id) },
+  });
+  console.log("channels: ", channels);
   const [searchMember, setSearchMember] = useState("");
   const [editingGroupName, setEditingGroupName] = useState(false);
   const [ChangeGroupName] = useChangeGroupNameMutation();
@@ -54,11 +59,10 @@ export default function Channels() {
     }
   }, [groupId]);
 
-  const members = groupId?.groupById.members;
-  const filteredMembers = members?.filter(
+  const filteredMembers = channels?.channels.filter(
     (member) =>
-      member.firstName?.toLowerCase().includes(searchMember.toLowerCase()) ||
-      member.lastName?.toLowerCase().includes(searchMember.toLowerCase())
+      member.receiver.firstName?.toLowerCase().includes(searchMember.toLowerCase()) ||
+      member.receiver.lastName?.toLowerCase().includes(searchMember.toLowerCase())
   );
   const avatarColors = [
     "primary.medium",
@@ -182,10 +186,10 @@ export default function Channels() {
         </Box>
         <Flex justifyContent="center" my={8}>
           <Stack direction="row" spacing={4}>
-            {members?.map((member, index) => (
+            {channels?.channels?.map((channel, index) => (
               <Avatar
-                key={member.id}
-                name={member.firstName + " " + member.lastName}
+                key={channel.id}
+                name={channel.receiver.firstName + " " + channel.receiver.lastName}
                 bg={avatarColors[index % avatarColors.length]}
                 color="white"
               />
@@ -238,7 +242,7 @@ export default function Channels() {
                 <Flex justify={"center"} width={"fit-content"} mb={16}>
                   <Avatar
                     size="lg"
-                    name={member.firstName + " " + member.lastName}
+                    name={member.receiver.firstName + " " + member.receiver.lastName}
                     bg={avatarColors[index % avatarColors.length]}
                     color="white"
                     mr="4"
@@ -257,14 +261,14 @@ export default function Channels() {
                       color={"primary.medium"}
                     >
                       {t("present-ideas")}{" "}
-                      {member.firstName + " " + member.lastName}
+                      {member.receiver.firstName + " " + member.receiver.lastName}
                     </Text>
                   </Box>
                 </Flex>
                 <Flex align="end" pr={2}>
                   <Box>
                     <Text size="sm" flexWrap="wrap" color={"primary.medium"}>
-                      {member.email}
+                      {member.receiver.email}
                     </Text>
                   </Box>
                 </Flex>

@@ -96,14 +96,6 @@ export default class GroupResolver {
         newGroup.members = members.filter(
           (member) => member !== null
         ) as User[]; // Add the members to the group
-        //   const channel = new Channel();
-        //   Object.assign(channel, {
-        //   name: `${user?.lastName} ${user?.firstName}'s channel`,
-        //   group: newGroup,
-        // });
-        // console.log(channel);
-
-        // await channel.save();
       }
     }
 
