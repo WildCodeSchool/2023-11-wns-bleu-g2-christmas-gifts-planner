@@ -210,6 +210,7 @@ export default function FormCreateGroup({
     >
       <Box>
         <FormControl
+          isRequired
           isInvalid={errors.groupName && errors.groupName.length > 0}
           mt={3}
         >
@@ -229,6 +230,8 @@ export default function FormCreateGroup({
                 {error}
               </FormErrorMessage>
             ))}
+        </FormControl>
+        <FormControl mt={3} isInvalid={errors.email && errors.email.length > 0}>
           <FormLabel>{t("add-members")}</FormLabel>
           <Flex>
             <Input
