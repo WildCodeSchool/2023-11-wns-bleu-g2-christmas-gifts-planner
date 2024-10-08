@@ -44,7 +44,8 @@
   "modify-old-password-is-different": "The password isn't the same !",
   "modify-password": "Modify the password",
   "modify-profile": "Modify the profile",
-  "my-groups-list": "You are a member of",
+  "my-group": "You are a member of {{groupCount}} group",
+  "my-groups-list": "You are a member of {{groupCount}} groups",
   "nav-my-groups": "My groups",
   "nav-my-profile": "My profile",
   "new-password": "New password",
@@ -68,7 +69,8 @@
   "placeholder": {
     "firstname": "Your first name",
     "lastname": "Your last name",
-    "password": "Your password"
+    "password": "Your password",
+    "search-group": "Search a group"
   },
   "present-ideas": "Present ideas for",
   "show-password": "Show password",
