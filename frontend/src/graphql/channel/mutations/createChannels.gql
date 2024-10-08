@@ -1,0 +1,6 @@
+mutation CreateChannels($groupId: Float!) {
+  createChannels(groupId: $groupId) {
+    id
+    name
+  }
+}

@@ -11,6 +11,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useCreateGroupMutation } from "@/graphql/generated/schema";
+import { useCreateChannelsMutation } from "@/graphql/generated/schema";
 import React, { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { ApolloError } from "@apollo/client";
@@ -31,6 +32,7 @@ export default function FormCreateGroup({
    * Creates a new group using the useCreateGroupMutation hook.
    */
   const [createGroup] = useCreateGroupMutation();
+  const [createChannels] = useCreateChannelsMutation();
   const [memberEmail, setMemberEmail] = React.useState("");
   const [members, setMembers] = useState<{ email: string; color: string }[]>(
     []
@@ -136,11 +138,23 @@ export default function FormCreateGroup({
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const formJson: any = Object.fromEntries(formData.entries());
-
+    const memberEmails = members.map((member) => member.email);
+    formJson.members = memberEmails;
     try {
-      await createGroup({
+      const result = await createGroup({
         variables: { data: formJson },
       });
+
+    const groupId = result?.data?.createGroup?.id;
+
+    if (groupId) {
+      console.log("groupId", groupId);
+      // Create the channels for the group
+      await createChannels({
+        variables: { groupId },
+      });
+    }
+
       // Refresh the list of groups after creating the new group.
       refetch();
       onClose();
