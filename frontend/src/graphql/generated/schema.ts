@@ -280,7 +280,7 @@ export type ChannelsQueryVariables = Exact<{
 }>;
 
 
-export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename?: 'Channel', id: number, name: string, group: { __typename?: 'Group', id: number, name: string }, receiver: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } }> };
+export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename?: 'Channel', id: number, name: string, group: { __typename?: 'Group', id: number, name: string }, receiver: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, email: string } }> };
 
 export type CreateGroupMutationVariables = Exact<{
   data: NewGroupInputType;
@@ -449,6 +449,7 @@ export const ChannelsDocument = gql`
       id
       firstName
       lastName
+      email
     }
   }
 }

@@ -10,6 +10,7 @@ query Channels($groupId: Float!) {
       id
       firstName
       lastName
+      email
     }
   }
 }
