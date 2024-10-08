@@ -19,10 +19,14 @@ import {
   Stack,
   Text,
   useMediaQuery,
+  FormControl,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { X, Check, Pen, SearchIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useGroupContext } from "@/contexts/GroupContext";
+import { useFormValidation } from "@/hooks/useFormValidation";
+import { ApolloError } from "@apollo/client";
 
 export default function Channels() {
   const router = useRouter();
@@ -36,7 +40,9 @@ export default function Channels() {
   const [editingGroupName, setEditingGroupName] = useState(false);
   const [ChangeGroupName] = useChangeGroupNameMutation();
   const [groupName, setGroupName] = useState("");
+  const [error, setError] = useState("");
   const { setGroupData } = useGroupContext();
+  const { validateGroupName } = useFormValidation();
   const { data: currentUser } = useProfileQuery({
     errorPolicy: "ignore",
   });
@@ -62,6 +68,7 @@ export default function Channels() {
   ];
   const handleEdit = () => {
     setEditingGroupName(!editingGroupName);
+    setError("");
   };
   const handleChangeGroupName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGroupName(e.target.value);
@@ -72,13 +79,37 @@ export default function Channels() {
         variables: { groupId: Number(id), data: { name: groupName || "" } },
       });
       setEditingGroupName(!editingGroupName);
+      setError("");
     } catch (error) {
-      console.log("error: ", error);
+      if (error instanceof ApolloError) {
+        console.error("GraphQL Error:", error.graphQLErrors);
+        handleError(error);
+      } else {
+        console.error(error);
+      }
     }
   };
   if (groupId?.groupById.owner.id !== undefined) {
     setGroupData(id, groupId.groupById.owner.id, groupName);
   }
+
+  const handleError = (error: ApolloError) => {
+    const newErrors: (string | string[])[] = [];
+    error.graphQLErrors.forEach((err) => {
+      if (err.message.includes("Argument Validation Error")) {
+        newErrors.push(validateGroupName(groupName));
+      } else if (
+        err.message.includes("A group with this name already exists for you")
+      ) {
+        const descriptionError = t("validate-data.group-name", { groupName });
+        newErrors.push(descriptionError);
+      } else {
+        const descriptionError = t("toast.error.generic-description");
+        newErrors.push(descriptionError);
+      }
+    });
+    setError(newErrors.join(", "));
+  };
   return (
     <>
       <Box
@@ -98,51 +129,55 @@ export default function Channels() {
           justifyContent={"center"}
           gap={4}
         >
-          {editingGroupName && isOwner ? (
-            <Heading size="lg" my={4}>
-              <Input
-                value={groupName}
-                onChange={handleChangeGroupName}
-                fontFamily={"heading"}
-                fontSize={"30px"}
-                width="auto"
-                variant="genericInput"
-              />
-            </Heading>
-          ) : (
-            <Heading size="lg" my={4}>
-              {groupId?.groupById.name || t("group-name")}
-            </Heading>
-          )}
-          {isOwner && (
-            <Box>
-              {editingGroupName ? (
-                <Box display={"flex"}>
-                  <Box
-                    as="button"
-                    className="genericButton"
-                    onClick={() => groupId && updateGroupName()}
-                  >
-                    <Check />
+          {isOwner ? (
+            editingGroupName ? (
+              <Box>
+                <FormControl mt={3} isInvalid={!!error}>
+                  <Box display={"flex"}>
+                    <Input
+                      value={groupName}
+                      onChange={handleChangeGroupName}
+                      fontFamily={"heading"}
+                      fontSize={"30px"}
+                      variant="genericInput"
+                    />
+
+                    <Box
+                      as="button"
+                      className="genericButton"
+                      onClick={() => groupId && updateGroupName()}
+                    >
+                      <Check />
+                    </Box>
+                    <Box
+                      as="button"
+                      className="genericButton"
+                      onClick={() => groupId && handleEdit()}
+                    >
+                      <X />
+                    </Box>
                   </Box>
-                  <Box
-                    as="button"
-                    className="genericButton"
-                    onClick={() => groupId && handleEdit()}
-                  >
-                    <X />
-                  </Box>
-                </Box>
-              ) : (
+                  <FormErrorMessage color="tertiary.medium">
+                    {error}
+                  </FormErrorMessage>
+                </FormControl>
+              </Box>
+            ) : (
+              <Heading size="lg" my={4}>
+                {groupId?.groupById.name}
                 <Box
                   as="button"
                   className="genericButton"
                   onClick={() => groupId && handleEdit()}
                 >
-                  <Pen />
+                  <Pen size={18} />
                 </Box>
-              )}
-            </Box>
+              </Heading>
+            )
+          ) : (
+            <Heading size="lg" my={4}>
+              {groupId?.groupById.name}
+            </Heading>
           )}
         </Box>
         <Flex justifyContent="center" my={8}>
