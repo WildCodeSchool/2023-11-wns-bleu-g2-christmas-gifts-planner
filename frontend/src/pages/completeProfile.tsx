@@ -158,6 +158,7 @@ export default function CompleteProfile() {
           gap={3}
           width={{ base: "95%", md: "48rem" }}
           m="auto"
+          marginBlock={4}
         >
           <Card
             paddingBlock={{ base: "0", md: "6" }}
