@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useCreateGroupMutation } from "@/graphql/generated/schema";
 import { useCreateChannelsMutation } from "@/graphql/generated/schema";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { ApolloError } from "@apollo/client";
 import { useFormValidation } from "@/hooks/useFormValidation";
@@ -33,8 +33,8 @@ export default function FormCreateGroup({
    */
   const [createGroup] = useCreateGroupMutation();
   const [createChannels] = useCreateChannelsMutation();
-  const [memberEmail, setMemberEmail] = React.useState("");
-  const [members, setMembers] = useState<{ email: string; color: string }[]>(
+  const [memberEmail, setMemberEmail] = useState("");
+  const [members, setMembers] = useState<{ email: string; color?: string }[]>(
     []
   );
   const [groupName, setGroupName] = useState("");
@@ -138,8 +138,31 @@ export default function FormCreateGroup({
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const formJson: any = Object.fromEntries(formData.entries());
-    const memberEmails = members.map((member) => member.email);
-    formJson.members = memberEmails;
+
+    // If the member email input field is not empty and there are no members in the list, add the email to the list of members.
+    if (memberEmail.trim() !== "" && members.length === 0) {
+      const emailErrors = validateEmail(
+        memberEmail,
+        members.map((member) => member.email)
+      );
+      if (emailErrors.length === 0) {
+        formJson.members = [memberEmail];
+        setMemberEmail("");
+      }
+    } else {
+      // Otherwise, if the member email input field is not empty, show an error message to the user.
+      if (memberEmail.trim() !== "") {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: [t("validate-data.email-list")],
+        }));
+        return;
+      }
+      // Else, if the member email input field is empty, add the list of members to the form data.
+      const memberEmails = members.map((member) => member.email);
+      formJson.members = memberEmails;
+    }
+
     try {
       const result = await createGroup({
         variables: { data: formJson },

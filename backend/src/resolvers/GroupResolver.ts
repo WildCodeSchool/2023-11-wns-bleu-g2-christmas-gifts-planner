@@ -93,7 +93,9 @@ export default class GroupResolver {
         const user = await findOrCreateUserByEmail(email);
 
         members.push(user);
-        newGroup.members = members.filter(member => member !== null) as User[]; // Add the members to the group
+        newGroup.members = members.filter(
+          (member) => member !== null
+        ) as User[]; // Add the members to the group
       }
     }
 
