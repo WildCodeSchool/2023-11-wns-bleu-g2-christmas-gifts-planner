@@ -12,6 +12,7 @@ import {
 } from "typeorm";
 import Channel from "./Channel";
 import User from "./User";
+import Message from "./Message";
 
 /**
  * The Group entity represents a group of users.
@@ -60,4 +61,8 @@ export default class Group extends BaseEntity {
   @Field(() => [Channel], { nullable: true })
   @OneToMany(() => Channel, (channel) => channel.group)
   channels: Channel[];
+
+  @Field(() => [Message], { nullable: true })
+  @OneToMany(() => Message, (message) => message.groupId)
+  messages: Message[];
 }

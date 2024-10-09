@@ -16,6 +16,9 @@ import Message from "../entities/Message";
 import { ContextType } from "../types/ContextType";
 import { NewMessageInputType } from "../types/NewMessageType";
 import ChannelResolver from "./ChannelResolver";
+import User from "../entities/User";
+import Channel from "../entities/Channel";
+import Group from "../entities/Group";
 
 @Resolver(Message)
 export default class MessageResolver extends ChannelResolver {
@@ -32,9 +35,40 @@ export default class MessageResolver extends ChannelResolver {
       throw new GraphQLError("You need to be logged in!");
     }
 
+    // const userInChannel = await User.findOneByOrFail({ email: data.email })
+
+    const currentGroup = await Group.findOne({
+      where: { id: groupId },
+    });
+    const currentChannel = await Channel.findOne({
+      where: { id: channelId },
+      relations: { group: true, receiver: true },
+    });
+    const isMember = currentGroup?.members.some(
+      (member) => member.id === ctx.currentUser?.id
+    );
+    if (!isMember || ctx?.currentUser.id === currentChannel?.receiver.id) {
+      throw new GraphQLError(
+        "Oh oh, looks like you dont belong to this group!"
+      );
+    }
+    // console.log("currentGroup", currentG?.members);
+    console.log("currentChannel-reciver", currentChannel?.receiver.id);
+    console.log("currentChannel-mmebers", currentChannel?.group.members);
+
+    // console.log("currentUser", ctx?.currentUser?.channels);
+
     return Message.find({
-      relations: { writtenBy: true, channelId: true, likes: true },
+      relations: {
+        writtenBy: true,
+        channelId: true,
+        likes: true,
+        groupId: true,
+      },
       where: {
+        groupId: {
+          id: groupId,
+        },
         writtenBy: {
           id: id,
         },

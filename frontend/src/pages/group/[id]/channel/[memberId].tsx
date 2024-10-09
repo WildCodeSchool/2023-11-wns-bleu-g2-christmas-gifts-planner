@@ -1,5 +1,6 @@
 import {
   MessagesDocument,
+  useChannelQuery,
   useCreateDelteLikeMutation,
   useCreateMessageMutation,
   useLikesQuery,
@@ -25,7 +26,15 @@ const Message = () => {
 
   const router = useRouter();
   const channelMemberId: any = router.query?.memberId;
-  console.log("router.query", router.query);
+  const GroupId: any = router.query.id;
+
+  const { data: getMembers } = useChannelQuery({
+    variables: {
+      channelId: parseInt(channelMemberId as string),
+      groupId: parseInt(GroupId as string),
+    },
+  });
+  console.log("memebers", getMembers);
   const { data: currentUser, client } = useProfileQuery({
     errorPolicy: "ignore",
   });
@@ -58,9 +67,17 @@ const Message = () => {
     return topMessages.slice(0, 3);
   }
   const topLikedMessages = getTopLikedMessages(getRatings?.Likes || []);
-  let { data: getMessages } = useMessagesQuery({
-    variables: { channelId: parseInt(channelMemberId as string) },
+  let {
+    data: getMessages,
+    loading,
+    error: messagesErr,
+  } = useMessagesQuery({
+    variables: {
+      channelId: parseInt(channelMemberId as string),
+      groupId: parseInt(GroupId as string),
+    },
   });
+  console.log(messagesErr?.graphQLErrors);
   const [createMessage] = useCreateMessageMutation();
   const [CreateDelteLike] = useCreateDelteLikeMutation();
 
@@ -146,7 +163,7 @@ const Message = () => {
 
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
-    formJSON.LikedBy = { id: parseInt(currentUser?.profile.id, 10) };
+    formJSON.LikedBy = { id: parseInt(currentUser?.profile.id as string, 10) };
     formJSON.likedMessageId = { id: parseInt(formJSON.likedMessageId, 10) };
     formJSON.channelId = { id: parseInt(channelMemberId, 10) };
 
@@ -169,9 +186,15 @@ const Message = () => {
 
     return dateA - dateB; // Sort by date
   });
-
   return (
     <>
+      {messagesErr ? (
+        <>
+          <h1>Error fetching messages</h1>
+        </>
+      ) : (
+        <></>
+      )}
       <h1 className="text-center">Top Gifts!</h1>
       <Accordion allowToggle>
         {topLikedMessages.map((m, idx) => (
@@ -234,9 +257,9 @@ const Message = () => {
                       </form>
                       <div
                         key={message.id}
-                        className="  bg-sky-300  px-3   rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl gap-3   "
+                        className="  bg-primary-lower  px-3   rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl gap-3   "
                       >
-                        <p className="text-m font-normal py-2.5 text-gray-900 ">
+                        <p className="text-m font-normal py-2.5 text-white ">
                           {message.content}
                         </p>
                       </div>
@@ -256,7 +279,8 @@ const Message = () => {
                       />
                       <div
                         key={message.id}
-                        className="flex  bg-slate-200  p-2 border-solid border-2 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl  "
+                        // className="flex  bg-slate-200  p-2 border-solid border-2 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl  "
+                        className="flex  bg-zinc-200 border-solid   p-2   rounded-tl-2xl rounded-tr-2xl rounded-br-2xl  "
                       >
                         <p className="text-m font-normal py-2.5 text-gray-900 dark:text-white">
                           {message.content}
