@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="https://i.imgur.com/6wj0hh6.jpg" alt="Project logo"></a>
+ <img width=200px height=200px src="./frontend/public/Gifty-logo-light.svg" alt="Project logo"></a>
 </p>
 
 <h3 align="center">Christmas Gifts Planner</h3>
@@ -24,11 +24,8 @@
 
 - [About](#about)
 - [Getting Started](#getting_started)
-- [Deployment](#deployment)
-- [Usage](#usage)
+- [Running the tests](#tests)
 - [Built Using](#built_using)
-- [TODO](../TODO.md)
-- [Contributing](../CONTRIBUTING.md)
 - [Authors](#authors)
 - [Acknowledgments](#acknowledgement)
 
@@ -58,7 +55,7 @@ PostgreSQL installed
 git clone https://github.com/WildCodeSchool/2023-11-wns-bleu-g2.git
 ```
 
-2.Navigate to the project directory:
+2. Navigate to the project directory:
 
 ```
 cd backend
@@ -71,41 +68,82 @@ cd backend
 DATABASE_URL=postgres://username:password@localhost:5432/database_name
 ```
 
-4.Start the development server with Docker Compose:
+4. Start the development server with Docker Compose:
 
 ```
 docker-compose up --build
 ```
 
-5.Open your browser and navigate to http://localhost:3000 to view the application.
+5. Open your browser and navigate to http://localhost:3000 to view the application.
 
 ## 🔧 Running the tests <a name = "tests"></a>
 
-Explain how to run the automated tests for this system.
+### Backend Tests
 
-### Break down into end to end tests
-
-Explain what these tests test and why
+To run the backend tests, navigate to the `backend` directory and execute:
 
 ```
-Give an example
+cd backend
+npm run test
+```
+
+This command runs the Jest test suite for the backend. It checks functionality like user profiles and user creation, ensuring all tests pass successfully.
+
+### Frontend Tests
+
+To run the frontend tests, navigate to the `frontend` directory and execute:
+
+```
+cd frontend
+npm run test
+```
+
+This command runs the Jest test suite for the frontend, ensuring that components render correctly.
+
+### E2E Tests
+
+To run the end-to-end (E2E) tests, follow these steps:
+
+1. Navigate to the `e2e-tests` directory:
+
+```
+cd e2e-tests
+```
+
+2. Install the required Playwright browsers
+
+```
+npx playwright install:
+```
+
+3. Start the application using Docker:
+
+```
+npm run app:start
+```
+
+4. Run the tests:
+
+```
+npm run test
+```
+
+5. To view the test report:
+
+```
+npx playwright show-report
 ```
 
 ### And coding style tests
 
-Explain what these tests test and why
+The `npm run lint` command runs the `next lint` script, which checks the code for potential errors and enforces coding standards using ESLint. This helps maintain code quality and consistency across the project.
+
+To run the linting tests, use the following commands:
 
 ```
-Give an example
+cd frontend
+npm run lint
 ```
-
-## 🎈 Usage <a name="usage"></a>
-
-Add notes about how to use the system.
-
-## 🚀 Deployment <a name = "deployment"></a>
-
-Add additional notes about how to deploy this on a live system.
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
@@ -114,22 +152,23 @@ Add additional notes about how to deploy this on a live system.
 - [NodeJs](https://nodejs.org/en/) - Server Environment
 - [PostgreSQL](https://www.postgresql.org/) - Database
 - [TypeORM](https://typeorm.io/) - ORM for TypeScript
-- [Next.js](https://nextjs.org/) - React Framework
+- [Next.js](https://nextjs.org/) - React Framework & contributor
 - [React](https://vuejs.org/) - JavaScript Library
 - [Apollo Client](https://www.apollographql.com/docs/react/) - GraphQL Client
 - [Docker](https://www.docker.com/) - Containerization Platform
 
 ## ✍️ Authors <a name = "authors"></a>
 
-- [@AlexandreRichert](https://github.com/AlexandreRichert) - Idea & Initial work
-- [@alon-bendavid](https://github.com/alon-bendavid) - Idea & Initial work
-- [@Fangornito](https://github.com/Fangornito) - Idea & Initial work
-- [@Jasminegrz](https://github.com/Jasminegrz) - Idea & Initial work
+This project was developed by the following contributors:
 
-See also the list of [contributors](https://github.com/kylelobo/The-Documentation-Compendium/contributors) who participated in this project.
+- [@AlexandreRichert](https://github.com/AlexandreRichert) - Idea, Initial work & contributor
+- [@alon-bendavid](https://github.com/alon-bendavid) - Idea, Initial work & contributor
+- [@Fangornito](https://github.com/Fangornito) - Idea, Initial work & contributor
+- [@Jasminegrz](https://github.com/Jasminegrz) - Idea, Initial work & contributor
+
+For more details on each contributor’s activity, visit the [contributors page](https://github.com/WildCodeSchool/2023-11-wns-bleu-g2-christmas-gifts-planner/graphs/contributors)
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
 - Hat tip to anyone whose code was used
-- Inspiration
-- References
+- A big thank you to **Wild Code School** for their support and guidance throughout our training. Their trainers and community helped us acquire the skills needed to successfully complete this project.
