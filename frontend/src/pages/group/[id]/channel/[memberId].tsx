@@ -234,9 +234,9 @@ const Message = () => {
                       </form>
                       <div
                         key={message.id}
-                        className="  bg-sky-300  px-3   rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl gap-3   "
+                        className="  bg-primary-lower  px-3   rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl gap-3   "
                       >
-                        <p className="text-m font-normal py-2.5 text-gray-900 ">
+                        <p className="text-m font-normal py-2.5 text-white ">
                           {message.content}
                         </p>
                       </div>
@@ -256,7 +256,8 @@ const Message = () => {
                       />
                       <div
                         key={message.id}
-                        className="flex  bg-slate-200  p-2 border-solid border-2 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl  "
+                        // className="flex  bg-slate-200  p-2 border-solid border-2 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl  "
+                        className="flex  bg-zinc-200 border-solid   p-2   rounded-tl-2xl rounded-tr-2xl rounded-br-2xl  "
                       >
                         <p className="text-m font-normal py-2.5 text-gray-900 dark:text-white">
                           {message.content}
