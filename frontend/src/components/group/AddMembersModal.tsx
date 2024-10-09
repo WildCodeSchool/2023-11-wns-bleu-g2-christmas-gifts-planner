@@ -24,19 +24,9 @@ export default function AddMembersModal({ refetch, id }: AddMembersModalProps) {
   const initialRef = React.useRef(null);
   return (
     <>
-      <IconButton
-        onClick={onOpen}
-        icon={<AddIcon />}
-        aria-label="Add Member"
-        borderRadius="full"
-        bg="transparent"
-        border="1px solid #084F2D"
-        size={"lg"}
-        _hover={{
-          textDecoration: "none",
-          bg: "secondary.medium",
-        }}
-      />
+      <Button onClick={onOpen} variant="goldenButton">
+        Ajouter des membres
+      </Button>
 
       <Modal
         isOpen={isOpen}

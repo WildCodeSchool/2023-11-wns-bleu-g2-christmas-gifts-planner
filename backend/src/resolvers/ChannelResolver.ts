@@ -47,15 +47,30 @@ export default class ChannelResolver {
   @Query(() => Channel, { nullable: true })
   async channel(
     @Arg("groupId") groupId: number,
-    @Arg("channelId") channelId: number
+    @Arg("channelId") channelId: number,
+    @Ctx() ctx: ContextType
   ) {
-    return Channel.findOne({
+    if (!ctx.currentUser) {
+      throw new GraphQLError("You need to be logged in!");
+    }
+  
+    const channel = await Channel.findOne({
       where: { id: channelId, group: { id: groupId } },
-      relations: { group: true },
+      relations: { group: true, receiver: true },
     });
+  
+    if (!channel) {
+      throw new GraphQLError("Channel not found");
+    }
+  
+    // Check if the current user is the receiver of this channel
+    if (channel.receiver.id === ctx.currentUser.id) {
+      throw new GraphQLError("You cannot access your own channel");
+    }
+  
+    return channel;
   }
-
-    @Authorized()
+      @Authorized()
     @Mutation(() => [Channel])
     async createChannels(
       @Arg("groupId") groupId: number,
