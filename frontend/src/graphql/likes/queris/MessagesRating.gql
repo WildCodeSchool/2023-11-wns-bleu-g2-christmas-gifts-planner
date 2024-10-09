@@ -1,0 +1,12 @@
+query Likes($channelId: Int) {
+  Likes(channelId: $channelId) {
+    id
+    likedMessageId {
+      id
+      content
+    }
+    LikedBy {
+      id
+    }
+  }
+}

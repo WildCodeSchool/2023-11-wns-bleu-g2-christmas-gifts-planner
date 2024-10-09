@@ -3,6 +3,7 @@ import Message from "./entities/Message";
 import Group from "./entities/Group";
 import Channel from "./entities/Channel";
 import User, { UserRole, hashPassword } from "./entities/User";
+import { NewMessageInputType } from "./types/NewMessageType";
 
 export async function clearDB() {
   const runner = db.createQueryRunner();
@@ -80,26 +81,6 @@ export default async function main() {
   });
   await userNina.save();
 
-  const message01 = new Message();
-  Object.assign(message01, {
-    content: "Hello Mateo, i tought about an amazing gift for pierre! a fish!",
-    sent_at: "2024-07-03 18:10:31",
-    writtenBy: {
-      id: 2,
-    },
-  });
-  await message01.save();
-
-  const message02 = new Message();
-  Object.assign(message02, {
-    content: "lol, Jonas!",
-    sent_at: "2024-07-03 18:11:02",
-    writtenBy: {
-      id: 3,
-    },
-  });
-  await message02.save();
-
   const firstAdminGroup = new Group();
   Object.assign(firstAdminGroup, {
     name: "My best family group",
@@ -139,6 +120,13 @@ export default async function main() {
   await firstJonasGroup.save();
   await secondJonasGroup.save();
 
+  const jonasChannel = new Channel();
+  Object.assign(jonasChannel, {
+    name: "Jonas's channel",
+    group: firstAdminGroup,
+  });
+  await jonasChannel.save();
+
   const mateoChannel = new Channel();
   Object.assign(mateoChannel, {
     name: "Mateo's channel",
@@ -146,26 +134,59 @@ export default async function main() {
   });
   await mateoChannel.save();
 
-  const ninaChannel = new Channel();
-  Object.assign(ninaChannel, {
-    name: "Nina's channel",
-    group: firstAdminGroup,
-  });
-  await ninaChannel.save();
-
   const enolaChannel = new Channel();
   Object.assign(enolaChannel, {
     name: "Enola's channel",
-    group: secondAdminGroup,
+    group: firstAdminGroup,
   });
   await enolaChannel.save();
 
-  const valentinaChannel = new Channel();
-  Object.assign(valentinaChannel, {
-    name: "Valentinas's channel",
-    group: secondAdminGroup,
+  const adminChannel = new Channel();
+  Object.assign(adminChannel, {
+    name: "Admin's channel",
+    group: firstJonasGroup,
   });
-  await valentinaChannel.save();
+  await adminChannel.save();
+
+  const mateoChannel2 = new Channel();
+  Object.assign(mateoChannel2, {
+    name: "Mateo's channel",
+    group: firstJonasGroup,
+  });
+  await mateoChannel2.save();
+
+  const message01 = new Message();
+  Object.assign(message01, {
+    content: "Hello Mateo, i tought about an amazing gift for pierre! a fish!",
+    sent_at: "2024-07-03 18:10:31",
+    channelId: 1,
+    writtenBy: {
+      id: 2,
+    },
+  });
+  await message01.save();
+
+  const message02 = new Message();
+  Object.assign(message02, {
+    content: "lol, Jonas!",
+    sent_at: "2024-07-03 18:11:02",
+    channelId: 1,
+    writtenBy: {
+      id: 3,
+    },
+  });
+  await message02.save();
+
+  const message03 = new Message();
+  Object.assign(message03, {
+    content: "message03",
+    sent_at: "2024-07-03 18:11:02",
+    channel: 1,
+    writtenBy: {
+      id: 3,
+    },
+  });
+  await message03.save();
 
   await db.destroy();
   console.log("Database reset complete");

@@ -1,5 +1,7 @@
 import {
+  Box,
   Button,
+  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import FormAddMembers from "./FormAddMembers";
+import { AddIcon } from "@chakra-ui/icons";
 
 type AddMembersModalProps = {
   refetch: () => void;
@@ -21,9 +24,19 @@ export default function AddMembersModal({ refetch, id }: AddMembersModalProps) {
   const initialRef = React.useRef(null);
   return (
     <>
-      <Button onClick={onOpen} variant="goldenButton">
-        Ajouter des membres
-      </Button>
+      <IconButton
+        onClick={onOpen}
+        icon={<AddIcon />}
+        aria-label="Add Member"
+        borderRadius="full"
+        bg="transparent"
+        border="1px solid #084F2D"
+        size={"lg"}
+        _hover={{
+          textDecoration: "none",
+          bg: "secondary.medium",
+        }}
+      />
 
       <Modal
         isOpen={isOpen}
@@ -33,7 +46,7 @@ export default function AddMembersModal({ refetch, id }: AddMembersModalProps) {
       >
         <ModalOverlay backdropFilter="blur(2px)" />
         <ModalContent
-          bg="secondary.lowest"
+          bg="background.default"
           p={6}
           mb={isMobile ? 0 : "auto"}
           mt="auto"

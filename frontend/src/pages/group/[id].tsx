@@ -1,83 +1,200 @@
 import AddMembersModal from "@/components/group/AddMembersModal";
-import { useGroupByIdQuery } from "@/graphql/generated/schema";
+import {
+  useChangeGroupNameMutation,
+  useGroupByIdQuery,
+  useProfileQuery,
+  useChannelsQuery,
+} from "@/graphql/generated/schema";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Avatar,
   Box,
   Flex,
   Heading,
-  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
   Stack,
   Text,
+  useMediaQuery,
+  FormControl,
+  FormErrorMessage,
 } from "@chakra-ui/react";
-import { SearchIcon } from "lucide-react";
-import { AddIcon } from "@chakra-ui/icons";
+import { X, Check, Pen, SearchIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useGroupContext } from "@/contexts/GroupContext";
+import { useFormValidation } from "@/hooks/useFormValidation";
+import { ApolloError } from "@apollo/client";
 
 export default function Channels() {
   const router = useRouter();
+  const { t } = useTranslation();
   const id = router.query?.id as string;
-  const [searchMember, setSearchMember] = useState("");
-
-  const { data: groupeId, refetch } = useGroupByIdQuery({
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
+  const { data: groupId, refetch } = useGroupByIdQuery({
     variables: { groupId: Number(id) },
   });
-  console.log("groupeId: ", groupeId);
-  const members = groupeId?.groupById.members;
-  console.log("members: ", members);
-  const filteredMembers = members?.filter(
+  const { data: channels } = useChannelsQuery({
+    variables: { groupId: Number(id) },
+  });
+  console.log("channels: ", channels);
+  const [searchMember, setSearchMember] = useState("");
+  const [editingGroupName, setEditingGroupName] = useState(false);
+  const [ChangeGroupName] = useChangeGroupNameMutation();
+  const [groupName, setGroupName] = useState("");
+  const [error, setError] = useState("");
+  const { setGroupData } = useGroupContext();
+  const { validateGroupName } = useFormValidation();
+  const { data: currentUser } = useProfileQuery({
+    errorPolicy: "ignore",
+  });
+  const isOwner = groupId?.groupById.owner.id === currentUser?.profile.id;
+
+  useEffect(() => {
+    if (groupId?.groupById) {
+      setGroupName(groupId.groupById.name);
+    }
+  }, [groupId]);
+
+  const filteredMembers = channels?.channels.filter(
     (member) =>
-      member.firstName?.toLowerCase().includes(searchMember.toLowerCase()) ||
-      member.lastName?.toLowerCase().includes(searchMember.toLowerCase())
+      member.receiver.firstName?.toLowerCase().includes(searchMember.toLowerCase()) ||
+      member.receiver.lastName?.toLowerCase().includes(searchMember.toLowerCase())
   );
-  console.log("filteredMembers: ", filteredMembers);
   const avatarColors = [
     "primary.medium",
     "secondary.high",
     "tertiary.medium",
     "orange.500",
   ];
+  const handleEdit = () => {
+    setEditingGroupName(!editingGroupName);
+    setError("");
+  };
+  const handleChangeGroupName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGroupName(e.target.value);
+  };
+  const updateGroupName = async () => {
+    try {
+      await ChangeGroupName({
+        variables: { groupId: Number(id), data: { name: groupName || "" } },
+      });
+      setEditingGroupName(!editingGroupName);
+      setError("");
+    } catch (error) {
+      if (error instanceof ApolloError) {
+        console.error("GraphQL Error:", error.graphQLErrors);
+        handleError(error);
+      } else {
+        console.error(error);
+      }
+    }
+  };
+  if (groupId?.groupById.owner.id !== undefined) {
+    setGroupData(id, groupId.groupById.owner.id, groupName);
+  }
+
+  const handleError = (error: ApolloError) => {
+    const newErrors: (string | string[])[] = [];
+    error.graphQLErrors.forEach((err) => {
+      if (err.message.includes("Argument Validation Error")) {
+        newErrors.push(validateGroupName(groupName));
+      } else if (
+        err.message.includes("A group with this name already exists for you")
+      ) {
+        const descriptionError = t("validate-data.group-name", { groupName });
+        newErrors.push(descriptionError);
+      } else {
+        const descriptionError = t("toast.error.generic-description");
+        newErrors.push(descriptionError);
+      }
+    });
+    setError(newErrors.join(", "));
+  };
   return (
     <>
       <Box
         p="4"
         mx="2"
         bg={"white"}
-        height={"full"}
+        height={isMobile ? "690px" : "780px"}
         boxShadow={"0px -2px #00000025"}
         borderRadius={"xl"}
+        overflowY="auto"
+        maxHeight={isMobile ? "690px" : "780px"}
       >
-        <Box textAlign="center" mb="4">
-          <Heading size="lg" my={4}>
-            {groupeId?.groupById.name || "Nom du Groupe"}
-          </Heading>
+        <Box
+          mb="4"
+          display="flex"
+          alignItems="center"
+          justifyContent={"center"}
+          gap={4}
+        >
+          {isOwner ? (
+            editingGroupName ? (
+              <Box>
+                <FormControl mt={3} isInvalid={!!error}>
+                  <Box display={"flex"}>
+                    <Input
+                      value={groupName}
+                      onChange={handleChangeGroupName}
+                      fontFamily={"heading"}
+                      fontSize={"30px"}
+                      variant="genericInput"
+                    />
+
+                    <Box
+                      as="button"
+                      className="genericButton"
+                      onClick={() => groupId && updateGroupName()}
+                    >
+                      <Check />
+                    </Box>
+                    <Box
+                      as="button"
+                      className="genericButton"
+                      onClick={() => groupId && handleEdit()}
+                    >
+                      <X />
+                    </Box>
+                  </Box>
+                  <FormErrorMessage color="tertiary.medium">
+                    {error}
+                  </FormErrorMessage>
+                </FormControl>
+              </Box>
+            ) : (
+              <Heading size="lg" my={4}>
+                {groupId?.groupById.name}
+                <Box
+                  as="button"
+                  className="genericButton"
+                  onClick={() => groupId && handleEdit()}
+                >
+                  <Pen size={18} />
+                </Box>
+              </Heading>
+            )
+          ) : (
+            <Heading size="lg" my={4}>
+              {groupId?.groupById.name}
+            </Heading>
+          )}
         </Box>
         <Flex justifyContent="center" my={8}>
           <Stack direction="row" spacing={4}>
-            {members?.map((member, index) => (
+            {channels?.channels?.map((channel, index) => (
               <Avatar
-                key={member.id}
-                name={member.firstName + " " + member.lastName}
+                key={channel.id}
+                name={channel.receiver.firstName + " " + channel.receiver.lastName}
                 bg={avatarColors[index % avatarColors.length]}
                 color="white"
               />
             ))}
-            <IconButton
-              icon={<AddIcon />}
-              aria-label="Add Member"
-              borderRadius="full"
-              bg="transparent"
-              border="1px solid #084F2D"
-              size={"lg"}
-              _hover={{
-                textDecoration: "none",
-                bg: "secondary.medium",
-              }}
-            />
+            <AddMembersModal refetch={refetch} id={id} />
           </Stack>
         </Flex>
         <InputGroup
@@ -96,52 +213,70 @@ export default function Channels() {
           </InputLeftElement>
           <Input
             type="text"
-            placeholder="Trouver un fil de discussion"
+            placeholder={t("placeholder-find-thread")}
             height="full"
             borderRadius="full"
             value={searchMember}
             onChange={(e) => setSearchMember(e.target.value)}
           />
         </InputGroup>
-        <Box my={8}>
+        <Box justifyContent={"center"}>
           {filteredMembers?.map((member, index) => (
-            <Card
-              className="items-start pl-8"
+            <Link
               key={member.id}
-              align="center"
-              width={{ base: "95%", md: "48rem" }}
-              m="auto"
-              h="100%"
-              paddingBlock="1rem"
-              marginBlock="1rem"
-              bg="secondary.lowest"
-              boxShadow={"lg"}
-              borderRadius={"lg"}
+              href={`/group/${groupId?.groupById.id}/channel/${member.id}`}
             >
-              <Flex align="center" pr={2}>
-                <Avatar
-                  name={member.firstName + " " + member.lastName}
-                  bg={avatarColors[index % avatarColors.length]}
-                  color="white"
-                  mr="4"
-                />
-                <Box>
-                  <Text
-                    as="b"
-                    size="md"
-                    flexWrap="wrap"
-                    color={"primary.medium"}
-                  >
-                    Idées cadeaux pour{" "}
-                    {member.firstName + " " + member.lastName}
-                  </Text>
-                </Box>
-              </Flex>
-            </Card>
+              <Card
+                className="items-center"
+                key={member.id}
+                align="center"
+                width={{ base: "95%", md: "48rem" }}
+                m="auto"
+                h={isMobile ? "190px" : "315px"}
+                marginBlock="3rem"
+                bg="white"
+                boxShadow={"lg"}
+                borderRadius={"lg"}
+                position={"relative"}
+              >
+                <Flex justify={"center"} width={"fit-content"} mb={16}>
+                  <Avatar
+                    size="lg"
+                    name={member.receiver.firstName + " " + member.receiver.lastName}
+                    bg={avatarColors[index % avatarColors.length]}
+                    color="white"
+                    mr="4"
+                    position="absolute"
+                    top="-10%"
+                    left="50%"
+                    transform="translateX(-50%)"
+                  />
+                </Flex>
+                <Flex align="center" pr={2} mb={16}>
+                  <Box>
+                    <Text
+                      as="b"
+                      size="md"
+                      flexWrap="wrap"
+                      color={"primary.medium"}
+                    >
+                      {t("present-ideas")}{" "}
+                      {member.receiver.firstName + " " + member.receiver.lastName}
+                    </Text>
+                  </Box>
+                </Flex>
+                <Flex align="end" pr={2}>
+                  <Box>
+                    <Text size="sm" flexWrap="wrap" color={"primary.medium"}>
+                      {member.receiver.email}
+                    </Text>
+                  </Box>
+                </Flex>
+              </Card>
+            </Link>
           ))}
         </Box>
       </Box>
-      <AddMembersModal refetch={refetch} id={id} />
     </>
   );
 }

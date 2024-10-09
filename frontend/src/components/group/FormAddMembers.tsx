@@ -1,4 +1,5 @@
 import { useAddMemberToGroupMutation } from "@/graphql/generated/schema";
+import { useFormValidation } from "@/hooks/useFormValidation";
 import { ApolloError } from "@apollo/client";
 import {
   Avatar,
@@ -6,12 +7,15 @@ import {
   Button,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Input,
   Text,
+  useToast,
 } from "@chakra-ui/react";
-import { Plus, X } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type FormAddMembersProps = {
   onClose: () => void;
@@ -27,12 +31,19 @@ export default function FormAddMembers({
 }: FormAddMembersProps) {
   const [addMembers] = useAddMemberToGroupMutation();
   const [memberEmail, setMemberEmail] = React.useState("");
-  const [members, setMembers] = useState<{ email: string; color: string }[]>(
+  const [members, setMembers] = useState<{ email: string; color?: string }[]>(
     []
   );
-  const [error, setError] = useState("");
+  // These functions are used to validate the user input in the form.
+  const { validateEmail } = useFormValidation();
+  const { t } = useTranslation();
+  const [errors, setErrors] = useState<{
+    email?: string[];
+    generic?: string[];
+  }>({});
   const [isHovered, setIsHovered] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
+  const toast = useToast();
 
   // Colors used to display the members of the group
   const colors = [
@@ -44,25 +55,31 @@ export default function FormAddMembers({
     "tertiary.lower",
   ];
 
-  const handleChange = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => setMemberEmail(event.target.value);
-
-  const validateEmail = (email: string) => {
-    //
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(email).toLowerCase());
+  const handleChangeMemberEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newMemberEmail = e.target.value;
+    setMemberEmail(newMemberEmail);
+    // Check if the input is a valid email or empty
+    const isValidEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(
+      newMemberEmail
+    );
+    const isEmpty = newMemberEmail === "";
+    if (isValidEmail || isEmpty) {
+      setErrors((prevErrors) => ({
+        // Reset the email error if the input is valid
+        ...prevErrors,
+        email: [],
+      }));
+    }
   };
 
   const handleAddMember = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (!validateEmail(memberEmail)) {
-      setError("Veuillez entrer une adresse e-mail valide.");
-      return;
-    }
-    if (members.some((member) => member.email === memberEmail)) {
-      setError("Cet e-mail est déjà ajouté.");
-      return;
+    const newErrors = validateEmail(
+      memberEmail,
+      members.map((member) => member.email)
+    );
+    if (newErrors.length > 0) {
+      return setErrors({ ...errors, email: newErrors });
     }
     if (
       memberEmail.trim() !== "" &&
@@ -74,8 +91,6 @@ export default function FormAddMembers({
       };
       setMembers([...members, newMember]);
       setMemberEmail("");
-      setError("");
-
       // Change the color of the next member to be added
       setColorIndex((colorIndex + 1) % colors.length);
     }
@@ -94,7 +109,34 @@ export default function FormAddMembers({
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const formJson: any = Object.fromEntries(formData.entries());
-    formJson.members = members.map((member) => ({ email: member.email }));
+    if (memberEmail.trim() !== "" && members.length === 0) {
+      const emailErrors = validateEmail(
+        memberEmail,
+        members.map((member) => member.email)
+      );
+      if (emailErrors.length === 0) {
+        const newMemberEmail = { email: memberEmail };
+        formJson.members = [newMemberEmail];
+        setMemberEmail("");
+      }
+    } else {
+      // Otherwise, if the member email input field is not empty, show an error message to the user.
+      if (memberEmail.trim() !== "") {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: [t("validate-data.email-list")],
+        }));
+        return;
+      }
+      // Else, if the member email input field is empty, add the list of members to the form data.
+      const memberEmails = members.map((member) => {
+        const memberEmail = {
+          email: member.email,
+        };
+        return memberEmail;
+      });
+      formJson.members = memberEmails;
+    }
 
     try {
       await addMembers({
@@ -105,13 +147,69 @@ export default function FormAddMembers({
       });
       refetch();
       onClose();
+      toast({
+        title: t("toast.success.add-member-title"),
+        description: t("toast.success.add-member-description"),
+        status: "success",
+        variant: "success",
+      });
     } catch (error) {
       if (error instanceof ApolloError) {
         console.error("GraphQL Error:", error.graphQLErrors);
+        handleGraphQLError(error);
       } else {
         console.error("Error adding members to group: ", error);
       }
+      onClose();
     }
+  };
+  /**
+   * Handle GraphQL errors that can occur during the creation of a group.
+   */
+  const handleGraphQLError = (error: ApolloError) => {
+    const newErrors: { [key: string]: string[] } = {};
+    // Iterate over each error returned by the GraphQL server.
+    error.graphQLErrors.forEach((err) => {
+      if (err.message.includes(`is already a member`)) {
+        const errorMessages = err.message.split(", ");
+        errorMessages.forEach((errorMessage) => {
+          const [email] = errorMessage.match(/(?<=email\s)(.*)(?=\sis)/) || [];
+          if (email) {
+            const descriptionError = t("toast.error.add-member-exist", {
+              email,
+            });
+            toast({
+              title: t("toast.error.add-member-title"),
+              description: descriptionError,
+              status: "error",
+              variant: "error",
+            });
+            newErrors.generic = [
+              ...(newErrors.generic || []),
+              descriptionError,
+            ];
+          }
+        });
+      } else if (err.message.includes("No members provided")) {
+        const descriptionError = t("toast.error.add-member-provided");
+        toast({
+          title: t("toast.error.generic-title"),
+          description: descriptionError,
+          status: "error",
+          variant: "error",
+        });
+      } else {
+        const descriptionError = t("toast.error.add-member");
+        toast({
+          title: t("toast.error.generic-title"),
+          description: descriptionError,
+          status: "error",
+          variant: "error",
+        });
+        newErrors.generic = [...(newErrors.generic || []), descriptionError];
+      }
+    });
+    setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
   };
   return (
     <form
@@ -119,7 +217,7 @@ export default function FormAddMembers({
       className="h-full flex flex-col justify-between"
     >
       <Box>
-        <FormControl mt={3} isInvalid={!!error}>
+        <FormControl mt={3} isInvalid={errors.email && errors.email.length > 0}>
           <FormLabel>Ajouter des membres</FormLabel>
           <Flex>
             <Input
@@ -127,7 +225,7 @@ export default function FormAddMembers({
               placeholder="Saisissez l'email d'un membre à ajouter"
               variant="goldenInput"
               value={memberEmail}
-              onChange={handleChange}
+              onChange={handleChangeMemberEmail}
               ref={initialRef}
             />
             <Button
@@ -144,16 +242,12 @@ export default function FormAddMembers({
             </Button>
           </Flex>
 
-          {error !== "" && (
-            <Text
-              position="absolute"
-              mt={1}
-              fontSize={12}
-              color="tertiary.medium"
-            >
-              {error}
-            </Text>
-          )}
+          {errors.email &&
+            errors.email.map((error, index) => (
+              <FormErrorMessage key={index} color="tertiary.medium">
+                {error}
+              </FormErrorMessage>
+            ))}
         </FormControl>
         <Box
           mt={6}
@@ -163,6 +257,20 @@ export default function FormAddMembers({
           borderColor="secondary.low"
           h={150}
           overflowY="auto"
+          sx={{
+            "::-webkit-scrollbar": {
+              width: "0.9rem",
+            },
+            "::-webkit-scrollbar-thumb": {
+              backgroundColor: "secondary.low",
+              borderRadius: "1rem",
+              border: "0.4rem solid transparent",
+              backgroundClip: "padding-box",
+            },
+            "::-webkit-scrollbar-track": {
+              marginBlock: "1.2rem",
+            },
+          }}
         >
           {members.length ? (
             <Box display="flex" flexDirection="column" gap={2}>
@@ -177,7 +285,7 @@ export default function FormAddMembers({
                     onClick={(event) => handleRemoveMember(event, member.email)}
                     ml="auto"
                   >
-                    <X color="#A10702" size={20} />
+                    <Trash2 color="#A10702" size={18} />
                   </Box>
                 </Box>
               ))}
@@ -190,7 +298,7 @@ export default function FormAddMembers({
           Annuler
         </Button>
         <Button type="submit" variant="greenButton">
-          Créer
+          Ajouter
         </Button>
       </Flex>
     </form>

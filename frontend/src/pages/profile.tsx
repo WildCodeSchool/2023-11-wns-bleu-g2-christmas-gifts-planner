@@ -6,19 +6,8 @@ import { Box, Button, Center, Flex, FormControl, FormLabel, IconButton, Input, I
 import { ArrowLeft, Eye, EyeOff, InfoIcon, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
-function validatePassword(p: string) {
-    let errors = [];
-    if (p.length < 8)
-      errors.push("Le mot de passe doit faire minimum 8 caractères");
-    if (p.search(/[a-z]/) < 0)
-      errors.push("Le mot de passe doit contenir une minuscule");
-    if (p.search(/[A-Z]/) < 0)
-      errors.push("Le mot de passe doit contenir une majuscule");
-    if (p.search(/[0-9]/) < 0)
-      errors.push("Le mot de passe doit contenir un chiffre");
-    return errors;
-  }
 
 const UserProfile = () => {
     const [arrayOfErrors, setArrayOfErrors] = useState<string[]>([])
@@ -29,8 +18,21 @@ const UserProfile = () => {
     const [updateUser] = useUpdateUserMutation();
     const toast = useToast();
     const router = useRouter()
-  
+    const { t } = useTranslation()
     
+    function validatePassword(p: string) {
+      let errors = [];
+      if (p.length < 8)
+        errors.push(t("character-limit"));
+      if (p.search(/[a-z]/) < 0)
+        errors.push(t("password-lowercase"));
+      if (p.search(/[A-Z]/) < 0)
+        errors.push(t("password-uppercase"));
+      if (p.search(/[0-9]/) < 0)
+        errors.push(t("password-number"));
+      return errors;
+    }
+
     const { data: currentUser } = useProfileQuery({
       errorPolicy: "ignore",
     });
@@ -96,8 +98,8 @@ const UserProfile = () => {
         });
 
         toast({
-          title: "Profile modifié !",
-          description: "Votre profil a bien été modifié",
+          title: t("success-profile-modified"),
+          description: t("description-success-profile-modified"),
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -156,8 +158,8 @@ const UserProfile = () => {
         });
   
         toast({
-          title: "Mot de passe modifié !",
-          description: "Votre mot de passe a bien été modifié",
+          title: t("success-password-modified"),
+          description: t("description-success-password-modified"),
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -179,23 +181,23 @@ const UserProfile = () => {
         <Center>
             <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
                 <form onSubmit={handleSubmitProfile}>
-                  <Text fontWeight="bold">Modifier le profil</Text>
+                  <Text fontWeight="bold">{t("modify-profile")}</Text>
                     <FormControl mt={6}>
                         {/* Firstname and lastname */}
-                                <FormLabel >Nom</FormLabel>
-                                <Input type="text" name="lastName" id="lastName" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.lastName)? currentUser!.profile.lastName : "Nom"} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.lastName}/>                        
-                        <FormLabel mt={4} >Prénom</FormLabel>
-                                <Input type="text" name="firstName" id="firstName" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.firstName)? currentUser!.profile.firstName : "Prénom"} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.firstName}/>
+                                <FormLabel >{t("lastname")}</FormLabel>
+                                <Input type="text" name="lastName" id="lastName" variant="goldenInput" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.lastName)? currentUser!.profile.lastName! : t("lastname")} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.lastName}/>                        
+                        <FormLabel mt={4} >{t("firstname")} </FormLabel>
+                                <Input type="text" name="firstName" id="firstName" variant="goldenInput" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.firstName)? currentUser!.profile.firstName! : t("firstname")} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.firstName}/>
                                 {/* Email */}
                         {error === 2 &&
-                                <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">Cet e-mail existe déjà</Text>
+                                <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">{t("email-already-existing")}</Text>
                                 }
-                                <FormLabel mt={4}>E-mail</FormLabel>
-                        <Input type='email' id="email" data-testid="label-email" name="email" placeholder={isValidNotEmptyString(currentUser?.profile.email) ? currentUser!.profile.email : "E-mail"} borderRadius={20} borderColor={error === 2 ? "red.700" : "green.600"} onChange={handleChange} value={formData.email}/>
+                                <FormLabel mt={4}>{t("email-adress")}</FormLabel>
+                        <Input type='email' id="email" data-testid="label-email" name="email" variant="goldenInput" placeholder={isValidNotEmptyString(currentUser?.profile.email) ? currentUser!.profile.email : t("email-adress")} borderRadius={20} borderColor={error === 2 ? "red.700" : "green.600"} onChange={handleChange} value={formData.email}/>
                          </FormControl>
                          <Flex w="100%" justifyContent="flex-end">
                          <Button variant="greenButton" mt={6} type="submit">
-                                Modifier
+                                {t("modify")}
                             </Button>
                             </Flex>
                 </form>
@@ -205,14 +207,14 @@ const UserProfile = () => {
                          <Center>
                          <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
                          <form onSubmit={handleSubmitPassword}>
-                         <Text fontWeight="bold">Modifier le mot de passe</Text>
+                         <Text fontWeight="bold">{t("modify-password")}</Text>
                          <FormControl mt={6}>
-                         <FormLabel >Mot de passe actuel</FormLabel>
+                         <FormLabel >{t("current-password")} </FormLabel>
                          <InputGroup size='md'>
-                            <Input name="oldPassword" id="oldPassword" fontSize={14} type={showOld ? "text":'password'} placeholder='Ancien mot de passe' borderRadius={15} borderColor={error === 3 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <Input name="oldPassword" id="oldPassword" fontSize={14} type={showOld ? "text":'password'} variant="goldenInput" placeholder={t("old-password")} borderRadius={15} borderColor={error === 3 ? "red.700" : "green.600"} onChange={handleChange}/>
                             <InputRightElement>
                             <IconButton
-                              aria-label={showOld ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                              aria-label={showOld ? t("hide-password") : t("show-password")}
                               variant="ghost"
                                 boxShadow="none"
                               icon={showOld ? <EyeOff /> : <Eye />}
@@ -220,16 +222,16 @@ const UserProfile = () => {
                                 />
                             </InputRightElement>
                             {error === 3 &&
-                                <Text position="absolute" mt={10} fontSize={14} fontWeight="bold" color="red.700">Le mot de passe n&apos;est pas le même !</Text>
+                                <Text position="absolute" mt={10} fontSize={14} fontWeight="bold" color="red.700">{t("modify-password-is-different")}</Text>
                                 }
                         </InputGroup>
                         {/* New Password and confirm Password */}
-                        <FormLabel mt={6}>Nouveau mot de passe</FormLabel>
+                        <FormLabel mt={6}>{t("new-password")} </FormLabel>
                         <InputGroup size='md' >
-                            <Input name="newPassword" id="newPassword" fontSize={14} type={showNew ? "text":'password'} placeholder='Nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <Input name="newPassword" id="newPassword" fontSize={14} type={showNew ? "text":'password'} variant="goldenInput" placeholder={t("new-password")} borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
                             <InputRightElement>
                             <IconButton
-                              aria-label={showNew ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                              aria-label={showNew ? t("hide-password") : t("show-password")}
                               variant="ghost"
                                 boxShadow="none"
                               icon={showNew ? <EyeOff /> : <Eye />}
@@ -237,21 +239,21 @@ const UserProfile = () => {
                                 />
                             </InputRightElement>
                             {error === 1 &&
-                                <Text position="absolute" mt={10} fontSize={14} fontWeight="bold" color="red.700">Les mots de passe ne correspondent pas !</Text>
+                                <Text position="absolute" mt={10} fontSize={14} fontWeight="bold" color="red.700">{t("passwords-are-not-equals")}</Text>
                                 }
-                            {error === 4 && <Text position="absolute" mt={10} fontSize={14} fontWeight="bold" color="red.700" >Ce mot de passe n&apos;est pas autorisé
+                            {error === 4 && <Text position="absolute" mt={10} fontSize={14} fontWeight="bold" color="red.700" >{t("unauthorized-password")}
                                     <Tooltip label={arrayOfErrors.map((error, index) => (<Text key={index} fontSize={12}>{error}</Text>))} >
                                         <IconButton icon={<InfoIcon height={22}/>} aria-label="seeMore" h={4} variant="none" bgColor="transparent" boxShadow="none" />
                                     </Tooltip> 
                                     </Text>
                                 }
                         </InputGroup>
-                        <FormLabel mt={6} >Confirmer le mot de passe</FormLabel>
+                        <FormLabel mt={6} >{t("confirm-password")}</FormLabel>
                         <InputGroup size='md'  zIndex={0}>
-                            <Input name="passwordConfirmation" zIndex={0} fontSize={14} id="passwordConfirmation"  type={showConfirm ? "text":'password'} placeholder='Confirmer le nouveau mot de passe' borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
+                            <Input name="passwordConfirmation" zIndex={0} fontSize={14} id="passwordConfirmation" variant="goldenInput" type={showConfirm ? "text":'password'} placeholder={t("confirm-new-password")} borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
                             <InputRightElement>
                             <IconButton
-                              aria-label={showConfirm ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                              aria-label={showConfirm ? t("hide-password") : t("show-password")}
                               variant="ghost"
                                 boxShadow="none"
                               icon={showConfirm ? <EyeOff /> : <Eye />}
@@ -261,7 +263,7 @@ const UserProfile = () => {
                         </InputGroup>
                         <Flex w="100%" justifyContent="flex-end">
                          <Button variant="greenButton" mt={6} type="submit">
-                                Modifier
+                                {t("modify")}
                             </Button>
                             </Flex>
                     </FormControl>
@@ -272,7 +274,7 @@ const UserProfile = () => {
             <Center>
             <Box mx="24px" mt="8px" mb={20} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
               <Center p={2}>
-                <Button variant="deleteButton" leftIcon={<Trash2 />}>Supprimer mon compte</Button>
+                <Button variant="deleteButton" leftIcon={<Trash2 />}>{t("delete-account")}</Button>
               </Center>
             </Box>
         </Center>

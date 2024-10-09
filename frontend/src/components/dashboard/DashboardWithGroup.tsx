@@ -1,36 +1,50 @@
 import { useProfileQuery } from "@/graphql/generated/schema";
 import { Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import GroupList from "../group/GroupList";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
+import SearchBar from "../SearchBar";
+import { group } from "console";
 
 export default function DashboardWhithGroup() {
+  const { t } = useTranslation();
+
   // Fetches the current user's profile and groups
   const { data: currentUser } = useProfileQuery({
     errorPolicy: "ignore",
   });
+  const [searchGroup, setSearchGroup] = useState("");
 
-  const listOfGroups = {
-    groups: currentUser?.profile.groups,
-    memberOf: currentUser?.profile.memberGroups,
-  };
-  const numberOfGroups =
-    (listOfGroups.groups?.length ?? 0) + (listOfGroups.memberOf?.length ?? 0);
-
+  const listOfGroups = [
+    ...(currentUser?.profile.groups?.map((group) => ({
+      ...group,
+      isOwner: true,
+    })) ?? []),
+    ...(currentUser?.profile.memberGroups?.map((group) => ({
+      ...group,
+      isOwner: false,
+    })) ?? []),
+  ];
+  const groupCount = listOfGroups.length;
+  const filteredGroups = listOfGroups.filter((group) =>
+    group.name?.toLowerCase().includes(searchGroup.toLowerCase())
+  );
   return (
     <>
       <Text fontSize="lg" mb={6}>
-        Vous êtes membre de {numberOfGroups}{" "}
-        {numberOfGroups > 1 ? "groupes" : "groupe"}
+        {groupCount > 1
+          ? t("my-groups-list", { groupCount })
+          : t("my-group", { groupCount })}{" "}
       </Text>
-      {listOfGroups.groups?.map((group) => (
+      <SearchBar
+        getter={searchGroup}
+        setter={setSearchGroup}
+        placeholder="placeholder.search-group"
+      />
+      {filteredGroups?.map((group) => (
         <Link href={`/group/${group.id}`} key={group.id}>
-          <GroupList name={group.name} isOwner={true} />
-        </Link>
-      ))}
-      {listOfGroups.memberOf?.map((group) => (
-        <Link href={`/group/${group.id}`} key={group.id}>
-          <GroupList name={group.name} isOwner={false} />
+          <GroupList name={group.name} isOwner={group.isOwner} />
         </Link>
       ))}
     </>

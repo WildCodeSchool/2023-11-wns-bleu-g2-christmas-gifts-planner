@@ -1,6 +1,8 @@
 import { Box, Flex, Center, UnorderedList, ListItem } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 export default function Footer() {
+  const { t } = useTranslation()
   return (
     <Box
       as="footer"
@@ -25,7 +27,7 @@ export default function Footer() {
                 cursor: "pointer",
               }}
             >
-              Mentions légales
+              {t("legal-notices")}
             </ListItem>
             <ListItem
               listStyleType="none"

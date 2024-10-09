@@ -1,5 +1,5 @@
-subscription NewMessage {
-  newMessage {
+subscription NewMessage($channelId: Int!) {
+  newMessage(channelId: $channelId) {
     id
     content
     sent_at
@@ -7,6 +7,9 @@ subscription NewMessage {
       id
       firstName
       lastName
+    }
+    channelId {
+      id
     }
   }
 }

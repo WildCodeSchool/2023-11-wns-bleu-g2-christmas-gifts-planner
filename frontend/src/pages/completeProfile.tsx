@@ -1,5 +1,5 @@
 import { useCompleteProfileMutation } from "@/graphql/generated/schema";
-import { ApolloError } from "@apollo/client";
+import { ApolloError, useApolloClient } from "@apollo/client";
 import {
   Box,
   Button,
@@ -14,19 +14,42 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  useToast,
 } from "@chakra-ui/react";
 import { Check, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useFormValidation } from "@/hooks/useFormValidation";
+import Error from "@/components/Error";
+import UnauthorizedImage from "../assets/images/Unauthorized.png";
+import Loader from "@/components/Loader";
+import { useTranslation } from "react-i18next";
+import { useErrorContext } from "@/contexts/ErrorContext";
 
 export default function CompleteProfile() {
   //Get the token from the URL query params
   const router = useRouter();
   const token = router.query.token as string;
 
+  const { messages } = useErrorContext();
+  const { t } = useTranslation();
+  const client = useApolloClient();
+
   // Use the useCompleteProfileMutation hook to handle the mutation for completing the profile
-  const [CompleteProfile, { error }] = useCompleteProfileMutation();
+  const [CompleteProfile, { error, loading }] = useCompleteProfileMutation({
+    onCompleted: () => {
+      client.refetchQueries({
+        include: ["Profile"],
+      });
+      toast({
+        title: t("toast.success.validate-profile-title"),
+        description: t("toast.success.validate-profile-description"),
+        status: "success",
+        variant: "success",
+      });
+      router.push("/dashboard");
+    },
+  });
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
@@ -34,13 +57,11 @@ export default function CompleteProfile() {
   const {
     validateLastName,
     validateFirstName,
-    validateEmail,
     validatePassword,
     validateConfirmPassword,
   } = useFormValidation();
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [errors, setErrors] = useState<{
@@ -50,6 +71,7 @@ export default function CompleteProfile() {
     password?: string[];
     passwordConfirmation?: string[];
   }>({});
+  const toast = useToast();
 
   const toggleShowPassword = () => setShowPassword(!showPassword);
   const toggleShowConfirmPassword = () =>
@@ -67,14 +89,6 @@ export default function CompleteProfile() {
     const newErrors = validateFirstName(e.target.value);
     return newErrors.length > 0
       ? setErrors({ ...errors, firstName: newErrors })
-      : setErrors({});
-  };
-
-  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    const newErrors = validateEmail(e.target.value);
-    return newErrors.length > 0
-      ? setErrors({ ...errors, email: newErrors })
       : setErrors({});
   };
 
@@ -111,19 +125,31 @@ export default function CompleteProfile() {
           token: token,
         },
       });
-
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 5000);
     } catch (error) {
       if (error instanceof ApolloError) {
         console.error("GraphQL Error:", error.graphQLErrors);
       } else {
         console.error(error);
       }
+      toast({
+        title: t("toast.error.generic-title"),
+        description: t("toast.error.validate-profile"),
+        status: "error",
+        variant: "error",
+      });
     }
   };
+  if (error?.message === "Invalid or expired token") {
+    return (
+      <Error
+        image={UnauthorizedImage}
+        alt="unauthorized error"
+        message={messages?.unauthorized}
+      ></Error>
+    );
+  }
 
+  if (loading) return <Loader></Loader>;
   if (token)
     return (
       <form onSubmit={handleSubmit}>
@@ -132,14 +158,14 @@ export default function CompleteProfile() {
           gap={3}
           width={{ base: "95%", md: "48rem" }}
           m="auto"
+          marginBlock={4}
         >
           <Card
             paddingBlock={{ base: "0", md: "6" }}
             paddingInline={{ base: "0", md: "32" }}
-            bg={"secondary.lowest"}
           >
             <CardHeader pb={0} fontWeight="bold">
-              Compléter votre profil
+              {t("complete-profile")}
             </CardHeader>
             <CardBody>
               <FormControl
@@ -147,11 +173,11 @@ export default function CompleteProfile() {
                 isInvalid={errors.lastName && errors.lastName.length > 0}
                 mt={3}
               >
-                <FormLabel>Nom</FormLabel>
+                <FormLabel>{t("lastname")}</FormLabel>
                 <Input
                   type="text"
                   name="lastName"
-                  placeholder="Votre nom"
+                  placeholder={t("placeholder.lastname")}
                   variant="goldenInput"
                   value={lastName}
                   onChange={(e) => handleChangeLastName(e)}
@@ -168,11 +194,11 @@ export default function CompleteProfile() {
                 isInvalid={errors.firstName && errors.firstName.length > 0}
                 mt={3}
               >
-                <FormLabel>Prénom</FormLabel>
+                <FormLabel>{t("firstname")}</FormLabel>
                 <Input
                   type="text"
                   name="firstName"
-                  placeholder="Votre prénom"
+                  placeholder={t("placeholder.firstname")}
                   variant="goldenInput"
                   value={firstName}
                   onChange={(e) => handleChangeFirstName(e)}
@@ -184,36 +210,14 @@ export default function CompleteProfile() {
                     </FormErrorMessage>
                   ))}
               </FormControl>
-              <FormControl
-                isRequired
-                isInvalid={errors.email && errors.email.length > 0}
-                mt={3}
-              >
-                <FormLabel>E-mail</FormLabel>
-                <Input
-                  type="email"
-                  name="email"
-                  placeholder="example@mail.com"
-                  variant="goldenInput"
-                  value={email}
-                  onChange={(e) => handleChangeEmail(e)}
-                />
-                {errors.email &&
-                  errors.email.map((error, index) => (
-                    <FormErrorMessage key={index} color="tertiary.medium">
-                      {error}
-                    </FormErrorMessage>
-                  ))}
-              </FormControl>
             </CardBody>
           </Card>
           <Card
             paddingBlock={{ base: "0", md: "6" }}
             paddingInline={{ base: "0", md: "32" }}
-            bg={"secondary.lowest"}
           >
             <CardHeader pb={0} fontWeight="bold">
-              Configurer votre mot de passe
+              {t("password-configuration")}
             </CardHeader>
             <CardBody>
               <FormControl
@@ -221,12 +225,12 @@ export default function CompleteProfile() {
                 isInvalid={errors.password && errors.password.length > 0}
                 mt={3}
               >
-                <FormLabel>Ajouter un mot de passe</FormLabel>
+                <FormLabel>{t("password-new")}</FormLabel>
                 <InputGroup>
                   <Input
                     type={showPassword ? "text" : "password"}
                     name="password"
-                    placeholder="Votre mot de passe"
+                    placeholder={t("placeholder.password")}
                     variant="goldenInput"
                     value={password}
                     onChange={(e) => handleChangePassword(e)}
@@ -239,9 +243,7 @@ export default function CompleteProfile() {
                 </InputGroup>
                 {!errors.password ? (
                   <FormHelperText>
-                    Le mot de passe doit contenir au moins 8 caractères, une
-                    minuscule, une majuscule, un chiffre et un caractère
-                    spécial.
+                    {t("validate-data.helper-password")}
                   </FormHelperText>
                 ) : (
                   errors.password.map((error, index) => (
@@ -259,12 +261,12 @@ export default function CompleteProfile() {
                 }
                 mt={3}
               >
-                <FormLabel>Confirmer le mot de passe</FormLabel>
+                <FormLabel>{t("password-confirm")}</FormLabel>
                 <InputGroup>
                   <Input
                     type={showConfirmPassword ? "text" : "password"}
                     name="passwordConfirmation"
-                    placeholder="Confirmer votre mot de passe"
+                    placeholder={t("placeholder.password")}
                     variant="goldenInput"
                     value={passwordConfirmation}
                     onChange={(e) => handleChangePasswordConfirmation(e)}
@@ -288,9 +290,9 @@ export default function CompleteProfile() {
               </FormControl>
             </CardBody>
           </Card>
-          <Flex justify="flex-end" pr={{ base: "0", md: "10" }}>
-            <Button type="submit" variant="redButton" leftIcon={<Check />}>
-              Valider
+          <Flex justify="center">
+            <Button type="submit" variant="greenButton" leftIcon={<Check />}>
+              {t("button.validate")}
             </Button>
           </Flex>
         </Flex>

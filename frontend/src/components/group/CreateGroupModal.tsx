@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import FormCreateGroup from "@/components/group/FormCreateGroup";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 type CreateGroupModalProps = {
   refetch: () => void;
@@ -17,11 +18,12 @@ type CreateGroupModalProps = {
 export default function CreateGroupModal({ refetch }: CreateGroupModalProps) {
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { t } = useTranslation();
   const initialRef = React.useRef(null);
   return (
     <>
       <Button onClick={onOpen} variant="goldenButton">
-        Créer un groupe
+        {t("create-group")}
       </Button>
 
       <Modal
@@ -32,7 +34,7 @@ export default function CreateGroupModal({ refetch }: CreateGroupModalProps) {
       >
         <ModalOverlay backdropFilter="blur(2px)" />
         <ModalContent
-          bg="secondary.lowest"
+          bg="background.default"
           p={6}
           mb={isMobile ? 0 : "auto"}
           mt="auto"
