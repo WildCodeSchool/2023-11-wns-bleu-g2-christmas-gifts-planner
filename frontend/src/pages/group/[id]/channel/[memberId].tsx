@@ -1,3 +1,4 @@
+import { ErrorContextProvider } from "@/contexts/ErrorContext";
 import {
   MessagesDocument,
   useChannelQuery,
@@ -38,17 +39,7 @@ const Message = () => {
   const { data: currentUser, client } = useProfileQuery({
     errorPolicy: "ignore",
   });
-  // console.log(
-  //   "clinet",
-  //   client.readQuery({
-  //     query: MessagesDocument,
-  //     variables: {
-  //       channelId: parseInt(channelMemberId, 10),
-  //       GroupId: parseInt(GroupId, 10),
-  //     },
-  //   })
-  // );
-  // console.log("clinet", client);
+
   let { data: getRatings } = useLikesQuery({
     variables: {
       channelId: parseInt(channelMemberId as string),
@@ -101,16 +92,6 @@ const Message = () => {
       groupId: parseInt(GroupId, 10),
     },
     onData: async (newMessage: any) => {
-      // console.log(
-      //   "clinet",
-      //   client.readQuery({
-      //     query: MessagesDocument,
-      //     variables: {
-      //       channelId: parseInt(channelMemberId, 10),
-      //       groupId: parseInt(GroupId, 10),
-      //     },
-      //   })
-      // );
       try {
         const getMessages = client.readQuery({
           query: MessagesDocument,
@@ -204,15 +185,9 @@ const Message = () => {
     formJSON.channelId = { id: parseInt(channelMemberId, 10) };
     formJSON.groupId = { id: parseInt(GroupId, 10) };
 
-    // console.log("form json", formJSON);
-    // formJSON.channelId = {
-    //   id: parseInt(channelMemberId, 10),
-    // };
     const res = await CreateDelteLike({
       variables: { data: formJSON },
     });
-    // console.log("res", res);
-    // setMessageInput("");
   };
 
   const sortedMessages = [...oldMessages]; // Create a copy of the array
@@ -223,35 +198,56 @@ const Message = () => {
 
     return dateA - dateB; // Sort by date
   });
+  // in caase that user is not authorized or recive any kind if error in the chat, he will be redirected aoutmaticlly
+  if (messagesErr) {
+    router.push("/dashboard");
+  }
+  console.log("messagesErr", messagesErr);
   return (
     <>
-      {messagesErr ? (
-        <>
-          <h1>Error fetching messages</h1>
-        </>
-      ) : (
-        <></>
-      )}
-      <h1 className="text-center">Top Gifts!</h1>
-      <Accordion allowToggle>
-        {topLikedMessages.map((m, idx) => (
-          <AccordionItem key={idx}>
-            <h2>
-              <AccordionButton>
-                <h1 className="flex gap-2 ">
-                  {m.count}
-                  <Heart />
-                </h1>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}>{m.content}</AccordionPanel>
-          </AccordionItem>
-        ))}
-      </Accordion>
+      <h1 className="text-center font-extrabold">Top Gifts! 🎁</h1>
+      <div className="flex justify-center ">
+        <Accordion
+          allowToggle
+          className="md:w-1/2 bg-primary-lowest text-white "
+        >
+          {topLikedMessages.map((m, idx) => (
+            <AccordionItem key={idx} className="">
+              <h2>
+                <AccordionButton className="text-center">
+                  {idx === 0 ? (
+                    <h1 className="flex gap-2 font-bold">
+                      Top cadeau! 🥇{m.count}
+                      {/* You can include an optional icon or component here */}
+                    </h1>
+                  ) : idx === 1 ? (
+                    <h1 className="flex gap-2 font-bold">
+                      Deuxième cadeau 🥈{m.count}
+                    </h1>
+                  ) : idx === 2 ? (
+                    <h1 className="flex gap-2 font-bold">
+                      Troisième cadeau 🥉 {m.count}
+                    </h1>
+                  ) : (
+                    <h1 className="flex gap-2 font-bold">
+                      Cadeau non défini 🎁
+                    </h1> // Fallback for any other value
+                  )}
+                  {/* <h1 className="flex gap-2 ">
+                    nombre de likes-{m.count}
+                    <Heart />
+                  </h1> */}
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel pb={4}>Message - {m.content}</AccordionPanel>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
       <div className=" flex justify-center ">
         <div className="md:w-1/2">
-          <div className=" p-3 h-[75vh] overflow-y-auto bg-white" id="chatBox">
+          <div className=" p-3 h-3/6 overflow-y-auto bg-white" id="chatBox">
             {sortedMessages.map((message: any) => (
               <div className="mt-6  ">
                 {message.writtenBy.firstName ==

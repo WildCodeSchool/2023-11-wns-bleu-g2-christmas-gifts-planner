@@ -35,8 +35,6 @@ export default class MessageResolver extends ChannelResolver {
       throw new GraphQLError("You need to be logged in!");
     }
 
-    // const userInChannel = await User.findOneByOrFail({ email: data.email })
-
     const currentGroup = await Group.findOne({
       where: { id: groupId },
     });
@@ -47,11 +45,20 @@ export default class MessageResolver extends ChannelResolver {
     const isMember = currentGroup?.members.some(
       (member) => member.id === ctx.currentUser?.id
     );
-    if (!isMember || ctx?.currentUser.id === currentChannel?.receiver.id) {
+    console.log("isMember", currentGroup?.members);
+    const isOwner = currentGroup?.owner.id === ctx.currentUser?.id;
+    console.log("isOwner", isOwner);
+
+    console.log("memebrs test", currentGroup);
+    if (
+      (!isMember && !isOwner) || // Check if the user is neither a member nor the owner
+      ctx?.currentUser.id === currentChannel?.receiver.id // Check if the user is the receiver
+    ) {
       throw new GraphQLError(
-        "Oh oh, looks like you dont belong to this group!"
+        "Oh oh, looks like you don't belong to this channel!"
       );
     }
+    console.log("reciverID", currentChannel?.receiver.id);
     // console.log("currentGroup", currentG?.members);
     console.log("currentChannel-reciver", currentChannel?.receiver.id);
     console.log("currentChannel-mmebers", currentChannel?.group.members);
