@@ -15,4 +15,7 @@ export class NewMessageInputType {
 
   @Field(() => ObjectId)
   channelId: ObjectId;
+
+  @Field(() => ObjectId)
+  groupId: ObjectId;
 }

@@ -123,6 +123,7 @@ export default async function main() {
   const jonasChannel = new Channel();
   Object.assign(jonasChannel, {
     name: "Jonas's channel",
+    receiver: 2,
     group: firstAdminGroup,
   });
   await jonasChannel.save();
@@ -130,6 +131,7 @@ export default async function main() {
   const mateoChannel = new Channel();
   Object.assign(mateoChannel, {
     name: "Mateo's channel",
+    receiver: 3,
     group: firstAdminGroup,
   });
   await mateoChannel.save();
@@ -137,6 +139,7 @@ export default async function main() {
   const enolaChannel = new Channel();
   Object.assign(enolaChannel, {
     name: "Enola's channel",
+    receiver: 4,
     group: firstAdminGroup,
   });
   await enolaChannel.save();
@@ -144,6 +147,7 @@ export default async function main() {
   const adminChannel = new Channel();
   Object.assign(adminChannel, {
     name: "Admin's channel",
+    receiver: 1,
     group: firstJonasGroup,
   });
   await adminChannel.save();
@@ -151,6 +155,7 @@ export default async function main() {
   const mateoChannel2 = new Channel();
   Object.assign(mateoChannel2, {
     name: "Mateo's channel",
+    receiver: 3,
     group: firstJonasGroup,
   });
   await mateoChannel2.save();
@@ -160,6 +165,7 @@ export default async function main() {
     content: "Hello Mateo, i tought about an amazing gift for pierre! a fish!",
     sent_at: "2024-07-03 18:10:31",
     channelId: 1,
+    groupId: 1,
     writtenBy: {
       id: 2,
     },
@@ -171,6 +177,7 @@ export default async function main() {
     content: "lol, Jonas!",
     sent_at: "2024-07-03 18:11:02",
     channelId: 1,
+    groupId: 1,
     writtenBy: {
       id: 3,
     },
@@ -181,7 +188,8 @@ export default async function main() {
   Object.assign(message03, {
     content: "message03",
     sent_at: "2024-07-03 18:11:02",
-    channel: 1,
+    channelId: 1,
+    groupId: 1,
     writtenBy: {
       id: 3,
     },

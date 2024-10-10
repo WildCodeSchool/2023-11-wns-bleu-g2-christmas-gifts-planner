@@ -1,5 +1,5 @@
-subscription NewMessage($channelId: Int!) {
-  newMessage(channelId: $channelId) {
+subscription NewMessage($groupId: Int!, $channelId: Int!) {
+  newMessage(groupId: $groupId, channelId: $channelId) {
     id
     content
     sent_at
