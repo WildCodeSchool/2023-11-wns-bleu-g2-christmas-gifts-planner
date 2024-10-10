@@ -42,26 +42,6 @@ export default function LegalModal() {
         motionPreset={isMobile ? "slideInBottom" : "scale"}
       >
         <ModalOverlay backdropFilter="blur(2px)" />
-        {/* <ModalContent
-          bg="background.default"
-          p={10}
-          mb={isMobile ? 0 : "auto"}
-          mt="auto"
-        >
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>
-              Gifty est une application développée par des élèves de la Wild
-              Code School, hébergée sur Vercel. Les interfaces sont créées avec
-              Chakra UI, et les illustrations sont fournies par Storyset.
-            </Text>
-            <Text mt={4}>
-              Tous les éléments du site, y compris les images, textes et code,
-              sont la propriété des développeurs et ne peuvent être réutilisés
-              sans leur autorisation.
-            </Text>
-          </ModalBody>
-        </ModalContent> */}
         <ModalContent
           bg="background.default"
           p={6}

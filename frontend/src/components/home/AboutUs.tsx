@@ -9,7 +9,7 @@ export default function AboutUs() {
       description:
         "Passionné par le développement Frontend, Alexandre a conçu l'interface utilisateur et implémenté les fils de discussions.",
       color: "secondary.medium",
-      link: "",
+      link: "https://github.com/AlexandreRichert",
     },
     {
       name: "Alon Ben David",
@@ -17,7 +17,7 @@ export default function AboutUs() {
       description:
         "Alon a implémenté le système de messagerie instantanée, permettant une communication fluide entre les membres du groupe.",
       color: "tertiary.low",
-      link: "",
+      link: "https://github.com/alon-bendavid",
     },
     {
       name: "Robin Kolasinski",
@@ -25,7 +25,7 @@ export default function AboutUs() {
       description:
         "Robin a développé l'inscription, la connexion, et la gestion des profils utilisateurs, garantissant la sécurité des comptes.",
       color: "primary.lowest",
-      link: "",
+      link: "https://github.com/Fangornito",
     },
     {
       name: "Jasmine Grozinger",
@@ -33,7 +33,7 @@ export default function AboutUs() {
       description:
         "Jasmine a conçu la fonctionnalité de création de groupes en veillant à ce que Gifty soit convivial et agréable à utiliser.",
       color: "tertiary.lower",
-      link: "",
+      link: "https://github.com/Jasminegrz",
     },
   ];
 
