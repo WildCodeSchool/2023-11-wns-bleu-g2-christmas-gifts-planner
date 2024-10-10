@@ -26,7 +26,7 @@ export default function App({ Component, pageProps }: MyAppProps) {
             position: "bottom-right",
             variant: "top-accent",
             isClosable: true,
-            duration: 9000,
+            duration: 5000,
             containerStyle: {
               maxWidth: "24rem",
             },
