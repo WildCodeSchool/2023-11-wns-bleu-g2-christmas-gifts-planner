@@ -18,10 +18,10 @@ export default function AboutCard({
   return (
     <Card
       m={"auto"}
-      maxWidth={{ base: "90%", md: "28rem" }}
-      mb={6}
+      width={"100%"}
+      maxWidth={"26rem"}
       p={8}
-      minH={"14rem"}
+      minH={"16rem"}
       flexDirection={"row"}
       gap={6}
     >

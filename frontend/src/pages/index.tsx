@@ -1,18 +1,10 @@
-import React from "react";
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  Heading,
-  Image,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Center, Flex, Heading, Image } from "@chakra-ui/react";
 import { Gift, TreePine, UsersRound } from "lucide-react";
 
-import { useTranslation } from "react-i18next";
 import AboutCard from "@/components/AboutCard";
+import AboutUs from "@/components/AboutUs";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 export default function Home() {
   const { t } = useTranslation();
 
@@ -35,7 +27,7 @@ export default function Home() {
   ];
   return (
     <>
-      <Box flexDirection="column">
+      <Flex flexDirection="column" gap={6}>
         <Center>
           <Heading
             textAlign={"center"}
@@ -47,24 +39,32 @@ export default function Home() {
         </Center>
         <Image
           m={"auto"}
-          marginBlock={8}
+          marginBlock={4}
           src="/Gifty-logo.svg"
           alt="Gifty"
           maxWidth={{ base: "40%", md: "16rem" }}
         />
 
-        {homepageCardData.map((x) => (
-          <AboutCard
-            key={x.step}
-            icon={x.icon}
-            color="tertiary.medium"
-            step={x.step}
-            description={x.description}
-          />
-        ))}
-
+        <Flex
+          flexDirection={{ base: "column", lg: "row" }}
+          justifyContent="center"
+          alignItems="center"
+          gap={4}
+          margin={"auto"}
+          maxW={"95%"}
+        >
+          {homepageCardData.map((x) => (
+            <AboutCard
+              key={x.step}
+              icon={x.icon}
+              color="tertiary.medium"
+              step={x.step}
+              description={x.description}
+            />
+          ))}
+        </Flex>
         <Center>
-          <Flex flexDirection="column" gap={5}>
+          <Flex flexDirection="column" gap={4}>
             <Button variant={"whiteGoldenButton"}>
               <Link href="/signup">{t("no-account")}</Link>
             </Button>
@@ -73,7 +73,8 @@ export default function Home() {
             </Button>
           </Flex>
         </Center>
-      </Box>
+        <AboutUs />
+      </Flex>
     </>
   );
 }
