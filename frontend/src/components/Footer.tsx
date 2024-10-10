@@ -1,45 +1,43 @@
-import { Box, Flex, Center, UnorderedList, ListItem } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
+import { Box, ListItem, UnorderedList } from "@chakra-ui/react";
+import LegalModal from "./LegalModal";
 
 export default function Footer() {
-  const { t } = useTranslation()
   return (
     <Box
       as="footer"
       w="100%"
       bottom="0"
-      bg="secondary.lower"
+      bg="primary.medium"
       py={4}
       boxShadow="md"
       mt="1rem"
+      color={"white"}
     >
-      <Flex justifyContent="center">
-        <Center>
-          <UnorderedList display="flex" flexDirection={"column"} spacing={4}>
-            <ListItem
-              listStyleType="none"
-              color="primary.highest"
-              fontWeight="bold"
-              fontSize="xs"
-              _hover={{
-                textDecoration: "none",
-                color: "secondary.medium",
-                cursor: "pointer",
-              }}
-            >
-              {t("legal-notices")}
-            </ListItem>
-            <ListItem
-              listStyleType="none"
-              color="primary.highest"
-              fontWeight="bold"
-              fontSize="xs"
-            >
-              Gifty 2024 Copyright
-            </ListItem>
-          </UnorderedList>
-        </Center>
-      </Flex>
+      <UnorderedList
+        display="flex"
+        flexDirection={{ base: "column", md: "row" }}
+        justifyContent={"space-between"}
+        p={{ base: 0, md: 4 }}
+        alignItems="center"
+      >
+        <ListItem
+          listStyleType="none"
+          color="primary.highest"
+          fontWeight="bold"
+          fontSize="sm"
+        >
+          © 2024 Gifty. Tous droits réservés.
+        </ListItem>
+        <ListItem
+          listStyleType="none"
+          color="primary.highest"
+          fontWeight="bold"
+          fontSize="sm"
+        >
+          Made with ❤️ by the Gifty team.
+        </ListItem>
+        <LegalModal />
+      </UnorderedList>
     </Box>
   );
 }
