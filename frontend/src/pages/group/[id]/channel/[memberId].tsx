@@ -146,19 +146,13 @@ const Message = () => {
 
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
-    formJSON.LikedBy = { id: parseInt(currentUser?.profile.id, 10) };
-    formJSON.likedMessageId = { id: parseInt(formJSON.likedMessageId, 10) };
-    formJSON.channelId = { id: parseInt(channelMemberId, 10) };
+    formJSON.LikedBy = Number(currentUser?.profile.id);
+    formJSON.likedMessageId = Number(formJSON.likedMessageId);
+    formJSON.channelId = Number(formJSON.channelId);
 
-    // console.log("form json", formJSON);
-    // formJSON.channelId = {
-    //   id: parseInt(channelMemberId, 10),
-    // };
     const res = await CreateDelteLike({
       variables: { data: formJSON },
     });
-    // console.log("res", res);
-    // setMessageInput("");
   };
 
   const sortedMessages = [...oldMessages]; // Create a copy of the array
@@ -193,7 +187,7 @@ const Message = () => {
         <div className="md:w-1/2">
           <div className=" p-3 h-[75vh] overflow-y-auto bg-white" id="chatBox">
             {sortedMessages.map((message: any) => (
-              <div className="mt-6  ">
+              <div key={message.id} className="mt-6  ">
                 {message.writtenBy.firstName ==
                   currentUser?.profile.firstName &&
                 message.writtenBy.lastName == currentUser?.profile.lastName ? (
