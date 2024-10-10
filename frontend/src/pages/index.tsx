@@ -1,8 +1,8 @@
 import { Button, Center, Flex, Heading, Image } from "@chakra-ui/react";
 import { Gift, TreePine, UsersRound } from "lucide-react";
 
-import AboutCard from "@/components/AboutCard";
-import AboutUs from "@/components/AboutUs";
+import AboutCard from "@/components/home/AboutCard";
+import AboutUs from "@/components/home/AboutUs";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 export default function Home() {
