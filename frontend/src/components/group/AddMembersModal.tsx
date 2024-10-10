@@ -13,19 +13,21 @@ import {
 import React from "react";
 import FormAddMembers from "./FormAddMembers";
 import { AddIcon } from "@chakra-ui/icons";
+import { useTranslation } from "react-i18next";
 
 type AddMembersModalProps = {
   refetch: () => void;
   id: string;
 };
 export default function AddMembersModal({ refetch, id }: AddMembersModalProps) {
+  const { t } = useTranslation();
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   return (
     <>
       <Button onClick={onOpen} variant="goldenButton">
-        Ajouter des membres
+      {t("add-members")}
       </Button>
 
       <Modal

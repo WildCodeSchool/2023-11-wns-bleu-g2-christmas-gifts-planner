@@ -34,7 +34,7 @@ export default function Channels() {
   const router = useRouter();
   const { t } = useTranslation();
   const id = router.query?.id as string;
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
+  const [isMobile] = useMediaQuery("(max-width: 500px)");
   const { data: groupId, refetch } = useGroupByIdQuery({
     variables: { groupId: Number(id) },
   });
@@ -118,7 +118,7 @@ export default function Channels() {
   return (
     <>
       <Box
-        p={isMobile ? "4" : "16"}
+        p={isMobile ? "4" : "32"}
         mx="2"
         bg={"white"}
         height={isMobile ? "690px" : "780px"}
@@ -218,7 +218,7 @@ export default function Channels() {
               transition="transform 0.2s ease"
               _hover={{ transform: "scale(1.05)" }}
               maxW="100%"  
-              minW={isMobile ? "200px" : "380px"}
+              minW={isMobile ? "330px" : "380px"}
               minH="250px"  
               h="full"  
             >
