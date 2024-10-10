@@ -14,5 +14,8 @@ query Messages($channelId: Int, $groupId: Float) {
     likes {
       id
     }
+    groupId {
+      id
+    }
   }
 }

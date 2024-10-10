@@ -48,6 +48,7 @@ export type Group = {
   __typename?: 'Group';
   channels?: Maybe<Array<Channel>>;
   id: Scalars['Int'];
+  likes?: Maybe<Array<Like>>;
   members: Array<User>;
   messages?: Maybe<Array<Message>>;
   name: Scalars['String'];
@@ -57,7 +58,8 @@ export type Group = {
 export type Like = {
   __typename?: 'Like';
   LikedBy?: Maybe<User>;
-  channelId?: Maybe<Message>;
+  channelId?: Maybe<Channel>;
+  groupId?: Maybe<Group>;
   id?: Maybe<Scalars['Int']>;
   likedMessageId?: Maybe<Message>;
 };
@@ -161,12 +163,14 @@ export type NewGroupInputType = {
 export type NewLikeType = {
   LikedBy: ObjectId;
   channelId: ObjectId;
+  groupId: ObjectId;
   likedMessageId: ObjectId;
 };
 
 export type NewMessageInputType = {
   channelId: ObjectId;
   content: Scalars['String'];
+  groupId: ObjectId;
   sent_at: Scalars['String'];
   writtenBy: Author;
 };
@@ -197,6 +201,7 @@ export type Query = {
 
 export type QueryLikesArgs = {
   channelId?: InputMaybe<Scalars['Int']>;
+  groupId?: InputMaybe<Scalars['Int']>;
   likedMessageId?: InputMaybe<Scalars['Int']>;
   userId?: InputMaybe<Scalars['Float']>;
 };
@@ -239,11 +244,13 @@ export type Subscription = {
 
 export type SubscriptionNewLikeArgs = {
   channelId: Scalars['Int'];
+  groupId: Scalars['Int'];
 };
 
 
 export type SubscriptionNewMessageArgs = {
   channelId: Scalars['Int'];
+  groupId: Scalars['Int'];
 };
 
 export type UpdateGroupNameInputType = {
@@ -326,7 +333,7 @@ export type CreateDelteLikeMutationVariables = Exact<{
 }>;
 
 
-export type CreateDelteLikeMutation = { __typename?: 'Mutation', createDelteLike: { __typename?: 'Like', id?: number | null, LikedBy?: { __typename?: 'User', id: string } | null, likedMessageId?: { __typename?: 'Message', id: number } | null, channelId?: { __typename?: 'Message', id: number } | null } };
+export type CreateDelteLikeMutation = { __typename?: 'Mutation', createDelteLike: { __typename?: 'Like', id?: number | null, LikedBy?: { __typename?: 'User', id: string } | null, likedMessageId?: { __typename?: 'Message', id: number } | null, channelId?: { __typename?: 'Channel', id: number } | null, groupId?: { __typename?: 'Group', id: number } | null } };
 
 export type LikesQueryVariables = Exact<{
   channelId?: InputMaybe<Scalars['Int']>;
@@ -336,11 +343,12 @@ export type LikesQueryVariables = Exact<{
 export type LikesQuery = { __typename?: 'Query', Likes: Array<{ __typename?: 'Like', id?: number | null, likedMessageId?: { __typename?: 'Message', id: number, content: string } | null, LikedBy?: { __typename?: 'User', id: string } | null }> };
 
 export type NewLikeSubscriptionVariables = Exact<{
+  groupId: Scalars['Int'];
   channelId: Scalars['Int'];
 }>;
 
 
-export type NewLikeSubscription = { __typename?: 'Subscription', newLike: { __typename?: 'Like', id?: number | null, LikedBy?: { __typename?: 'User', id: string, firstName?: string | null } | null, likedMessageId?: { __typename?: 'Message', id: number } | null } };
+export type NewLikeSubscription = { __typename?: 'Subscription', newLike: { __typename?: 'Like', id?: number | null, LikedBy?: { __typename?: 'User', id: string, firstName?: string | null } | null, likedMessageId?: { __typename?: 'Message', id: number } | null, channelId?: { __typename?: 'Channel', id: number } | null, groupId?: { __typename?: 'Group', id: number } | null } };
 
 export type AddMemberToGroupMutationVariables = Exact<{
   data: AddMembersInputType;
@@ -363,9 +371,10 @@ export type MessagesQueryVariables = Exact<{
 }>;
 
 
-export type MessagesQuery = { __typename?: 'Query', messages: Array<{ __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null }, channelId: { __typename?: 'Channel', id: number }, likes?: Array<{ __typename?: 'Like', id?: number | null }> | null }> };
+export type MessagesQuery = { __typename?: 'Query', messages: Array<{ __typename?: 'Message', id: number, content: string, sent_at: string, writtenBy: { __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null }, channelId: { __typename?: 'Channel', id: number }, likes?: Array<{ __typename?: 'Like', id?: number | null }> | null, groupId: { __typename?: 'User', id: string } }> };
 
 export type NewMessageSubscriptionVariables = Exact<{
+  groupId: Scalars['Int'];
   channelId: Scalars['Int'];
 }>;
 
@@ -712,6 +721,9 @@ export const CreateDelteLikeDocument = gql`
     channelId {
       id
     }
+    groupId {
+      id
+    }
   }
 }
     `;
@@ -784,14 +796,20 @@ export type LikesQueryHookResult = ReturnType<typeof useLikesQuery>;
 export type LikesLazyQueryHookResult = ReturnType<typeof useLikesLazyQuery>;
 export type LikesQueryResult = Apollo.QueryResult<LikesQuery, LikesQueryVariables>;
 export const NewLikeDocument = gql`
-    subscription NewLike($channelId: Int!) {
-  newLike(channelId: $channelId) {
+    subscription NewLike($groupId: Int!, $channelId: Int!) {
+  newLike(groupId: $groupId, channelId: $channelId) {
     id
     LikedBy {
       id
       firstName
     }
     likedMessageId {
+      id
+    }
+    channelId {
+      id
+    }
+    groupId {
       id
     }
   }
@@ -810,6 +828,7 @@ export const NewLikeDocument = gql`
  * @example
  * const { data, loading, error } = useNewLikeSubscription({
  *   variables: {
+ *      groupId: // value for 'groupId'
  *      channelId: // value for 'channelId'
  *   },
  * });
@@ -924,6 +943,9 @@ export const MessagesDocument = gql`
     likes {
       id
     }
+    groupId {
+      id
+    }
   }
 }
     `;
@@ -957,8 +979,8 @@ export type MessagesQueryHookResult = ReturnType<typeof useMessagesQuery>;
 export type MessagesLazyQueryHookResult = ReturnType<typeof useMessagesLazyQuery>;
 export type MessagesQueryResult = Apollo.QueryResult<MessagesQuery, MessagesQueryVariables>;
 export const NewMessageDocument = gql`
-    subscription NewMessage($channelId: Int!) {
-  newMessage(channelId: $channelId) {
+    subscription NewMessage($groupId: Int!, $channelId: Int!) {
+  newMessage(groupId: $groupId, channelId: $channelId) {
     id
     content
     sent_at
@@ -986,6 +1008,7 @@ export const NewMessageDocument = gql`
  * @example
  * const { data, loading, error } = useNewMessageSubscription({
  *   variables: {
+ *      groupId: // value for 'groupId'
  *      channelId: // value for 'channelId'
  *   },
  * });

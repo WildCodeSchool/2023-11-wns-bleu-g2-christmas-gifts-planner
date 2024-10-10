@@ -30,17 +30,30 @@ const Message = () => {
 
   const { data: getMembers } = useChannelQuery({
     variables: {
-      channelId: parseInt(channelMemberId as string),
-      groupId: parseInt(GroupId as string),
+      channelId: parseInt(channelMemberId),
+      groupId: parseInt(GroupId),
     },
   });
-  console.log("memebers", getMembers);
+  // console.log("memebers", getMembers);
   const { data: currentUser, client } = useProfileQuery({
     errorPolicy: "ignore",
   });
-
+  // console.log(
+  //   "clinet",
+  //   client.readQuery({
+  //     query: MessagesDocument,
+  //     variables: {
+  //       channelId: parseInt(channelMemberId, 10),
+  //       GroupId: parseInt(GroupId, 10),
+  //     },
+  //   })
+  // );
+  // console.log("clinet", client);
   let { data: getRatings } = useLikesQuery({
-    variables: { channelId: parseInt(channelMemberId as string) },
+    variables: {
+      channelId: parseInt(channelMemberId as string),
+      // groupId: parseInt(GroupId as string),
+    },
   });
 
   function getTopLikedMessages(likesArray: any[]): any[] {
@@ -85,27 +98,39 @@ const Message = () => {
   useNewMessageSubscription({
     variables: {
       channelId: parseInt(channelMemberId, 10),
+      groupId: parseInt(GroupId, 10),
     },
     onData: async (newMessage: any) => {
+      // console.log(
+      //   "clinet",
+      //   client.readQuery({
+      //     query: MessagesDocument,
+      //     variables: {
+      //       channelId: parseInt(channelMemberId, 10),
+      //       groupId: parseInt(GroupId, 10),
+      //     },
+      //   })
+      // );
       try {
         const getMessages = client.readQuery({
           query: MessagesDocument,
           variables: {
             channelId: parseInt(channelMemberId, 10),
+            groupId: parseInt(GroupId, 10),
           },
         });
         const oldMessages = getMessages?.messages || [];
-
         const newMsgObj = newMessage.data.data.newMessage;
+        console.log("oldMsgObj", oldMessages);
 
         client.writeQuery({
           query: MessagesDocument,
           data: { messages: [...oldMessages, newMsgObj] },
           variables: {
             channelId: parseInt(channelMemberId, 10),
+            groupId: parseInt(GroupId, 10),
           },
         });
-
         const objDiv = document.getElementById("chatBox");
         if (objDiv) {
           objDiv.scrollTop = objDiv.scrollHeight;
@@ -118,18 +143,26 @@ const Message = () => {
   useNewLikeSubscription({
     variables: {
       channelId: parseInt(channelMemberId, 10),
+      groupId: parseInt(GroupId, 10),
     },
 
     onData: async (newLike: any) => {
       try {
+        const getMessages = client.readQuery({
+          query: MessagesDocument,
+          variables: {
+            channelId: parseInt(channelMemberId, 10),
+            groupId: parseInt(GroupId, 10),
+          },
+        });
         const oldLikes = getMessages?.messages || [];
-
         const newLikeObj = newLike.data.data;
         client.writeQuery({
           query: MessagesDocument,
           data: { messages: [...oldLikes, newLikeObj] },
           variables: {
             channelId: parseInt(channelMemberId, 10),
+            groupId: parseInt(GroupId, 10),
           },
         });
       } catch (error) {
@@ -153,6 +186,9 @@ const Message = () => {
     formJSON.channelId = {
       id: parseInt(channelMemberId, 10),
     };
+    formJSON.groupId = {
+      id: parseInt(GroupId, 10),
+    };
     const res = await createMessage({ variables: { data: formJSON } });
 
     setMessageInput("");
@@ -166,6 +202,7 @@ const Message = () => {
     formJSON.LikedBy = { id: parseInt(currentUser?.profile.id as string, 10) };
     formJSON.likedMessageId = { id: parseInt(formJSON.likedMessageId, 10) };
     formJSON.channelId = { id: parseInt(channelMemberId, 10) };
+    formJSON.groupId = { id: parseInt(GroupId, 10) };
 
     // console.log("form json", formJSON);
     // formJSON.channelId = {

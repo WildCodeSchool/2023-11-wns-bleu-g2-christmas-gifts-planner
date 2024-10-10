@@ -104,7 +104,8 @@ export default class MessageResolver extends ChannelResolver {
   })
   newMessage(
     @Root() newMessagePayload: Message,
-    @Arg("channelId", () => Int) channelId: number
+    @Arg("channelId", () => Int) channelId: number,
+    @Arg("groupId", () => Int) groupId: number
   ): Message {
     return newMessagePayload;
   }

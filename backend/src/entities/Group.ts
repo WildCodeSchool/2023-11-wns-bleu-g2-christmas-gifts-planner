@@ -13,6 +13,7 @@ import {
 import Channel from "./Channel";
 import User from "./User";
 import Message from "./Message";
+import Like from "./Like";
 
 /**
  * The Group entity represents a group of users.
@@ -65,4 +66,8 @@ export default class Group extends BaseEntity {
   @Field(() => [Message], { nullable: true })
   @OneToMany(() => Message, (message) => message.groupId)
   messages: Message[];
+
+  @Field(() => [Like], { nullable: true })
+  @OneToMany(() => Like, (like) => like.id)
+  likes: Like[];
 }
