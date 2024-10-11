@@ -30,6 +30,13 @@
   "email-adress-invalid": "Cette adresse mail est invalide !",
   "email-already-added": "Cet email est déjà ajouté.",
   "email-already-existing": "Cette adresse mail existe déjà",
+  "error-messages": {
+    "not-found": "Oups, la page demandée n'a pas été trouvée",
+    "not-exist": "Cette page n'existe pas",
+    "unauthorized": "Vous n'êtes pas autorisé a consulter la page demandée",
+    "result": "Oups, il semble qu'il n'y ait pas de résultats",
+    "generic": "Une erreur s'est produite. Veuillez réessayer plus tard"
+  },
   "firstname": "Prénom",
   "forgot-password": "Mot de passe oublié ?",
   "group-name": "Nom du groupe",
@@ -44,7 +51,8 @@
   "modify-old-password-is-different": "Le mot de passe n'est pas le même !",
   "modify-password": "Modifier le mot de passe",
   "modify-profile": "Modifier le profil",
-  "my-groups-list": "Vous êtes membre de",
+  "my-group": "Vous êtes membre de {{groupCount}} groupe",
+  "my-groups-list": "Vous êtes membre de {{groupCount}} groupes",
   "nav-my-groups": "Mes groupes",
   "nav-my-profile": "Mon profil",
   "new-password": "Nouveau mot de passe",
@@ -68,7 +76,8 @@
   "placeholder": {
     "firstname": "Votre prénom",
     "lastname": "Votre nom",
-    "password": "Votre mot de passe"
+    "password": "Votre mot de passe",
+    "search-group": "Rechercher un groupe"
   },
   "present-ideas": "Idées cadeaux pour",
   "show-password": "Afficher le mot de passe",
@@ -87,12 +96,18 @@
   "success-signed-up": "Vous êtes bien enregistré.e",
   "toast": {
     "error": {
+      "add-member": "Une erreur est survenue lors de l'ajout des membres au groupe",
+      "add-member-exist": "L'utilisateur avec l'email {{email}} est déjà membre du groupe",
+      "add-member-provided": "Veuillez renseigner au moins un membre",
+      "add-member-title": "Erreur d'ajout de membre",
       "create-group": "Une erreur est survenue lors de la création du groupe",
       "generic-title": "Erreur",
       "generic-description": "Une erreur est survenue",
       "validate-profile": "Une erreur est survenue lors de la validation du profil"
     },
     "success": {
+      "add-member-description": "Les membres ont bien été ajoutés avec succès.",
+      "add-member-title": "Membres ajoutés",
       "delete-group-description": "Votre groupe {{groupName}} a bien été supprimé.",
       "delete-group-title": "Groupe supprimé",
       "group-created-description": "Votre groupe {{groupName}} a été créé avec succès.",
@@ -104,6 +119,7 @@
   "unauthorized-password": "Ce mot de passe n'est pas autorisé",
   "validate-data": {
     "email-already-used": "Cet e-mail est déjà ajouté.",
+    "email-list": "Ajoutez l'email dans la liste",
     "email-type": "L'adresse e-mail doit être au format 'nom@domaine.com'.",
     "firstname-length": "Le prénom doit contenir au moins 2 caractères.",
     "firstname-type": "Le prénom ne doit contenir que des lettres.",

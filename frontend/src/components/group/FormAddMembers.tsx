@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { Plus, Trash2 } from "lucide-react";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type FormAddMembersProps = {
   onClose: () => void;
@@ -30,11 +31,12 @@ export default function FormAddMembers({
 }: FormAddMembersProps) {
   const [addMembers] = useAddMemberToGroupMutation();
   const [memberEmail, setMemberEmail] = React.useState("");
-  const [members, setMembers] = useState<{ email: string; color: string }[]>(
+  const [members, setMembers] = useState<{ email: string; color?: string }[]>(
     []
   );
   // These functions are used to validate the user input in the form.
   const { validateEmail } = useFormValidation();
+  const { t } = useTranslation();
   const [errors, setErrors] = useState<{
     email?: string[];
     generic?: string[];
@@ -107,6 +109,34 @@ export default function FormAddMembers({
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const formJson: any = Object.fromEntries(formData.entries());
+    if (memberEmail.trim() !== "" && members.length === 0) {
+      const emailErrors = validateEmail(
+        memberEmail,
+        members.map((member) => member.email)
+      );
+      if (emailErrors.length === 0) {
+        const newMemberEmail = { email: memberEmail };
+        formJson.members = [newMemberEmail];
+        setMemberEmail("");
+      }
+    } else {
+      // Otherwise, if the member email input field is not empty, show an error message to the user.
+      if (memberEmail.trim() !== "") {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: [t("validate-data.email-list")],
+        }));
+        return;
+      }
+      // Else, if the member email input field is empty, add the list of members to the form data.
+      const memberEmails = members.map((member) => {
+        const memberEmail = {
+          email: member.email,
+        };
+        return memberEmail;
+      });
+      formJson.members = memberEmails;
+    }
 
     try {
       await addMembers({
@@ -118,8 +148,8 @@ export default function FormAddMembers({
       refetch();
       onClose();
       toast({
-        title: "Membres ajoutés avec succès",
-        description: "Les membres ont été ajoutés avec succès.",
+        title: t("toast.success.add-member-title"),
+        description: t("toast.success.add-member-description"),
         status: "success",
         variant: "success",
       });
@@ -145,9 +175,11 @@ export default function FormAddMembers({
         errorMessages.forEach((errorMessage) => {
           const [email] = errorMessage.match(/(?<=email\s)(.*)(?=\sis)/) || [];
           if (email) {
-            const descriptionError = `L'utilisateur avec l'email ${email} est déjà membre du groupe`;
+            const descriptionError = t("toast.error.add-member-exist", {
+              email,
+            });
             toast({
-              title: "Erreur d'ajout de membre",
+              title: t("toast.error.add-member-title"),
               description: descriptionError,
               status: "error",
               variant: "error",
@@ -159,18 +191,17 @@ export default function FormAddMembers({
           }
         });
       } else if (err.message.includes("No members provided")) {
-        const descriptionError = "Veuillez renseigner au moins un membre";
+        const descriptionError = t("toast.error.add-member-provided");
         toast({
-          title: "Erreur",
+          title: t("toast.error.generic-title"),
           description: descriptionError,
           status: "error",
           variant: "error",
         });
       } else {
-        const descriptionError =
-          "Une erreur est survenue lors de l'ajout des membres au groupe";
+        const descriptionError = t("toast.error.add-member");
         toast({
-          title: "Erreur",
+          title: t("toast.error.generic-title"),
           description: descriptionError,
           status: "error",
           variant: "error",

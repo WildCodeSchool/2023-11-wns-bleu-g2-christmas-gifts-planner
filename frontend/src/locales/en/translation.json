@@ -30,6 +30,13 @@
   "email-adress-invalid": "This email adress is invalid !",
   "email-already-added": "This email is already added.",
   "email-already-existing": "This email is already taken",
+  "error-messages": {
+    "not-found": "Oups, the requested page wasn't found",
+    "not-exist": "This page doesn't exist",
+    "unauthorized": "You're not authorized to see this page",
+    "result": "Oups, it seems like there's no result",
+    "generic": "An error occurred. Please try again later"
+  },
   "firstname": "Firstname",
   "forgot-password": "Forgot your password ?",
   "group-name": "Group name",
@@ -44,7 +51,8 @@
   "modify-old-password-is-different": "The password isn't the same !",
   "modify-password": "Modify the password",
   "modify-profile": "Modify the profile",
-  "my-groups-list": "You are a member of",
+  "my-group": "You are a member of {{groupCount}} group",
+  "my-groups-list": "You are a member of {{groupCount}} groups",
   "nav-my-groups": "My groups",
   "nav-my-profile": "My profile",
   "new-password": "New password",
@@ -68,7 +76,8 @@
   "placeholder": {
     "firstname": "Your first name",
     "lastname": "Your last name",
-    "password": "Your password"
+    "password": "Your password",
+    "search-group": "Search a group"
   },
   "present-ideas": "Present ideas for",
   "show-password": "Show password",
@@ -87,12 +96,18 @@
   "success-signed-up": "You are signed up !",
   "toast": {
     "error": {
+      "add-member": "An error occurred while adding the members",
+      "add-member-exist": "The user with the email {{email}} is already a member of the group",
+      "add-member-provided": "Please provide at least one member",
+      "add-member-title": "Error while adding a member",
       "create-group": "An error occurred while creating the group",
       "generic-title": "Error",
       "generic-description": "An error occurred",
       "validate-profile": "An error occurred during profile validation"
     },
     "success": {
+      "add-member-description": "The members have been successfully added.",
+      "add-member-title": "Members added",
       "delete-group-description": "Your group {{groupName}} has been successfully deleted.",
       "delete-group-title": "Group deleted",
       "group-created-description": "Your group {{groupName}} has been successfully created.",
@@ -104,6 +119,7 @@
   "unauthorized-password": "This password isn't authorized",
   "validate-data": {
     "email-already-used": "This email is already added.",
+    "email-list": "Please add the member to the list",
     "email-type": "The email address must be in the format 'name@domain.com'.",
     "firstname-length": "The first name must contain at least 2 characters.",
     "firstname-type": "The first name must contain only letters.",

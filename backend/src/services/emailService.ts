@@ -4,14 +4,14 @@ import env from "../env";
 // verify connection configuration
 mailer.verify(function (error, success) {
   if (error) {
-    console.log(error);
+    console.log("Verification failed: ", error);
   } else {
     console.log("Server is ready to take our messages");
   }
 });
 
 //* you can use this function to test the email service
-export async function testEmail(email: string): Promise<boolean> {
+export async function testEmail(email: string) {
   const htmlContent = `
    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background-color: #f9f9f9;">
         <p style="font-size: 16px; color: #555;">Bonjour,</p>
@@ -33,10 +33,8 @@ export async function testEmail(email: string): Promise<boolean> {
       html: htmlContent,
     });
     console.info("Email sent successfully" + info.response);
-    return true;
   } catch (error) {
     console.error("Error sending email", error);
-    return false;
   }
 }
 
@@ -47,7 +45,7 @@ export async function sendInvitationEmail(
   token: string | null,
   lastName: string,
   firstName: string
-): Promise<boolean> {
+) {
   const profileUrl = `${env.FRONTEND_URL}/completeProfile?token=${token}`;
   const groupUrl = `${env.FRONTEND_URL}/dashboard/${groupId}`;
   const member = `${lastName} ${firstName}`;
@@ -99,10 +97,8 @@ export async function sendInvitationEmail(
       html: htmlContent,
     });
     console.info("Email sent successfully " + info.response);
-    return true;
   } catch (error) {
     console.error("Error sending email ", error);
-    return false;
   }
 }
 
