@@ -99,13 +99,13 @@ export default function Signup() {
     <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} mt={4} alignItems="center">
         <GridItem>
             <Heading
-        as="h1"
-        fontSize={{base: "6xl", md: "76", lg: "96" }}
-        fontWeight="bold"
-        mt={{ base: 4, md: 8 }}
-        ml={8}
-        textAlign="center"
-        color="green.800"
+              as="h1"
+              fontSize={{base: "6xl", md: "76", lg: "96" }}
+              fontWeight="bold"
+              mt={{ base: 4, md: 8 }}
+              ml={8}
+              textAlign="center"
+              color="green.800"
             >
                 {t("create-account")}
             </Heading>
@@ -131,7 +131,6 @@ export default function Signup() {
                 ><Image src="/Gifty-logo.svg" alt="Gifty" mt={4} mx="35%" />
                     <form onSubmit={handleSubmit}>
                         <FormControl>
-                            {/* Prénom et nom de famille */}
                             <Grid templateColumns="repeat(2, 1fr)" gap={4} mt={4}>
                                 <GridItem>
                                     <Input
@@ -144,8 +143,6 @@ export default function Signup() {
                                         isRequired
                                         placeholder={t("lastname")}
                                         width="100%"
-                                        borderRadius={15}
-                                        borderColor="green.600"
                                     />
                                 </GridItem>
                                 <GridItem>
@@ -159,13 +156,9 @@ export default function Signup() {
                                         isRequired
                                         placeholder={t("firstname")}
                                         width="100%"
-                                        borderRadius={15}
-                                        borderColor="green.600"
                                     />
                                 </GridItem>
                             </Grid>
-
-                            {/* Email */}
                             {error === 2 ? (
                                 <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">
                                     {t("email-already-existing")}
@@ -180,11 +173,7 @@ export default function Signup() {
                                 variant="goldenInput"
                                 placeholder={t("email-adress")}
                                 my={6}
-                                borderRadius={15}
-                                borderColor={error === 2 ? "red.700" : "green.600"}
                             />
-
-                            {/* Mot de passe et confirmation */}
                             <InputGroup size='md'>
                                 {error === 1 && (
                                     <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700">
@@ -210,8 +199,6 @@ export default function Signup() {
                                     type='password'
                                     variant="goldenInput"
                                     placeholder={t("password")}
-                                    borderRadius={15}
-                                    borderColor={error === 1 || error === 4 ? "red.700" : "green.600"}
                                 />
                             </InputGroup>
 
@@ -223,8 +210,6 @@ export default function Signup() {
                                     variant="goldenInput"
                                     type='password'
                                     placeholder={t("confirm-password")}
-                                    borderRadius={15}
-                                    borderColor={error === 1 || error === 4 ? "red.700" : "green.600"}
                                 />
                             </InputGroup>
                             <Center>

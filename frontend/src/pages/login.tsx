@@ -69,7 +69,7 @@ const Login = () => {
       mt={{ base: 4, md: 8 }}
       ml={8}
       textAlign="center"
-      color="green.800"
+      color="primary.low"
     >
       {t("welcome-back")}
     </Heading>
@@ -100,7 +100,7 @@ const Login = () => {
               fontSize={14}
               fontWeight="bold"
               mb={1}
-              color="green.800"
+              color="primary.low"
             >
               {t("email-adress")}
             </FormLabel>
@@ -111,8 +111,6 @@ const Login = () => {
               type="email"
               id="email"
               name="email"
-              borderRadius={15}
-              borderColor="green.800"
             />
             {error === 1 && (
               <Text
@@ -120,7 +118,7 @@ const Login = () => {
                 mt={1}
                 fontSize={14}
                 fontWeight="bold"
-                color="red.700"
+                color="tertiary.medium"
               >
                 {t("email-adress-invalid")}
               </Text>
@@ -131,7 +129,7 @@ const Login = () => {
               fontSize={14}
               fontWeight="bold"
               mb={1}
-              color="green.800"
+              color="primary.low"
             >
               {t("password")}
             </FormLabel>
@@ -141,8 +139,6 @@ const Login = () => {
               isRequired
               type="password"
               variant="goldenInput"
-              borderRadius={15}
-              borderColor="green.800"
             />
             {error === 2 && (
               <Text
@@ -150,7 +146,7 @@ const Login = () => {
                 mt={1}
                 fontSize={14}
                 fontWeight="bold"
-                color="red.700"
+                color="tertiary.medium"
               >
                 {t("incorrect-password")}
               </Text>
