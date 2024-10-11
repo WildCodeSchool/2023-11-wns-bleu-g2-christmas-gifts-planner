@@ -30,6 +30,13 @@
   "email-adress-invalid": "Cette adresse mail est invalide !",
   "email-already-added": "Cet email est déjà ajouté.",
   "email-already-existing": "Cette adresse mail existe déjà",
+  "error-messages": {
+    "not-found": "Oups, la page demandée n'a pas été trouvée",
+    "not-exist": "Cette page n'existe pas",
+    "unauthorized": "Vous n'êtes pas autorisé a consulter la page demandée",
+    "result": "Oups, il semble qu'il n'y ait pas de résultats",
+    "generic": "Une erreur s'est produite. Veuillez réessayer plus tard"
+  },
   "firstname": "Prénom",
   "forgot-password": "Mot de passe oublié ?",
   "group-name": "Nom du groupe",

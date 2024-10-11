@@ -180,10 +180,9 @@ const Message = () => {
 
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
-    formJSON.LikedBy = { id: parseInt(currentUser?.profile.id as string, 10) };
-    formJSON.likedMessageId = { id: parseInt(formJSON.likedMessageId, 10) };
-    formJSON.channelId = { id: parseInt(channelMemberId, 10) };
-    formJSON.groupId = { id: parseInt(GroupId, 10) };
+    formJSON.LikedBy = Number(currentUser?.profile.id);
+    formJSON.likedMessageId = Number(formJSON.likedMessageId);
+    formJSON.channelId = Number(formJSON.channelId);
 
     const res = await CreateDelteLike({
       variables: { data: formJSON },
