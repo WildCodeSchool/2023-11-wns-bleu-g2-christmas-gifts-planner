@@ -1,4 +1,11 @@
-import { Button, Center, Flex, Heading, Image } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  Flex,
+  Heading,
+  Image,
+  useColorMode,
+} from "@chakra-ui/react";
 import { Gift, TreePine, UsersRound } from "lucide-react";
 
 import AboutCard from "@/components/home/AboutCard";
@@ -7,6 +14,7 @@ import Link from "next/link";
 import { useTranslation } from "react-i18next";
 export default function Home() {
   const { t } = useTranslation();
+  const { colorMode } = useColorMode();
 
   const homepageCardData = [
     {
@@ -40,7 +48,9 @@ export default function Home() {
         <Image
           m={"auto"}
           marginBlock={4}
-          src="/Gifty-logo.svg"
+          src={
+            colorMode === "light" ? "/Gifty-logo.svg" : "/Gifty-logo-light.svg"
+          }
           alt="Gifty"
           maxWidth={{ base: "40%", md: "16rem" }}
         />
@@ -65,7 +75,7 @@ export default function Home() {
         </Flex>
         <Center>
           <Flex flexDirection="column" gap={4}>
-            <Button className="genericButton">
+            <Button variant={"whiteGoldenButton"}>
               <Link href="/signup">{t("no-account")}</Link>
             </Button>
             <Button variant="goldenButton">

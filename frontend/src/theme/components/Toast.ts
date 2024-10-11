@@ -43,13 +43,13 @@ const errorVariant = definePartsStyle({
   title: {
     color: "tertiary.medium",
     _dark: {
-      color: "white",
+      color: "black",
     },
   },
   icon: {
     color: "tertiary.medium",
     _dark: {
-      color: "white",
+      color: "black",
     },
   },
 });
