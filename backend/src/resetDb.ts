@@ -8,11 +8,11 @@ import { NewMessageInputType } from "./types/NewMessageType";
 export async function clearDB() {
   const runner = db.createQueryRunner();
   // await runner.query("SET session_replication_role = 'replica'");
-  await Promise.all(
-    db.entityMetadatas.map(async (entity) =>
-      runner.query(`ALTER TABLE "${entity.tableName}" DISABLE TRIGGER ALL`)
-    )
-  );
+  // await Promise.all(
+  //   db.entityMetadatas.map(async (entity) =>
+  //     runner.query(`ALTER TABLE "${entity.tableName}" DISABLE TRIGGER ALL`)
+  //   )
+  // );
   await Promise.all(
     db.entityMetadatas.map(async (entity) =>
       runner.query(`DROP TABLE IF EXISTS "${entity.tableName}" CASCADE`)
