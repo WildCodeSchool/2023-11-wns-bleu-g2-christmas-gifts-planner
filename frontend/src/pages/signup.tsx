@@ -1,6 +1,6 @@
 import client from "@/graphql/client";
 import { useLoginMutation, useSignupMutation } from "@/graphql/generated/schema";
-import { Button, Card, Center, FormControl, Grid, GridItem, Heading, IconButton, Input, InputGroup, Link, Text, Tooltip, useToast } from '@chakra-ui/react';
+import { Box, Button, Card, Center, FormControl, Grid, GridItem, Heading, IconButton, Image, Input, InputGroup, Link, Show, Text, Tooltip, useToast } from '@chakra-ui/react';
 import { ArrowLeft, InfoIcon } from "lucide-react";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
@@ -87,125 +87,142 @@ export default function Signup() {
 
   return (
     <>
-    <Link href='/'>
-        <IconButton
-          aria-label="Back"
-					bg="transparent"
-					boxShadow="none"
-          _hover={{ bg: "gray.200" }}
-          icon={<ArrowLeft color="#003B1E"/>}
-        />
-        </Link>
-      <Heading as="h1" fontSize='6xl' fontWeight="bold" mt={8} textAlign="center" color="primary.high">{t("create-account")}</Heading>
-      <Center>
-      <Card
-        mx="24px"
-        mt="8px"
-        p={4}
-        maxW="500px"
-        w="90%"
-        data-testid="card"
-        bgColor="#FFFEF9"
-        border="1px solid gray"
-        borderRadius={15}
-        boxShadow="1px 1px 3px 1px gray"
-      >
-
-<form onSubmit={handleSubmit}>
-  <FormControl>
-      {/* Firstname and lastname */}
-      <Grid templateColumns="repeat(2, 1fr)" gap={4} mt={4}>
+    <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} mt={4} alignItems="center">
         <GridItem>
-          <Input
-          variant="goldenInput"
-            type="text"
-            name="firstName"
-            id="firstName"
-            minLength={2}
-            maxLength={30}
-            isRequired
-            placeholder={t("lastname")}
-            width="100%"
-            borderRadius={15}
-						borderColor="green.600"
-          />
+            <Heading
+              as="h1"
+              fontSize={{base: "6xl", md: "76", lg: "96" }}
+              fontWeight="bold"
+              mt={{ base: 4, md: 8 }}
+              ml={8}
+              textAlign="center"
+              color="green.800"
+            >
+                {t("create-account")}
+            </Heading>
+            <Show above="md">
+                <Center mt={4}>
+                    <Image src="/images/Gifts-rafiki.svg" alt="GiftsRafiki" />
+                </Center>
+            </Show>
         </GridItem>
         <GridItem>
-          <Input
-          variant="goldenInput"
-            type="text"
-            name="lastName"
-            id="lastName"
-            minLength={2}
-            maxLength={30}
-            isRequired
-            placeholder={t("firstname")}
-            width="100%"
-            borderRadius={15}
-						borderColor="green.600"
-          />
+            <Center>
+                <Card
+                    mx="24px"
+                    mt="8px"
+                    p={4}
+                    maxW="500px"
+                    w="90%"
+                    data-testid="card"
+                    bgColor="#FFFEF9"
+                    border="1px solid gray"
+                    borderRadius={15}
+                    boxShadow="1px 1px 3px 1px gray"
+                ><Image src="/Gifty-logo.svg" alt="Gifty" mt={4} mx="35%" />
+                    <form onSubmit={handleSubmit}>
+                        <FormControl>
+                            <Grid templateColumns="repeat(2, 1fr)" gap={4} mt={4}>
+                                <GridItem>
+                                    <Input
+                                        variant="goldenInput"
+                                        type="text"
+                                        name="firstName"
+                                        id="firstName"
+                                        minLength={2}
+                                        maxLength={30}
+                                        isRequired
+                                        placeholder={t("lastname")}
+                                        width="100%"
+                                    />
+                                </GridItem>
+                                <GridItem>
+                                    <Input
+                                        variant="goldenInput"
+                                        type="text"
+                                        name="lastName"
+                                        id="lastName"
+                                        minLength={2}
+                                        maxLength={30}
+                                        isRequired
+                                        placeholder={t("firstname")}
+                                        width="100%"
+                                    />
+                                </GridItem>
+                            </Grid>
+                            {error === 2 ? (
+                                <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">
+                                    {t("email-already-existing")}
+                                </Text>
+                            ) : ""}
+                            <Input
+                                type="email"
+                                isRequired
+                                id="email"
+                                data-testid="label-email"
+                                name="email"
+                                variant="goldenInput"
+                                placeholder={t("email-adress")}
+                                my={6}
+                            />
+                            <InputGroup size='md'>
+                                {error === 1 && (
+                                    <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700">
+                                        {t("passwords-are-not-equals")}
+                                    </Text>
+                                )}
+                                {error === 4 && (
+                                    <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700">
+                                        {t("unauthorized-password")}
+                                        <Tooltip
+                                            label={arrayOfErrors.map((error, index) => (
+                                                <Text key={index} fontSize={12}>{error}</Text>
+                                            ))}
+                                        >
+                                            <IconButton icon={<InfoIcon height={22}/>} aria-label="seeMore" h={4} variant="none" bgColor="transparent" boxShadow="none" />
+                                        </Tooltip>
+                                    </Text>
+                                )}
+                                <Input
+                                    name="password"
+                                    id="password"
+                                    isRequired
+                                    type='password'
+                                    variant="goldenInput"
+                                    placeholder={t("password")}
+                                />
+                            </InputGroup>
+
+                            <InputGroup size='md' mt={6} zIndex={0}>
+                                <Input
+                                    name="passwordConfirmation"
+                                    id="passwordConfirmation"
+                                    isRequired
+                                    variant="goldenInput"
+                                    type='password'
+                                    placeholder={t("confirm-password")}
+                                />
+                            </InputGroup>
+                            <Center>
+                                <Button variant="goldenButton" type="submit" mt={4} px={6}>
+                                    {t("sign-up2")}
+                                </Button>
+                            </Center>
+                        </FormControl>
+                    <Box ml={6} mt={16}>
+                    <Text mt={4} fontSize={12}>
+                        {t("already-have-an-account")}{" "}
+                        <Link href='/login' _hover={{ bg: "gray.200" }} p={1} borderRadius="md" color="gray">
+                            {t("sign-in")}
+                        </Link>
+                    </Text>
+                    </Box>
+                    </form>
+                </Card>
+            </Center>
         </GridItem>
-      </Grid>
-      {/* Email */}
-      {error === 2 ? 
-                <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">{t("email-already-existing")}</Text>
-              : ""}
-        <Input type='email' 
-        isRequired
-        id="email" 
-        data-testid="label-email" 
-        name="email" 
-        variant="goldenInput"
-        placeholder={t("email-adress")}
-        my={6}
-        borderRadius={15}
-				borderColor={error === 2 ? "red.700" : "green.600"}
-        />
-{/* Password and confirm Password */}
-        <InputGroup size='md'>
-              {error === 1 &&
-                <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700">{t("passwords-are-not-equals")}</Text>
-               }
-               {error === 4 && <Text position="absolute" mt={-6} fontSize={14} fontWeight="bold" color="red.700" >
-                {t("unauthorized-password")} 
-                <Tooltip label={arrayOfErrors.map((error, index) => (<Text key={index} fontSize={12}>{error}</Text>))
-                }>
-                  <IconButton icon={<InfoIcon height={22}/>} aria-label="seeMore" h={4} variant="none" bgColor="transparent" boxShadow="none" /></Tooltip></Text> }
-
-
-          <Input
-          name="password" 
-          id="password" 
-          isRequired
-          type='password'
-          variant="goldenInput"
-          placeholder={t("password")}
-          borderRadius={15}
-					borderColor={error === 1 || error === 4 ? "red.700" : "green.600"}
-          />
-        </InputGroup>
-        <InputGroup size='md' mt={6} zIndex={0}>
-          <Input
-          name="passwordConfirmation" zIndex={0}
-          id="passwordConfirmation" 
-          isRequired
-          variant="goldenInput"
-          type={'password'}
-          placeholder={t("confirm-password")}
-          borderRadius={15}
-					borderColor={error === 1 || error === 4 ? "red.700" : "green.600"}
-          />
-        </InputGroup>
-		    <Center>
-          <Button variant="goldenButton" type="submit" mt={4} px={6}>
-            {t("sign-up2")}
-          </Button>
-		    </Center>
-      </FormControl>
-    </form>
-			<Text mt={4} fontSize={12}>{t("already-have-an-account")} <Link href='/login'  _hover={{ bg: "gray.200" }}  p={1} borderRadius="md" color="gray">{t("sign-in")}</Link></Text>
-  </Card>
-  </Center>
+    </Grid>
 </>
+
   );
 }
