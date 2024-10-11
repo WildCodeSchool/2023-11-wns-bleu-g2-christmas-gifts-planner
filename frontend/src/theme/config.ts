@@ -1,20 +1,13 @@
-import {
-  background,
-  border,
-  Card,
-  extendTheme,
-  FormErrorMessage,
-  type ThemeConfig,
-} from "@chakra-ui/react";
-import { menuItemTheme } from "./components/MenuItem";
+import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
 import "@fontsource/amatic-sc";
 import "@fontsource/open-sans";
 import { buttonTheme } from "./components/Button";
-import { inputTheme } from "./components/Input";
-import { formTheme } from "./components/Form";
-import { toastTheme } from "./components/Toast";
 import { cardTheme } from "./components/Card";
+import { formTheme } from "./components/Form";
 import { formErrorTheme } from "./components/FormError";
+import { inputTheme } from "./components/Input";
+import { menuItemTheme } from "./components/MenuItem";
+import { toastTheme } from "./components/Toast";
 
 const config: ThemeConfig = {
   initialColorMode: "light",
@@ -73,14 +66,6 @@ export const theme = extendTheme({
     heading: `'Amatic Sc', sans-serif`,
     body: `'Open Sans', sans-serif`,
   },
-  // styles: {
-  //   global: {
-  //     "html, body": {
-  //       backgroundColor: "background.default" ,
-
-  //     },
-  //   },
-  // },
   styles: {
     global: (props: any) => ({
       "html, body": {

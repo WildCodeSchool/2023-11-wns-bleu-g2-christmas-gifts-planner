@@ -9,7 +9,6 @@ const goldenButton = defineStyle({
 
 const whiteGoldenButton = defineStyle({
   background: "white",
-  color: "secondary.hightest",
 
   _hover: {
     background: "secondary.medium",
@@ -27,7 +26,6 @@ const greenButton = defineStyle({
 
 const whiteGreenButton = defineStyle({
   background: "white",
-  color: "primary.hightest",
   _hover: {
     background: "primary.lower",
     color: "white",

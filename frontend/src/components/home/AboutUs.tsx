@@ -39,7 +39,7 @@ export default function AboutUs() {
 
   return (
     <>
-      <Box bg={"white"} p={6}>
+      <Box bg={"white"} _dark={{ bg: "dark.surface10" }} p={6}>
         <Box m={"auto"} width={"90%"} alignContent={"center"}>
           <Heading mb={6}>A propos</Heading>
           <Text fontSize="sm" textAlign={"justify"}>

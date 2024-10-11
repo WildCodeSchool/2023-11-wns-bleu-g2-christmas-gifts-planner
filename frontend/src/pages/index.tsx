@@ -65,7 +65,7 @@ export default function Home() {
         </Flex>
         <Center>
           <Flex flexDirection="column" gap={4}>
-            <Button variant={"whiteGoldenButton"}>
+            <Button className="genericButton">
               <Link href="/signup">{t("no-account")}</Link>
             </Button>
             <Button variant="goldenButton">

@@ -26,6 +26,7 @@ export default function DevCard({
         boxShadow: "2xl",
         transform: "translateY(-2px)",
         backgroundColor: "whiteAlpha.600",
+        _dark: { backgroundColor: "dark.surface20" },
       }}
     >
       <Link href={link}>
@@ -38,7 +39,7 @@ export default function DevCard({
         <Text fontWeight="bold" mb={2}>
           {role}
         </Text>
-        <Text fontSize="sm" color="gray.600">
+        <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.200" }}>
           {description}
         </Text>
       </Link>
