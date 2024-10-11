@@ -43,7 +43,7 @@ const Message = () => {
   let { data: getRatings } = useLikesQuery({
     variables: {
       channelId: parseInt(channelMemberId as string),
-      // groupId: parseInt(GroupId as string),
+      groupId: parseInt(GroupId as string),
     },
   });
 
@@ -180,10 +180,17 @@ const Message = () => {
 
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
-    formJSON.LikedBy = Number(currentUser?.profile.id);
-    formJSON.likedMessageId = Number(formJSON.likedMessageId);
-    formJSON.channelId = Number(formJSON.channelId);
-
+    formJSON.LikedBy = { id: parseInt(currentUser?.profile.id as string) };
+    formJSON.likedMessageId = {
+      id: parseInt(formJSON.likedMessageId),
+    };
+    formJSON.channelId = {
+      id: parseInt(channelMemberId, 10),
+    };
+    formJSON.groupId = {
+      id: parseInt(GroupId, 10),
+    };
+    console.log("formJSON", formJSON);
     const res = await CreateDelteLike({
       variables: { data: formJSON },
     });
@@ -232,10 +239,7 @@ const Message = () => {
                       Cadeau non défini 🎁
                     </h1> // Fallback for any other value
                   )}
-                  {/* <h1 className="flex gap-2 ">
-                    nombre de likes-{m.count}
-                    <Heart />
-                  </h1> */}
+
                   <AccordionIcon />
                 </AccordionButton>
               </h2>
@@ -258,14 +262,8 @@ const Message = () => {
                         <button
                           type="submit"
                           className=" transition ease-in-out delay-150 text-black hover:-translate-y-1 hover:scale-110  duration-300"
-                          // className=" transition ease-in-out delay-150 text-black hover:-translate-y-1 hover:scale-110 hover:text-red-600 duration-300"
                         >
                           <div className="flex mr-2 mt-3">
-                            <input
-                              type="hidden"
-                              name="channelId"
-                              value={parseInt(message.channelId, 10)}
-                            />
                             <input
                               type="hidden"
                               name="likedMessageId"
@@ -311,7 +309,6 @@ const Message = () => {
                       />
                       <div
                         key={message.id}
-                        // className="flex  bg-slate-200  p-2 border-solid border-2 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl  "
                         className="flex  bg-zinc-200 border-solid   p-2   rounded-tl-2xl rounded-tr-2xl rounded-br-2xl  "
                       >
                         <p className="text-m font-normal py-2.5 text-gray-900 dark:text-white">
@@ -323,11 +320,6 @@ const Message = () => {
                           type="submit"
                           className=" transition ease-in-out delay-150 text-black hover:-translate-y-1 hover:scale-110  duration-300"
                         >
-                          <input
-                            type="hidden"
-                            name="channelId"
-                            value={parseInt(message.channelId, 10)}
-                          />
                           <input
                             type="hidden"
                             name="likedMessageId"
