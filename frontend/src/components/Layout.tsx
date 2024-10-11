@@ -7,7 +7,6 @@ import { useProfileQuery } from "@/graphql/generated/schema";
 
 export default function Layout({
   children,
-  pageTitle,
 }: {
   children: ReactNode;
   pageTitle: string;
@@ -18,7 +17,7 @@ export default function Layout({
   return (
     <>
       <Head>
-        <title>{pageTitle} Christmas Gift Planner </title>
+        <title> Christmas Gift Planner </title>
         <meta
           name="description"
           content="gift planner for family/friend group"
