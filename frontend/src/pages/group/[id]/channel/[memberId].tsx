@@ -247,9 +247,9 @@ const Message = () => {
       </div>
       <div className=" flex justify-center ">
         <div className="md:w-1/2">
-          <div className=" p-3 h-3/6 overflow-y-auto bg-white" id="chatBox">
+          <div className=" p-3 h-[60vh] overflow-y-auto bg-white" id="chatBox">
             {sortedMessages.map((message: any) => (
-              <div className="mt-6  ">
+              <div key={message.id} className="mt-6  ">
                 {message.writtenBy.firstName ==
                   currentUser?.profile.firstName &&
                 message.writtenBy.lastName == currentUser?.profile.lastName ? (

@@ -336,6 +336,7 @@ export type CreateDelteLikeMutationVariables = Exact<{
 export type CreateDelteLikeMutation = { __typename?: 'Mutation', createDelteLike: { __typename?: 'Like', id?: number | null, LikedBy?: { __typename?: 'User', id: string } | null, likedMessageId?: { __typename?: 'Message', id: number } | null, channelId?: { __typename?: 'Channel', id: number } | null, groupId?: { __typename?: 'Group', id: number } | null } };
 
 export type LikesQueryVariables = Exact<{
+  groupId?: InputMaybe<Scalars['Int']>;
   channelId?: InputMaybe<Scalars['Int']>;
 }>;
 
@@ -754,8 +755,8 @@ export type CreateDelteLikeMutationHookResult = ReturnType<typeof useCreateDelte
 export type CreateDelteLikeMutationResult = Apollo.MutationResult<CreateDelteLikeMutation>;
 export type CreateDelteLikeMutationOptions = Apollo.BaseMutationOptions<CreateDelteLikeMutation, CreateDelteLikeMutationVariables>;
 export const LikesDocument = gql`
-    query Likes($channelId: Int) {
-  Likes(channelId: $channelId) {
+    query Likes($groupId: Int, $channelId: Int) {
+  Likes(groupId: $groupId, channelId: $channelId) {
     id
     likedMessageId {
       id
@@ -780,6 +781,7 @@ export const LikesDocument = gql`
  * @example
  * const { data, loading, error } = useLikesQuery({
  *   variables: {
+ *      groupId: // value for 'groupId'
  *      channelId: // value for 'channelId'
  *   },
  * });
