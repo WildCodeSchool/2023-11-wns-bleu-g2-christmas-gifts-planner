@@ -33,11 +33,11 @@ export default class ChannelResolver {
     // Fetch the channels with the receiver relation included
     const channels = await Channel.find({
       where: { group: { id: groupId } },
-      relations: { group: true, receiver: true }, 
+      relations: { group: true, receiver: true },
     });
 
     //Check if the current user is the receiver of the channel
-     const filteredChannels = channels.filter(
+    const filteredChannels = channels.filter(
       (channel) => channel.receiver.id !== ctx.currentUser?.id
     );
 
@@ -115,17 +115,16 @@ export default class ChannelResolver {
         channels.push(newChannel); 
       }
 
-      const ownerChannel = Channel.create({
-        name: `Channel for ${group.owner.firstName} ${group.owner.lastName}`,
-        group: group, 
-        receiver: group.owner, 
-      });
-    
-      // Save the channel of the owner in the database
-      await ownerChannel.save();
-      channels.push(ownerChannel);
-      // return the created channels
-      return channels; 
-    }
-  
+    const ownerChannel = Channel.create({
+      name: `Channel for ${group.owner.firstName} ${group.owner.lastName}`,
+      group: group,
+      receiver: group.owner,
+    });
+
+    // Save the channel of the owner in the database
+    await ownerChannel.save();
+    channels.push(ownerChannel);
+    // return the created channels
+    return channels;
+  }
 }

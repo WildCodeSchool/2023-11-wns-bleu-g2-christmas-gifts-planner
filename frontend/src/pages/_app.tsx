@@ -6,7 +6,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { theme } from "@/theme/config";
 import Layout from "@/components/Layout";
 import { ErrorContextProvider } from "@/contexts/ErrorContext";
-import "./i18n";
+import "../i18n";
 import { GroupContextProvider } from "@/contexts/GroupContext";
 
 interface MyAppProps extends AppProps {
@@ -26,7 +26,7 @@ export default function App({ Component, pageProps }: MyAppProps) {
             position: "bottom-right",
             variant: "top-accent",
             isClosable: true,
-            duration: 9000,
+            duration: 5000,
             containerStyle: {
               maxWidth: "24rem",
             },
