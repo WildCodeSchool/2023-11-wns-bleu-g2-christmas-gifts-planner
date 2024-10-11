@@ -44,7 +44,6 @@ const redButton = defineStyle({
 });
 const whiteRedButton = defineStyle({
   background: "white",
-  color: "tertiary.hightest",
   _hover: {
     background: "tertiary.lowest",
   },

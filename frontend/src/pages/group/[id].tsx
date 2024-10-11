@@ -61,8 +61,12 @@ export default function Channels() {
 
   const filteredMembers = channels?.channels.filter(
     (member) =>
-      member.receiver.firstName?.toLowerCase().includes(searchMember.toLowerCase()) ||
-      member.receiver.lastName?.toLowerCase().includes(searchMember.toLowerCase())
+      member.receiver.firstName
+        ?.toLowerCase()
+        .includes(searchMember.toLowerCase()) ||
+      member.receiver.lastName
+        ?.toLowerCase()
+        .includes(searchMember.toLowerCase())
   );
   const avatarColors = [
     "primary.medium",
@@ -161,9 +165,7 @@ export default function Channels() {
                       <X />
                     </Box>
                   </Box>
-                  <FormErrorMessage color="tertiary.medium">
-                    {error}
-                  </FormErrorMessage>
+                  <FormErrorMessage>{error}</FormErrorMessage>
                 </FormControl>
               </Box>
             ) : (
@@ -189,7 +191,9 @@ export default function Channels() {
             {channels?.channels?.map((channel, index) => (
               <Avatar
                 key={channel.id}
-                name={channel.receiver.firstName + " " + channel.receiver.lastName}
+                name={
+                  channel.receiver.firstName + " " + channel.receiver.lastName
+                }
                 bg={avatarColors[index % avatarColors.length]}
                 color="white"
               />
@@ -242,7 +246,9 @@ export default function Channels() {
                 <Flex justify={"center"} width={"fit-content"} mb={16}>
                   <Avatar
                     size="lg"
-                    name={member.receiver.firstName + " " + member.receiver.lastName}
+                    name={
+                      member.receiver.firstName + " " + member.receiver.lastName
+                    }
                     bg={avatarColors[index % avatarColors.length]}
                     color="white"
                     mr="4"
@@ -261,7 +267,9 @@ export default function Channels() {
                       color={"primary.medium"}
                     >
                       {t("present-ideas")}{" "}
-                      {member.receiver.firstName + " " + member.receiver.lastName}
+                      {member.receiver.firstName +
+                        " " +
+                        member.receiver.lastName}
                     </Text>
                   </Box>
                 </Flex>

@@ -1,4 +1,11 @@
-import { extendTheme } from "@chakra-ui/react";
+import {
+  background,
+  border,
+  Card,
+  extendTheme,
+  FormErrorMessage,
+  type ThemeConfig,
+} from "@chakra-ui/react";
 import { menuItemTheme } from "./components/MenuItem";
 import "@fontsource/amatic-sc";
 import "@fontsource/open-sans";
@@ -6,6 +13,13 @@ import { buttonTheme } from "./components/Button";
 import { inputTheme } from "./components/Input";
 import { formTheme } from "./components/Form";
 import { toastTheme } from "./components/Toast";
+import { cardTheme } from "./components/Card";
+import { formErrorTheme } from "./components/FormError";
+
+const config: ThemeConfig = {
+  initialColorMode: "light",
+  useSystemColorMode: true,
+};
 
 const colors = {
   primary: {
@@ -42,27 +56,46 @@ const colors = {
   },
   background: {
     default: "#F9F6F1",
+    dark: "#121714",
+    darkCard: "#282828",
+  },
+  dark: {
+    background: "#121714",
+    surface10: "#282828",
+    surface20: "#3f3f3f",
   },
 };
 
 export const theme = extendTheme({
+  config,
   colors,
   fonts: {
     heading: `'Amatic Sc', sans-serif`,
     body: `'Open Sans', sans-serif`,
   },
+  // styles: {
+  //   global: {
+  //     "html, body": {
+  //       backgroundColor: "background.default" ,
+
+  //     },
+  //   },
+  // },
   styles: {
-    global: {
+    global: (props: any) => ({
       "html, body": {
-        backgroundColor: "background.default",
+        bg:
+          props.colorMode === "dark" ? "background.dark" : "background.default",
       },
-    },
+    }),
   },
   components: {
     Button: buttonTheme,
     MenuItem: menuItemTheme,
     Input: inputTheme,
     Form: formTheme,
+    FormError: formErrorTheme,
     Alert: toastTheme,
+    Card: cardTheme,
   },
 });

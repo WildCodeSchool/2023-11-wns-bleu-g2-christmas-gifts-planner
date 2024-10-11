@@ -168,15 +168,15 @@ export default function FormCreateGroup({
         variables: { data: formJson },
       });
 
-    const groupId = result?.data?.createGroup?.id;
+      const groupId = result?.data?.createGroup?.id;
 
-    if (groupId) {
-      console.log("groupId", groupId);
-      // Create the channels for the group
-      await createChannels({
-        variables: { groupId },
-      });
-    }
+      if (groupId) {
+        console.log("groupId", groupId);
+        // Create the channels for the group
+        await createChannels({
+          variables: { groupId },
+        });
+      }
 
       // Refresh the list of groups after creating the new group.
       refetch();
@@ -249,9 +249,7 @@ export default function FormCreateGroup({
           />
           {errors.groupName &&
             errors.groupName.map((error, index) => (
-              <FormErrorMessage key={index} color="tertiary.medium">
-                {error}
-              </FormErrorMessage>
+              <FormErrorMessage key={index}>{error}</FormErrorMessage>
             ))}
         </FormControl>
         <FormControl mt={3} isInvalid={errors.email && errors.email.length > 0}>
@@ -273,6 +271,14 @@ export default function FormCreateGroup({
               size="md"
               p={0}
               ml={3}
+              _dark={
+                isHovered
+                  ? {
+                      background: "secondary.low",
+                      color: "white",
+                    }
+                  : { background: "dark.surface20" }
+              }
             >
               <Plus color={isHovered ? "#AA7124" : "#724421"} />
             </Button>
@@ -280,9 +286,7 @@ export default function FormCreateGroup({
 
           {errors.email &&
             errors.email.map((error, index) => (
-              <FormErrorMessage key={index} color="tertiary.medium">
-                {error}
-              </FormErrorMessage>
+              <FormErrorMessage key={index}>{error}</FormErrorMessage>
             ))}
         </FormControl>
         <Box

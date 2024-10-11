@@ -244,7 +244,7 @@ export default function FormAddMembers({
 
           {errors.email &&
             errors.email.map((error, index) => (
-              <FormErrorMessage key={index} color="tertiary.medium">
+              <FormErrorMessage key={index}>
                 {error}
               </FormErrorMessage>
             ))}
