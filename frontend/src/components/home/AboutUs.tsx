@@ -1,37 +1,35 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import DevCard from "./DevCard";
+import { useTranslation } from "react-i18next";
 
 export default function AboutUs() {
+  const { t } = useTranslation();
   const developers = [
     {
       name: "Alexandre Richert",
-      role: "Développeur Full-Stack",
-      description:
-        "Passionné par le développement Frontend, Alexandre a conçu l'interface utilisateur et implémenté les fils de discussions.",
+      role: "about.dev-role",
+      description: "about.alexandre-description",
       color: "secondary.medium",
       link: "https://github.com/AlexandreRichert",
     },
     {
       name: "Alon Ben David",
-      role: "Développeur Full-Stack",
-      description:
-        "Alon a implémenté le système de messagerie instantanée, permettant une communication fluide entre les membres du groupe.",
+      role: "about.dev-role",
+      description: "about.alon-description",
       color: "tertiary.low",
       link: "https://github.com/alon-bendavid",
     },
     {
       name: "Robin Kolasinski",
-      role: "Développeur Full-Stack",
-      description:
-        "Robin a développé l'inscription, la connexion, et la gestion des profils utilisateurs, garantissant la sécurité des comptes.",
+      role: "about.dev-role",
+      description: "about.robin-description",
       color: "primary.lowest",
       link: "https://github.com/Fangornito",
     },
     {
       name: "Jasmine Grozinger",
-      role: "Développeur Full-Stack",
-      description:
-        "Jasmine a conçu la fonctionnalité de création de groupes en veillant à ce que Gifty soit convivial et agréable à utiliser.",
+      role: "about.dev-role",
+      description: "about.jasmine-description",
       color: "tertiary.lower",
       link: "https://github.com/Jasminegrz",
     },
@@ -41,21 +39,18 @@ export default function AboutUs() {
     <>
       <Box bg={"white"} _dark={{ bg: "dark.surface10" }} p={6}>
         <Box m={"auto"} width={"90%"} alignContent={"center"}>
-          <Heading mb={6}>A propos</Heading>
+          <Heading mb={6}>{t("about.title")}</Heading>
           <Text fontSize="sm" textAlign={"justify"}>
-            Gifty est une application qui facilite l&apos;organisation des
-            cadeaux entre amis et en famille. Ce projet est développé dans le
-            cadre de notre apprentissage à la Wild Code School.
+            {t("about.description1")}
           </Text>
           <Text fontSize="sm" textAlign={"justify"}>
-            Nous tenons à remercier la Wild Code School pour leur soutien et
-            pour nous avoir donné l&apos;opportunité de réaliser ce projet.
+            {t("about.description2")}
           </Text>
         </Box>
       </Box>
       <Box p={6}>
         <Box m={"auto"} width={"90%"} alignContent={"center"}>
-          <Heading mb={6}>Notre team</Heading>
+          <Heading mb={6}>{t("our-team")}</Heading>
 
           <Flex flexWrap="wrap" justifyContent="center" gap={8}>
             {developers.map((dev, index) => (
