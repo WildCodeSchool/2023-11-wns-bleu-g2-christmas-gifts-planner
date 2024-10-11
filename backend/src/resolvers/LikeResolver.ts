@@ -20,10 +20,17 @@ export default class LikeResolver {
     @Arg("likedMessageId", () => Int, { nullable: true })
     likedMessageId?: number,
     @Arg("channelId", () => Int, { nullable: true })
-    channelId?: number
+    channelId?: number,
+    @Arg("groupId", () => Int, { nullable: true })
+    groupId?: number
   ) {
     return Like.find({
-      relations: { likedMessageId: true, LikedBy: true, channelId: true },
+      relations: {
+        likedMessageId: true,
+        LikedBy: true,
+        channelId: true,
+        groupId: true,
+      },
       where: {
         likedMessageId: {
           id: likedMessageId,
@@ -33,6 +40,9 @@ export default class LikeResolver {
         },
         channelId: {
           id: channelId,
+        },
+        groupId: {
+          id: groupId,
         },
       },
     });
@@ -45,6 +55,7 @@ export default class LikeResolver {
   ) {
     const existingLike = await Like.findOne({
       where: {
+        groupId: data.groupId,
         channelId: data.channelId,
         likedMessageId: data.likedMessageId,
         LikedBy: data.LikedBy,
@@ -77,7 +88,8 @@ export default class LikeResolver {
   })
   newLike(
     @Root() newLike: Like,
-    @Arg("channelId", () => Int) channelId: number
+    @Arg("channelId", () => Int) channelId: number,
+    @Arg("groupId", () => Int) groupId: number
   ): Like {
     return newLike;
   }
