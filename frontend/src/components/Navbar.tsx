@@ -27,6 +27,7 @@ import i18n from "@/pages/i18n";
 import { useTranslation } from "react-i18next";
 import { useGroupContext } from "@/contexts/GroupContext";
 import ConfirmModal from "./ConfirmModal";
+import CreateGroupModal from "@/components/group/CreateGroupModal";
 
 export default function Navbar({
   onGroupDeleted,
@@ -37,7 +38,7 @@ export default function Navbar({
   const router = useRouter();
   const [language, setLanguage] = useState("FR");
   const { t } = useTranslation();
-  const { data: currentUser } = useProfileQuery({
+  const { data: currentUser,refetch, client } = useProfileQuery({
     errorPolicy: "ignore",
   });
   const { groupId, ownerId, groupName } = useGroupContext();
@@ -68,6 +69,7 @@ export default function Navbar({
   const handleLogout = async () => {
     try {
       await logout();
+      await client.resetStore();
       router.push("/login");
     } catch (error) {
       console.error("Failed to logout", error);
@@ -104,13 +106,13 @@ export default function Navbar({
   };
 
   return (
-    <Box as="nav" bg="primary.high" color="white" padding="4">
+    <Box as="nav" bg="primary.high" color="white" padding="4" mb={16}>
       <Flex justifyContent="space-between" alignItems="center">
         <Link href="/" passHref>
           <Image
             src="/Gifty-logo-white.svg"
             alt="Gifty Logo"
-            height="40px"
+            height="50px"
             className="logo"
             css={{
               transition: "filter 0.2s ease",
@@ -126,6 +128,7 @@ export default function Navbar({
             <MenuButton
               as={Button}
               variant="outline"
+              h={"40px"}
               colorScheme="white"
               mr="4"
               _hover={{
@@ -154,13 +157,6 @@ export default function Navbar({
               </MenuItem>
             </MenuList>
           </Menu>
-
-          <IconButton
-            aria-label="Toggle Theme"
-            icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-            onClick={toggleColorMode}
-            mr="4"
-          />
 
           {!currentUser ? (
             <Button
@@ -212,13 +208,8 @@ export default function Navbar({
                 <MenuDivider />
                 <Box textAlign="center" p={4}>
                   <Flex flexDirection="column" gap={4}>
-                    <Button
-                      variant="goldenButton"
-                      onClick={() => router.push("/create-group")}
-                    >
-                      {t("create-group")}
-                    </Button>
-                    {isOwner &&
+                  <CreateGroupModal refetch={refetch} />
+                  {isOwner &&
                       router.query.id?.toString() === groupId?.toString() && (
                         <ConfirmModal
                           handleClick={handleDeleteGroup}
