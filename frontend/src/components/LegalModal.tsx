@@ -33,7 +33,7 @@ export default function LegalModal() {
           cursor: "pointer",
         }}
       >
-        {t("legal-notices")}
+        {t("legal-notices.title")}
       </ListItem>
 
       <Modal
@@ -49,6 +49,7 @@ export default function LegalModal() {
           boxShadow="lg"
           mb={isMobile ? 0 : "auto"}
           mt="auto"
+          _dark={{ bg: "dark.surface10" }}
         >
           <ModalHeader
             display="flex"
@@ -59,21 +60,15 @@ export default function LegalModal() {
           >
             <Gavel />
             <Text fontSize="lg" fontWeight="bold">
-              {t("legal-notices")}
+              {t("legal-notices.title")}
             </Text>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Text fontSize="md" mb={4}>
-              Gifty est une application développée par des élèves de la Wild
-              Code School, hébergée sur Vercel. Les interfaces sont créées avec
-              Chakra UI, et les illustrations sont fournies par Storyset.
+              {t("legal-notices.content")}
             </Text>
-            <Text fontSize="md">
-              Tous les éléments du site, y compris les images, textes et code,
-              sont la propriété des développeurs et ne peuvent être réutilisés
-              sans leur autorisation.
-            </Text>
+            <Text fontSize="md">{t("legal-notices.property")}</Text>
           </ModalBody>
         </ModalContent>
       </Modal>

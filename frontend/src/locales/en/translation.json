@@ -38,6 +38,9 @@
     "generic": "An error occurred. Please try again later"
   },
   "firstname": "Firstname",
+  "footer": {
+    "copyright": "© 2024 Gifty. All rights reserved."
+  },
   "forgot-password": "Forgot your password ?",
   "group-name": "Group name",
   "heading-organize": "Organize your Christmas present in group with",
@@ -46,7 +49,11 @@
   "incorrect-password": "Incorrect password",
   "join-to-start": "Join an existing group or create a new one to start exchanging presents ideas with your friends !",
   "lastname": "Lastname",
-  "legal-notices": "Legal notices",
+  "legal-notices": {
+    "title": "Legal notices",
+    "content": "Gifty is an application developed by students from Wild Code School. The interfaces are created with Chakra UI, and the illustrations are provided by Storyset.",
+    "property": "All elements of the site, including images, texts and code, are the property of the developers and cannot be reused without their permission."
+  },
   "modify": "Modify",
   "modify-old-password-is-different": "The password isn't the same !",
   "modify-password": "Modify the password",

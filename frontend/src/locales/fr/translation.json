@@ -39,6 +39,9 @@
   },
   "firstname": "Prénom",
   "forgot-password": "Mot de passe oublié ?",
+  "footer": {
+    "copyright": "© 2024 Gifty. Tous droits réservés."
+  },
   "group-name": "Nom du groupe",
   "heading-organize": "Organisez vos cadeaux de Noël en groupe avec",
   "hello": "Bonjour",
@@ -46,7 +49,11 @@
   "incorrect-password": "Mot de passe incorrect",
   "join-to-start": "Rejoignez un groupe existant ou créez en un nouveau pour commencer à échanger des idées cadeaux avec vos amis !",
   "lastname": "Nom",
-  "legal-notices": "Mentions légales",
+  "legal-notices": {
+    "title": "Mentions légales",
+    "content": "Gifty est une application développée par des élèves de la Wild Code School. Les interfaces sont créées avec Chakra UI, et les illustrations sont fournies par Storyset.",
+    "property": "Tous les éléments du site, y compris les images, textes et code, sont la propriété des développeurs et ne peuvent être réutilisés sans leur autorisation."
+  },
   "modify": "Modifier",
   "modify-old-password-is-different": "Le mot de passe n'est pas le même !",
   "modify-password": "Modifier le mot de passe",
