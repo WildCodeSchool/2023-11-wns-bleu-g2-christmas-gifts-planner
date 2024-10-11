@@ -22,7 +22,15 @@ services:
       DB_USER: ${DB_USER-postgres}
       JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY:-changeme}
       NODE_ENV: ${NODE_ENV:-production}
-      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-changeme}
+      FRONTEND_URL: ${FRONTEND_URL:-localhost:3000}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-localhost:3000}
+      SMTP_HOST: ${SMTP_HOST:-smtp}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-yourId}
+      SMTP_PASSWORD: ${SMTP_PASS:-yourPassword}
+      EMAIL_FROM: ${EMAIL_FROM:-yourEmail}
+      DB_PORT: ${DB_PORT:-5432}
+      SERVER_PORT: ${SERVER_PORT:-4001}
     depends_on:
       db:
         condition: service_healthy

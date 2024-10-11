@@ -30,6 +30,13 @@
   "email-adress-invalid": "This email adress is invalid !",
   "email-already-added": "This email is already added.",
   "email-already-existing": "This email is already taken",
+  "error-messages": {
+    "not-found": "Oups, the requested page wasn't found",
+    "not-exist": "This page doesn't exist",
+    "unauthorized": "You're not authorized to see this page",
+    "result": "Oups, it seems like there's no result",
+    "generic": "An error occurred. Please try again later"
+  },
   "firstname": "Firstname",
   "forgot-password": "Forgot your password ?",
   "group-name": "Group name",
@@ -76,7 +83,7 @@
   "show-password": "Show password",
   "sign-in": "Sign in",
   "sign-out": "Sign out",
-  "sign-up": "Sign up",
+  "sign-up1": "Sign up",
   "sign-up2": "Sign up",
   "step1": "Step 1 : Create your Christmas circle",
   "step1-description": "Start by creating your family group or friend group to organize the Christmas presents in a more collaborative way.",

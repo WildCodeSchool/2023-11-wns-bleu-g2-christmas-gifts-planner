@@ -1,5 +1,7 @@
+import { ErrorContextProvider } from "@/contexts/ErrorContext";
 import {
   MessagesDocument,
+  useChannelQuery,
   useCreateDelteLikeMutation,
   useCreateMessageMutation,
   useLikesQuery,
@@ -25,13 +27,24 @@ const Message = () => {
 
   const router = useRouter();
   const channelMemberId: any = router.query?.memberId;
-  console.log("router.query", router.query);
+  const GroupId: any = router.query.id;
+
+  const { data: getMembers } = useChannelQuery({
+    variables: {
+      channelId: parseInt(channelMemberId),
+      groupId: parseInt(GroupId),
+    },
+  });
+  // console.log("memebers", getMembers);
   const { data: currentUser, client } = useProfileQuery({
     errorPolicy: "ignore",
   });
 
   let { data: getRatings } = useLikesQuery({
-    variables: { channelId: parseInt(channelMemberId as string) },
+    variables: {
+      channelId: parseInt(channelMemberId as string),
+      groupId: parseInt(GroupId as string),
+    },
   });
 
   function getTopLikedMessages(likesArray: any[]): any[] {
@@ -58,9 +71,17 @@ const Message = () => {
     return topMessages.slice(0, 3);
   }
   const topLikedMessages = getTopLikedMessages(getRatings?.Likes || []);
-  let { data: getMessages } = useMessagesQuery({
-    variables: { channelId: parseInt(channelMemberId as string) },
+  let {
+    data: getMessages,
+    loading,
+    error: messagesErr,
+  } = useMessagesQuery({
+    variables: {
+      channelId: parseInt(channelMemberId as string),
+      groupId: parseInt(GroupId as string),
+    },
   });
+  console.log(messagesErr?.graphQLErrors);
   const [createMessage] = useCreateMessageMutation();
   const [CreateDelteLike] = useCreateDelteLikeMutation();
 
@@ -68,6 +89,7 @@ const Message = () => {
   useNewMessageSubscription({
     variables: {
       channelId: parseInt(channelMemberId, 10),
+      groupId: parseInt(GroupId, 10),
     },
     onData: async (newMessage: any) => {
       try {
@@ -75,20 +97,21 @@ const Message = () => {
           query: MessagesDocument,
           variables: {
             channelId: parseInt(channelMemberId, 10),
+            groupId: parseInt(GroupId, 10),
           },
         });
         const oldMessages = getMessages?.messages || [];
-
         const newMsgObj = newMessage.data.data.newMessage;
+        console.log("oldMsgObj", oldMessages);
 
         client.writeQuery({
           query: MessagesDocument,
           data: { messages: [...oldMessages, newMsgObj] },
           variables: {
             channelId: parseInt(channelMemberId, 10),
+            groupId: parseInt(GroupId, 10),
           },
         });
-
         const objDiv = document.getElementById("chatBox");
         if (objDiv) {
           objDiv.scrollTop = objDiv.scrollHeight;
@@ -101,18 +124,26 @@ const Message = () => {
   useNewLikeSubscription({
     variables: {
       channelId: parseInt(channelMemberId, 10),
+      groupId: parseInt(GroupId, 10),
     },
 
     onData: async (newLike: any) => {
       try {
+        const getMessages = client.readQuery({
+          query: MessagesDocument,
+          variables: {
+            channelId: parseInt(channelMemberId, 10),
+            groupId: parseInt(GroupId, 10),
+          },
+        });
         const oldLikes = getMessages?.messages || [];
-
         const newLikeObj = newLike.data.data;
         client.writeQuery({
           query: MessagesDocument,
           data: { messages: [...oldLikes, newLikeObj] },
           variables: {
             channelId: parseInt(channelMemberId, 10),
+            groupId: parseInt(GroupId, 10),
           },
         });
       } catch (error) {
@@ -136,6 +167,9 @@ const Message = () => {
     formJSON.channelId = {
       id: parseInt(channelMemberId, 10),
     };
+    formJSON.groupId = {
+      id: parseInt(GroupId, 10),
+    };
     const res = await createMessage({ variables: { data: formJSON } });
 
     setMessageInput("");
@@ -146,19 +180,20 @@ const Message = () => {
 
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
-    formJSON.LikedBy = { id: parseInt(currentUser?.profile.id, 10) };
-    formJSON.likedMessageId = { id: parseInt(formJSON.likedMessageId, 10) };
-    formJSON.channelId = { id: parseInt(channelMemberId, 10) };
-
-    // console.log("form json", formJSON);
-    // formJSON.channelId = {
-    //   id: parseInt(channelMemberId, 10),
-    // };
+    formJSON.LikedBy = { id: parseInt(currentUser?.profile.id as string) };
+    formJSON.likedMessageId = {
+      id: parseInt(formJSON.likedMessageId),
+    };
+    formJSON.channelId = {
+      id: parseInt(channelMemberId, 10),
+    };
+    formJSON.groupId = {
+      id: parseInt(GroupId, 10),
+    };
+    console.log("formJSON", formJSON);
     const res = await CreateDelteLike({
       variables: { data: formJSON },
     });
-    // console.log("res", res);
-    // setMessageInput("");
   };
 
   const sortedMessages = [...oldMessages]; // Create a copy of the array
@@ -169,31 +204,55 @@ const Message = () => {
 
     return dateA - dateB; // Sort by date
   });
-
+  // in caase that user is not authorized or recive any kind if error in the chat, he will be redirected aoutmaticlly
+  if (messagesErr) {
+    router.push("/dashboard");
+  }
+  console.log("messagesErr", messagesErr);
   return (
     <>
-      <h1 className="text-center">Top Gifts!</h1>
-      <Accordion allowToggle>
-        {topLikedMessages.map((m, idx) => (
-          <AccordionItem key={idx}>
-            <h2>
-              <AccordionButton>
-                <h1 className="flex gap-2 ">
-                  {m.count}
-                  <Heart />
-                </h1>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}>{m.content}</AccordionPanel>
-          </AccordionItem>
-        ))}
-      </Accordion>
+      <h1 className="text-center font-extrabold">Top Gifts! 🎁</h1>
+      <div className="flex justify-center ">
+        <Accordion
+          allowToggle
+          className="md:w-1/2 bg-primary-lowest text-white "
+        >
+          {topLikedMessages.map((m, idx) => (
+            <AccordionItem key={idx} className="">
+              <h2>
+                <AccordionButton className="text-center">
+                  {idx === 0 ? (
+                    <h1 className="flex gap-2 font-bold">
+                      Top cadeau! 🥇{m.count}
+                      {/* You can include an optional icon or component here */}
+                    </h1>
+                  ) : idx === 1 ? (
+                    <h1 className="flex gap-2 font-bold">
+                      Deuxième cadeau 🥈{m.count}
+                    </h1>
+                  ) : idx === 2 ? (
+                    <h1 className="flex gap-2 font-bold">
+                      Troisième cadeau 🥉 {m.count}
+                    </h1>
+                  ) : (
+                    <h1 className="flex gap-2 font-bold">
+                      Cadeau non défini 🎁
+                    </h1> // Fallback for any other value
+                  )}
+
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel pb={4}>Message - {m.content}</AccordionPanel>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
       <div className=" flex justify-center ">
         <div className="md:w-1/2">
-          <div className=" p-3 h-[75vh] overflow-y-auto bg-white" id="chatBox">
+          <div className=" p-3 h-[60vh] overflow-y-auto bg-white" id="chatBox">
             {sortedMessages.map((message: any) => (
-              <div className="mt-6  ">
+              <div key={message.id} className="mt-6  ">
                 {message.writtenBy.firstName ==
                   currentUser?.profile.firstName &&
                 message.writtenBy.lastName == currentUser?.profile.lastName ? (
@@ -203,14 +262,8 @@ const Message = () => {
                         <button
                           type="submit"
                           className=" transition ease-in-out delay-150 text-black hover:-translate-y-1 hover:scale-110  duration-300"
-                          // className=" transition ease-in-out delay-150 text-black hover:-translate-y-1 hover:scale-110 hover:text-red-600 duration-300"
                         >
                           <div className="flex mr-2 mt-3">
-                            <input
-                              type="hidden"
-                              name="channelId"
-                              value={parseInt(message.channelId, 10)}
-                            />
                             <input
                               type="hidden"
                               name="likedMessageId"
@@ -234,9 +287,9 @@ const Message = () => {
                       </form>
                       <div
                         key={message.id}
-                        className="  bg-sky-300  px-3   rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl gap-3   "
+                        className="  bg-primary-lower  px-3   rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl gap-3   "
                       >
-                        <p className="text-m font-normal py-2.5 text-gray-900 ">
+                        <p className="text-m font-normal py-2.5 text-white ">
                           {message.content}
                         </p>
                       </div>
@@ -256,7 +309,7 @@ const Message = () => {
                       />
                       <div
                         key={message.id}
-                        className="flex  bg-slate-200  p-2 border-solid border-2 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl  "
+                        className="flex  bg-zinc-200 border-solid   p-2   rounded-tl-2xl rounded-tr-2xl rounded-br-2xl  "
                       >
                         <p className="text-m font-normal py-2.5 text-gray-900 dark:text-white">
                           {message.content}
@@ -267,11 +320,6 @@ const Message = () => {
                           type="submit"
                           className=" transition ease-in-out delay-150 text-black hover:-translate-y-1 hover:scale-110  duration-300"
                         >
-                          <input
-                            type="hidden"
-                            name="channelId"
-                            value={parseInt(message.channelId, 10)}
-                          />
                           <input
                             type="hidden"
                             name="likedMessageId"
