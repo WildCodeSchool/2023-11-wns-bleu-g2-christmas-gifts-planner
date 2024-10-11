@@ -46,16 +46,6 @@ const Login = () => {
 
   return (
     <>
-    <Link href='/'>
-  <IconButton
-    aria-label="Back"
-    bg="transparent"
-    boxShadow="none"
-    _hover={{ bg: "gray.200" }}
-    icon={<ArrowLeft color="#003B1E" />}
-  />
-</Link>
-
 <Grid
   templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
   mt={4}
