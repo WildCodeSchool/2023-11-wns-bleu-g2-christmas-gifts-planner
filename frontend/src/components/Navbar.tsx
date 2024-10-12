@@ -106,8 +106,19 @@ export default function Navbar({
   };
 
   return (
-    <Box as="nav" bg="primary.high" color="white" padding="4" mb={16}>
-      <Flex justifyContent="space-between" alignItems="center">
+    <Box
+      as="nav"
+      bg="primary.high"
+      color="white"
+      padding="4"
+      mb={32}
+      position="fixed"  
+      top={0} 
+      left={0}  
+      right={0}  
+      zIndex="1000"
+    >      
+    <Flex justifyContent="space-between" alignItems="center">
         <Link href="/" passHref>
           <Image
             src="/Gifty-logo-white.svg"
@@ -158,6 +169,13 @@ export default function Navbar({
             </MenuList>
           </Menu>
 
+          <IconButton
+            aria-label="Toggle Theme"
+            icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+            onClick={toggleColorMode}
+            mr="4"
+          />
+          
           {!currentUser ? (
             <Button
               colorScheme="white"
