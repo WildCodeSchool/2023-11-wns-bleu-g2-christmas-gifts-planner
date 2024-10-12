@@ -191,7 +191,7 @@ export default function Channels() {
           placeholder="placeholder-find-thread"
         />        
         <Flex justifyContent="center" my={16}>
-            <AddMembersModal refetch={refetch} id={id} />
+          {isOwner && <AddMembersModal refetch={refetch} id={id} />}        
         </Flex>
 
         <Grid
@@ -226,6 +226,7 @@ export default function Channels() {
                 size="xl"
                 name={member.receiver.firstName + " " + member.receiver.lastName}
                 bg={avatarColors[index % avatarColors.length]}
+                color={"white"}
                 mb={4}
               />
               <Text fontWeight="bold" color="primary.medium" fontSize="lg">

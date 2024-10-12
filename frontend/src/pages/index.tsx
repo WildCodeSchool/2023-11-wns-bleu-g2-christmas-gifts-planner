@@ -70,6 +70,7 @@ export default function Home() {
             />
           ))}
         </Flex>
+        {!currentUser && (
         <Center>
           <Flex flexDirection="column" gap={4}>
             <Button variant={"whiteGoldenButton"}>
@@ -80,6 +81,7 @@ export default function Home() {
             </Button>
           </Flex>
         </Center>
+          )}
         <AboutUs />
       </Flex>
     </>
