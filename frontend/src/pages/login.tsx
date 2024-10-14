@@ -1,7 +1,7 @@
 import client from "@/graphql/client";
 import { useLoginMutation, useProfileQuery } from "@/graphql/generated/schema";
-import { Box, Button, Card, Center, Flex, FormControl, FormLabel, Grid, GridItem, Heading, IconButton, Image, Input, Link, Show, Text } from "@chakra-ui/react";
-import { ArrowLeft } from "lucide-react";
+import { Box, Button, Card, Center, Flex, FormControl, FormLabel, Grid, GridItem, Heading, IconButton, Image, Input, InputGroup, InputRightElement, Link, Show, Text } from "@chakra-ui/react";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,8 @@ const Login = () => {
   const [login]= useLoginMutation();
   const { t } = useTranslation();
   const router = useRouter();
+  
+  const [show, setShow] = useState<boolean>(false);
   const { data: currentUser, client } = useProfileQuery({
     errorPolicy: "ignore",
   });
@@ -123,13 +125,23 @@ const Login = () => {
             >
               {t("password")}
             </FormLabel>
+            <InputGroup>
             <Input
               name="password"
               id="password"
               isRequired
-              type="password"
+              type={show ? "text" : "password"}
               variant="goldenInput"
             />
+            <InputRightElement>
+                <IconButton
+                  aria-label={show ? t("hide-password") : t("show-password")}
+                  variant="ghost"
+                  boxShadow="none"
+                  icon={show ? <EyeOff /> : <Eye />}
+                  onClick={() => setShow(!show)}
+                  />
+            </InputRightElement>
             {error === 2 && (
               <Text
                 position="absolute"
@@ -141,6 +153,7 @@ const Login = () => {
                 {t("incorrect-password")}
               </Text>
             )}
+            </InputGroup>
             <Flex justify="flex-end">
               <Link
                 color="gray.400"
