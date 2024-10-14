@@ -271,13 +271,9 @@ const UserProfile = () => {
                 </form>
             </Box>
             </Center>
-            <Center>
-            <Box mx="24px" mt="8px" mb={20} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
-              <Center p={2}>
-                <Button variant="deleteButton" leftIcon={<Trash2 />}>{t("delete-account")}</Button>
+              <Center p={2} mt={4}>
+                <Button variant="redButton" leftIcon={<Trash2 />}>{t("delete-account")}</Button>
               </Center>
-            </Box>
-        </Center>
               <Spacer h={4}/>
         </>
     )
