@@ -37,9 +37,7 @@ export default function Navbar({
   const router = useRouter();
   const [language, setLanguage] = useState("FR");
   const { t } = useTranslation();
-  const { data: currentUser } = useProfileQuery({
-    errorPolicy: "ignore",
-  });
+  const { currentUser } = useAuthRedirect();
   const { groupId, ownerId, groupName } = useGroupContext();
 
   const isOwner =

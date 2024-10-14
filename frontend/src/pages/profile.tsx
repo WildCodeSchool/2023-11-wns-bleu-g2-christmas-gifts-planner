@@ -1,5 +1,6 @@
 import client from "@/graphql/client";
 import { useDeleteUserMutation, useProfileQuery, useUpdateUserMutation } from "@/graphql/generated/schema";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import isDefined from "@/types/isDefined";
 import isValidNotEmptyString from "@/types/isValidNotEmptyString";
 import { useApolloClient } from "@apollo/client";
@@ -37,10 +38,7 @@ const UserProfile = () => {
         errors.push(t("password-number"));
       return errors;
     }
-
-    const { data: currentUser } = useProfileQuery({
-      errorPolicy: "ignore",
-    });
+    const { currentUser } = useAuthRedirect();
     const [deleteUser] = useDeleteUserMutation();
 
     const [formData, setFormData] = useState({
