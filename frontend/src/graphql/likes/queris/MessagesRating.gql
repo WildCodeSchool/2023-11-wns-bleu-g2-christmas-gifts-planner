@@ -1,5 +1,5 @@
-query Likes($channelId: Int) {
-  Likes(channelId: $channelId) {
+query Likes($groupId: Int, $channelId: Int) {
+  Likes(groupId: $groupId, channelId: $channelId) {
     id
     likedMessageId {
       id

@@ -17,7 +17,7 @@ export default function AboutUs() {
       role: "about.dev-role",
       description: "about.alon-description",
       color: "tertiary.low",
-      link: "https://github.com/alon-bendavid",
+      link: "https://github.com/mistral-nw",
     },
     {
       name: "Robin Kolasinski",

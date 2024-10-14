@@ -12,9 +12,16 @@ import AboutCard from "@/components/home/AboutCard";
 import AboutUs from "@/components/home/AboutUs";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
+import { useProfileQuery } from "@/graphql/generated/schema";
+
 export default function Home() {
   const { t } = useTranslation();
   const { colorMode } = useColorMode();
+  const router = useRouter();
+  const { data: currentUser } = useProfileQuery({
+    errorPolicy: "ignore",
+  });
 
   const homepageCardData = [
     {
