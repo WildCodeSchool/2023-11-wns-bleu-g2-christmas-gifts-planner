@@ -304,7 +304,7 @@ const UserProfile = () => {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              {t("delete-account-confirm-title")}
+              {t("delete-account")}
             </AlertDialogHeader>
 
             <AlertDialogBody>
