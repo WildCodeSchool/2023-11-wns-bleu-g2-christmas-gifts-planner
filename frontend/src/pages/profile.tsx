@@ -1,11 +1,11 @@
 import client from "@/graphql/client";
-import { useProfileQuery, useUpdateUserMutation } from "@/graphql/generated/schema";
+import { useDeleteUserMutation, useProfileQuery, useUpdateUserMutation } from "@/graphql/generated/schema";
 import isDefined from "@/types/isDefined";
 import isValidNotEmptyString from "@/types/isValidNotEmptyString";
-import { Box, Button, Center, Flex, FormControl, FormLabel, IconButton, Input, InputGroup, InputRightElement, Link, Spacer, Text, Tooltip, useToast } from "@chakra-ui/react";
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Center, Flex, FormControl, FormLabel, IconButton, Input, InputGroup, InputRightElement, Link, Spacer, Text, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
 import { ArrowLeft, Eye, EyeOff, InfoIcon, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 
@@ -15,6 +15,9 @@ const UserProfile = () => {
     const [showOld, setShowOld] = useState<boolean>(false);
     const [showNew, setShowNew] = useState<boolean>(false);
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const cancelRef = useRef<HTMLButtonElement>(null);
+    
     const [updateUser] = useUpdateUserMutation();
     const toast = useToast();
     const router = useRouter()
@@ -36,6 +39,10 @@ const UserProfile = () => {
     const { data: currentUser } = useProfileQuery({
       errorPolicy: "ignore",
     });
+    const [deleteUser] = useDeleteUserMutation({
+      variables: { userId: parseInt(currentUser!.profile.id)}
+       }
+    );
 
     const [formData, setFormData] = useState({
       email: "",
@@ -173,6 +180,11 @@ const UserProfile = () => {
       }
     };
 
+  const handleDelete = () => {
+    deleteUser();
+    onClose();
+  };
+
     return(
         <>
         <Link href='/dashboard'>
@@ -272,10 +284,37 @@ const UserProfile = () => {
             </Box>
             </Center>
               <Center p={2} mt={4}>
-                <Button variant="redButton" leftIcon={<Trash2 />}>{t("delete-account")}</Button>
+                <Button variant="redButton" leftIcon={<Trash2 />} onClick={onOpen}>{t("delete-account")}</Button>
               </Center>
               <Spacer h={4}/>
+              <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              {t("delete-account-confirm-title")}
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              {t("delete-account-confirm-message")}
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                {t("return")}
+              </Button>
+              <Button colorScheme="red" onClick={handleDelete} ml={3}>
+                {t("yes-delete-it")}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
         </>
+        
     )
 }
 export default UserProfile;

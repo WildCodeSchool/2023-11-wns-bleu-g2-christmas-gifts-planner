@@ -91,6 +91,7 @@ export type Mutation = {
   createMessage: Message;
   createUser: User;
   deleteGroup: Scalars['String'];
+  deleteUser: Scalars['String'];
   login: Scalars['String'];
   logout: Scalars['String'];
   updateUser: User;
@@ -144,6 +145,10 @@ export type MutationDeleteGroupArgs = {
   groupId: Scalars['Int'];
 };
 
+
+export type MutationDeleteUserArgs = {
+  userId: Scalars['Int'];
+};
 
 export type MutationLoginArgs = {
   data: LoginInputType;
@@ -1244,3 +1249,21 @@ export function useProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Pr
 export type ProfileQueryHookResult = ReturnType<typeof useProfileQuery>;
 export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>;
 export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVariables>;
+
+export type DeleteUserMutationVariables = Exact<{
+  userId: Scalars['Float'];
+}>;
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: string };
+export const DeleteUserDocument = gql`
+    mutation DeleteUser($userId: Float!) {
+  deleteUser(userId: $userId)
+}
+    `;
+export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
+export function useDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, options);
+}
+export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
+export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
+export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
