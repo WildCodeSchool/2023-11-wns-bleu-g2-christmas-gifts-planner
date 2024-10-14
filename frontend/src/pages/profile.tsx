@@ -1,5 +1,4 @@
-import client from "@/graphql/client";
-import { useDeleteUserMutation, useProfileQuery, useUpdateUserMutation } from "@/graphql/generated/schema";
+import { useDeleteUserMutation, useUpdateUserMutation } from "@/graphql/generated/schema";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import isDefined from "@/types/isDefined";
 import isValidNotEmptyString from "@/types/isValidNotEmptyString";
@@ -204,12 +203,10 @@ const UserProfile = () => {
                 <form onSubmit={handleSubmitProfile}>
                   <Text fontWeight="bold">{t("modify-profile")}</Text>
                     <FormControl mt={6}>
-                        {/* Firstname and lastname */}
                                 <FormLabel >{t("lastname")}</FormLabel>
                                 <Input type="text" name="lastName" id="lastName" variant="goldenInput" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.lastName)? currentUser!.profile.lastName! : t("lastname")} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.lastName}/>                        
                         <FormLabel mt={4} >{t("firstname")} </FormLabel>
                                 <Input type="text" name="firstName" id="firstName" variant="goldenInput" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.firstName)? currentUser!.profile.firstName! : t("firstname")} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.firstName}/>
-                                {/* Email */}
                         {error === 2 &&
                                 <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">{t("email-already-existing")}</Text>
                                 }
@@ -224,7 +221,6 @@ const UserProfile = () => {
                 </form>
                 </Box>
                 </Center>
-                         {/* Old Password */}
                          <Center>
                          <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
                          <form onSubmit={handleSubmitPassword}>
@@ -246,7 +242,6 @@ const UserProfile = () => {
                                 <Text position="absolute" mt={10} fontSize={14} fontWeight="bold" color="red.700">{t("modify-password-is-different")}</Text>
                                 }
                         </InputGroup>
-                        {/* New Password and confirm Password */}
                         <FormLabel mt={6}>{t("new-password")} </FormLabel>
                         <InputGroup size='md' >
                             <Input name="newPassword" id="newPassword" fontSize={14} type={showNew ? "text":'password'} variant="goldenInput" placeholder={t("new-password")} borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>

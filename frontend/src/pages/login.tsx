@@ -1,7 +1,7 @@
-import client from "@/graphql/client";
-import { useLoginMutation, useProfileQuery } from "@/graphql/generated/schema";
+import { useLoginMutation } from "@/graphql/generated/schema";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import { Box, Button, Card, Center, Flex, FormControl, FormLabel, Grid, GridItem, Heading, IconButton, Image, Input, InputGroup, InputRightElement, Link, Show, Text } from "@chakra-ui/react";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -13,9 +13,7 @@ const Login = () => {
   const router = useRouter();
   
   const [show, setShow] = useState<boolean>(false);
-  const { data: currentUser, client } = useProfileQuery({
-    errorPolicy: "ignore",
-  });
+  const { client } = useAuthRedirect();
 
   useEffect(() => {
     if (error !== 0) {
@@ -33,7 +31,7 @@ const Login = () => {
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
     try {
-      const res = await login({ variables: { data: formJSON } });
+      await login({ variables: { data: formJSON } });
       router.push('/dashboard')
     } catch (e: any) {
       if(e.message === "Invalid Credentials") {

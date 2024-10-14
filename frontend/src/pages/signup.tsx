@@ -1,7 +1,7 @@
 import client from "@/graphql/client";
 import { useLoginMutation, useSignupMutation } from "@/graphql/generated/schema";
 import { Box, Button, Card, Center, FormControl, Grid, GridItem, Heading, IconButton, Image, Input, InputGroup, InputRightElement, Link, Show, Text, Tooltip, useToast } from '@chakra-ui/react';
-import { ArrowLeft, Eye, EyeOff, InfoIcon } from "lucide-react";
+import { Eye, EyeOff, InfoIcon } from "lucide-react";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
