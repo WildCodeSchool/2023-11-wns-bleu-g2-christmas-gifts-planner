@@ -27,8 +27,6 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18n from "../i18n";
 import ConfirmModal from "./ConfirmModal";
-import CreateGroupModal from "@/components/group/CreateGroupModal";
-import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 
 export default function Navbar({
   onGroupDeleted,
