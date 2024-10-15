@@ -104,6 +104,18 @@ export default class ChannelResolver {
       const channels: Channel[] = [];
       // Creation of a channel for each member of the group
       for (const member of group.members) {
+        // Check if a channel already exists for this member in the group
+        const existingChannel = await Channel.findOne({
+          where: {
+            receiver: { id: member.id },
+            group: { id: groupId },
+          },
+        });
+    
+        // If the channel already exists, skip the creation
+        if (existingChannel) {
+          continue;
+        }
         const newChannel = Channel.create({
           name: `Channel for ${member.firstName} ${member.lastName}`,
           group: group, 
@@ -115,11 +127,20 @@ export default class ChannelResolver {
         channels.push(newChannel); 
       }
 
-    const ownerChannel = Channel.create({
-      name: `Channel for ${group.owner.firstName} ${group.owner.lastName}`,
-      group: group,
-      receiver: group.owner,
-    });
+      const existingOwnerChannel = await Channel.findOne({
+        where: {
+          receiver: { id: group.owner.id },
+          group: { id: groupId },
+        },
+      });
+    
+      // Si le canal du propriétaire n'existe pas, le créer
+      if (!existingOwnerChannel) {
+        const ownerChannel = Channel.create({
+          name: `Channel for ${group.owner.firstName} ${group.owner.lastName}`,
+          group: group,
+          receiver: group.owner,
+        });
 
     // Save the channel of the owner in the database
     await ownerChannel.save();
@@ -127,4 +148,8 @@ export default class ChannelResolver {
     // return the created channels
     return channels;
   }
+
+  // Return an empty array if no channels were created
+  return [];
+}
 }
