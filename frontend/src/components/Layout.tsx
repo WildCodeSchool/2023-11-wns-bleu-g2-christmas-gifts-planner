@@ -7,7 +7,6 @@ import Navbar from "./Navbar";
 
 export default function Layout({
   children,
-  pageTitle,
 }: {
   children: ReactNode;
   pageTitle: string;
@@ -16,7 +15,7 @@ export default function Layout({
   return (
     <>
       <Head>
-        <title>{pageTitle} Christmas Gift Planner </title>
+        <title> Christmas Gift Planner </title>
         <meta
           name="description"
           content="gift planner for family/friend group"
@@ -26,7 +25,7 @@ export default function Layout({
       </Head>
       <Box display="flex" flexDirection="column" minHeight="100vh">
         <Navbar onGroupDeleted={refetch} />
-        <Box as="main" flex="1">
+        <Box as="main" flex="1" mt={32}>
           {children}
         </Box>
         <Footer />
