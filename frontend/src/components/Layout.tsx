@@ -27,7 +27,7 @@ export default function Layout({
       </Head>
       <Box display="flex" flexDirection="column" minHeight="100vh">
         <Navbar onGroupDeleted={refetch} />
-        <Box as="main" flex="1">
+        <Box as="main" flex="1" mt={32}>
           {children}
         </Box>
         <Footer />
