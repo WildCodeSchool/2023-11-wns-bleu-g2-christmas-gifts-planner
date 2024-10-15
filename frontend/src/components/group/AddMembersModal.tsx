@@ -10,33 +10,26 @@ import {
   useDisclosure,
   useMediaQuery,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import FormAddMembers from "./FormAddMembers";
 import { AddIcon } from "@chakra-ui/icons";
+import { useTranslation } from "react-i18next";
 
 type AddMembersModalProps = {
   refetch: () => void;
   id: string;
 };
 export default function AddMembersModal({ refetch, id }: AddMembersModalProps) {
+  const { t } = useTranslation();
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
+  const [channels, setChannels] = useState<{ email: string; color?: string }[]>([]);
   return (
     <>
-      <IconButton
-        onClick={onOpen}
-        icon={<AddIcon />}
-        aria-label="Add Member"
-        borderRadius="full"
-        bg="transparent"
-        border="1px solid #084F2D"
-        size={"lg"}
-        _hover={{
-          textDecoration: "none",
-          bg: "secondary.medium",
-        }}
-      />
+      <Button onClick={onOpen} variant="goldenButton">
+      {t("add-members")}
+      </Button>
 
       <Modal
         isOpen={isOpen}
@@ -58,6 +51,8 @@ export default function AddMembersModal({ refetch, id }: AddMembersModalProps) {
               refetch={refetch}
               initialRef={initialRef}
               id={id}
+              setChannels={setChannels} // Passez la fonction setChannels
+            channels={channels}
             />
           </ModalBody>
         </ModalContent>
