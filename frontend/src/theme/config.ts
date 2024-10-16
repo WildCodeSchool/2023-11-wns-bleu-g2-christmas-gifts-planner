@@ -11,7 +11,7 @@ import { toastTheme } from "./components/Toast";
 
 const config: ThemeConfig = {
   initialColorMode: "light",
-  useSystemColorMode: true,
+  useSystemColorMode: false,
 };
 
 const colors = {

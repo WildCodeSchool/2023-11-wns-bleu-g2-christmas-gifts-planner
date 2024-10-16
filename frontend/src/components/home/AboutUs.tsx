@@ -50,7 +50,7 @@ export default function AboutUs() {
       </Box>
       <Box p={6}>
         <Box m={"auto"} width={"90%"} alignContent={"center"}>
-          <Heading mb={6}>{t("our-team")}</Heading>
+          <Heading mb={6}>{t("about.our-team")}</Heading>
 
           <Flex flexWrap="wrap" justifyContent="center" gap={8}>
             {developers.map((dev, index) => (
