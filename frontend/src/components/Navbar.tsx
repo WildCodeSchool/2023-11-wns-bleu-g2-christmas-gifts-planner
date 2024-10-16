@@ -21,7 +21,6 @@ import {
   useProfileQuery,
   useLogoutMutation,
   useDeleteGroupMutation,
-  useGroupByIdQuery,
 } from "@/graphql/generated/schema";
 import i18n from "../i18n";
 import { useTranslation } from "react-i18next";
@@ -38,7 +37,11 @@ export default function Navbar({
   const router = useRouter();
   const [language, setLanguage] = useState("FR");
   const { t } = useTranslation();
-  const { data: currentUser,refetch, client } = useProfileQuery({
+  const {
+    data: currentUser,
+    refetch,
+    client,
+  } = useProfileQuery({
     errorPolicy: "ignore",
   });
   const { groupId, ownerId, groupName } = useGroupContext();
@@ -109,16 +112,15 @@ export default function Navbar({
     <Box
       as="nav"
       bg="primary.high"
-      color="white"
       padding="4"
       mb={32}
-      position="fixed"  
-      top={0} 
-      left={0}  
-      right={0}  
+      position="fixed"
+      top={0}
+      left={0}
+      right={0}
       zIndex="1000"
-    >      
-    <Flex justifyContent="space-between" alignItems="center">
+    >
+      <Flex justifyContent="space-between" alignItems="center">
         <Link href="/" passHref>
           <Image
             src="/Gifty-logo-white.svg"
@@ -141,6 +143,7 @@ export default function Navbar({
               variant="outline"
               h={"40px"}
               colorScheme="white"
+              color={"white"}
               mr="4"
               _hover={{
                 textDecoration: "none",
@@ -151,7 +154,6 @@ export default function Navbar({
             </MenuButton>
             <MenuList minWidth="50px">
               <MenuItem
-                color="primary.high"
                 _hover={{ bg: "secondary.low" }}
                 fontWeight="bold"
                 onClick={() => handleLanguageChange("FR")}
@@ -159,7 +161,6 @@ export default function Navbar({
                 FR
               </MenuItem>
               <MenuItem
-                color="primary.high"
                 _hover={{ bg: "secondary.low" }}
                 fontWeight="bold"
                 onClick={() => handleLanguageChange("EN")}
@@ -175,7 +176,7 @@ export default function Navbar({
             onClick={toggleColorMode}
             mr="4"
           />
-          
+
           {!currentUser ? (
             <Button
               colorScheme="white"
@@ -208,14 +209,12 @@ export default function Navbar({
                 <Box textAlign="center" p={2}>
                   <Flex flexDirection="column">
                     <MenuItem
-                      color="primary.high"
                       _hover={{ bg: "secondary.low" }}
                       onClick={() => router.push("/profile")}
                     >
                       {t("nav-my-profile")}
                     </MenuItem>
                     <MenuItem
-                      color="primary.high"
                       _hover={{ bg: "secondary.low" }}
                       onClick={() => router.push("/dashboard")}
                     >
@@ -226,8 +225,8 @@ export default function Navbar({
                 <MenuDivider />
                 <Box textAlign="center" p={4}>
                   <Flex flexDirection="column" gap={4}>
-                  <CreateGroupModal refetch={refetch} />
-                  {isOwner &&
+                    <CreateGroupModal refetch={refetch} />
+                    {isOwner &&
                       router.query.id?.toString() === groupId?.toString() && (
                         <ConfirmModal
                           handleClick={handleDeleteGroup}

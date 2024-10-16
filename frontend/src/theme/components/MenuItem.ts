@@ -4,7 +4,6 @@ const defaultMenuItem = defineStyle({
   _hover: {
     background: "secondary.low",
   },
-  color: "primary.high",
   fontWeight: "bold",
 });
 
