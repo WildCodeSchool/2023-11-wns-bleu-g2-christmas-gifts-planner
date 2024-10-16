@@ -23,6 +23,7 @@
   "create-new-group-to-start": "Create a new group to start exchanging present ideas with your kin",
   "current-password": "Current password",
   "delete-account": "Delete my account",
+  "delete-account-confirm-message": "Do you really want to delete your account ? This action cannot be undone",
   "description-success-password-modified": "Your password has been modified !",
   "description-success-profile-modified": "Your profile has been modified",
   "description-success-signed-up": "Your registration has been taken into account",
@@ -31,11 +32,11 @@
   "email-already-added": "This email is already added.",
   "email-already-existing": "This email is already taken",
   "error-messages": {
-    "not-found": "Oups, the requested page wasn't found",
+    "generic": "An error occurred. Please try again later",
     "not-exist": "This page doesn't exist",
-    "unauthorized": "You're not authorized to see this page",
+    "not-found": "Oups, the requested page wasn't found",
     "result": "Oups, it seems like there's no result",
-    "generic": "An error occurred. Please try again later"
+    "unauthorized": "You're not authorized to see this page"
   },
   "firstname": "Firstname",
   "forgot-password": "Forgot your password ?",
@@ -69,17 +70,18 @@
   "password-number": "Password must contain a number",
   "password-uppercase": "Password must contain an uppercase letter",
   "passwords-are-not-equals": "Passwords are not corresponding !",
-  "placeholder-add-member-email": "Insert a member's email to add him",
-  "placeholder-add-members-to-group": "Add members to your group",
-  "placeholder-find-thread": "Find thread",
-  "placeholder-name-your-group": "Give a name to your group",
   "placeholder": {
     "firstname": "Your first name",
     "lastname": "Your last name",
     "password": "Your password",
     "search-group": "Search a group"
   },
+  "placeholder-add-member-email": "Insert a member's email to add him",
+  "placeholder-add-members-to-group": "Add members to your group",
+  "placeholder-find-thread": "Find thread",
+  "placeholder-name-your-group": "Give a name to your group",
   "present-ideas": "Present ideas for",
+  "return": "Return",
   "show-password": "Show password",
   "sign-in": "Sign in",
   "sign-out": "Sign out",
@@ -101,8 +103,8 @@
       "add-member-provided": "Please provide at least one member",
       "add-member-title": "Error while adding a member",
       "create-group": "An error occurred while creating the group",
-      "generic-title": "Error",
       "generic-description": "An error occurred",
+      "generic-title": "Error",
       "validate-profile": "An error occurred during profile validation"
     },
     "success": {
@@ -112,8 +114,8 @@
       "delete-group-title": "Group deleted",
       "group-created-description": "Your group {{groupName}} has been successfully created.",
       "group-created-title": "Group created",
-      "validate-profile-title": "Profile validated",
-      "validate-profile-description": "Your profile has been successfully validated."
+      "validate-profile-description": "Your profile has been successfully validated.",
+      "validate-profile-title": "Profile validated"
     }
   },
   "unauthorized-password": "This password isn't authorized",
@@ -123,9 +125,9 @@
     "email-type": "The email address must be in the format 'name@domain.com'.",
     "firstname-length": "The first name must contain at least 2 characters.",
     "firstname-type": "The first name must contain only letters.",
-    "helper-password": "The password must contain at least 8 characters, an uppercase letter, a lowercase letter, a number, and a special character.",
     "group-name": "The group name '{{groupName}}' already exists",
     "group-name-length": "The group name must contain at least 2 characters.",
+    "helper-password": "The password must contain at least 8 characters, an uppercase letter, a lowercase letter, a number, and a special character.",
     "lastname-length": "The last name must contain at least 2 characters.",
     "lastname-type": "The last name must contain only letters.",
     "password-equal": "Passwords do not match",
@@ -135,5 +137,6 @@
     "password-special": "The password must contain a special character",
     "password-uppercase": "The password must contain an uppercase letter"
   },
-  "welcome-back": "Welcome back"
+  "welcome-back": "Welcome back",
+  "yes-delete-it": "Yes, delete it"
 }

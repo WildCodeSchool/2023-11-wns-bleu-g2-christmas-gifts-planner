@@ -10,6 +10,7 @@ import {
   useNewMessageSubscription,
   useProfileQuery,
 } from "@/graphql/generated/schema";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import {
   Accordion,
   AccordionButton,
@@ -35,10 +36,7 @@ const Message = () => {
       groupId: parseInt(GroupId),
     },
   });
-  // console.log("memebers", getMembers);
-  const { data: currentUser, client } = useProfileQuery({
-    errorPolicy: "ignore",
-  });
+  const { currentUser, client } = useAuthRedirect();
 
   let { data: getRatings } = useLikesQuery({
     variables: {
