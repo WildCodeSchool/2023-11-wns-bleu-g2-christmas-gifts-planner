@@ -1,7 +1,10 @@
 import { Box, ListItem, UnorderedList } from "@chakra-ui/react";
 import LegalModal from "./LegalModal";
+import { useTranslation } from "react-i18next";
 
 export default function Footer() {
+  const { t } = useTranslation();
+
   return (
     <Box
       as="footer"
@@ -26,7 +29,7 @@ export default function Footer() {
           fontWeight="bold"
           fontSize="sm"
         >
-          © 2024 Gifty. Tous droits réservés.
+          {t("footer.copyright")}
         </ListItem>
         <ListItem
           listStyleType="none"

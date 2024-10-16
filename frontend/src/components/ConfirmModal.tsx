@@ -6,7 +6,6 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
-  AlertDialogCloseButton,
   useDisclosure,
   Button,
 } from "@chakra-ui/react";
@@ -42,7 +41,10 @@ export default function ConfirmModal({
         onClose={onClose}
       >
         <AlertDialogOverlay>
-          <AlertDialogContent backgroundColor={"background.default"}>
+          <AlertDialogContent
+            backgroundColor={"background.default"}
+            _dark={{ bg: "dark.surface10" }}
+          >
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
               {title}
             </AlertDialogHeader>

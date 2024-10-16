@@ -23,6 +23,14 @@ const goldenInput = definePartsStyle({
     _placeholder: {
       fontSize: "sm",
     },
+    _dark: {
+      _focusVisible: {
+        bg: "dark.surface20",
+      },
+      _invalid: {
+        borderColor: "tertiary.lower",
+      },
+    },
   },
 });
 const genericInput = definePartsStyle({
@@ -44,6 +52,11 @@ const genericInput = definePartsStyle({
     },
     _placeholder: {
       fontSize: "sm",
+    },
+    _dark: {
+      _focusVisible: {
+        bg: "dark.surface20",
+      },
     },
   },
 });

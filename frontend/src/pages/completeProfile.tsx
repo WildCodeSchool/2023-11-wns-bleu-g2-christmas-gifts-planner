@@ -184,9 +184,7 @@ export default function CompleteProfile() {
                 />
                 {errors.lastName &&
                   errors.lastName.map((error, index) => (
-                    <FormErrorMessage key={index} color="tertiary.medium">
-                      {error}
-                    </FormErrorMessage>
+                    <FormErrorMessage key={index}>{error}</FormErrorMessage>
                   ))}
               </FormControl>
               <FormControl
@@ -205,9 +203,7 @@ export default function CompleteProfile() {
                 />
                 {errors.firstName &&
                   errors.firstName.map((error, index) => (
-                    <FormErrorMessage key={index} color="tertiary.medium">
-                      {error}
-                    </FormErrorMessage>
+                    <FormErrorMessage key={index}>{error}</FormErrorMessage>
                   ))}
               </FormControl>
             </CardBody>
@@ -247,9 +243,7 @@ export default function CompleteProfile() {
                   </FormHelperText>
                 ) : (
                   errors.password.map((error, index) => (
-                    <FormErrorMessage key={index} color="tertiary.medium">
-                      {error}
-                    </FormErrorMessage>
+                    <FormErrorMessage key={index}>{error}</FormErrorMessage>
                   ))
                 )}
               </FormControl>
@@ -283,9 +277,7 @@ export default function CompleteProfile() {
                 </InputGroup>
                 {errors.passwordConfirmation &&
                   errors.passwordConfirmation.map((error, index) => (
-                    <FormErrorMessage key={index} color="tertiary.medium">
-                      {error}
-                    </FormErrorMessage>
+                    <FormErrorMessage key={index}>{error}</FormErrorMessage>
                   ))}
               </FormControl>
             </CardBody>

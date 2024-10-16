@@ -50,6 +50,7 @@ export default function AddMembersModal({ refetch, id }: AddMembersModalProps) {
           p={6}
           mb={isMobile ? 0 : "auto"}
           mt="auto"
+          _dark={{ bg: "dark.surface10" }}
         >
           <ModalCloseButton />
           <ModalBody p={isMobile ? 0 : "auto"}>
