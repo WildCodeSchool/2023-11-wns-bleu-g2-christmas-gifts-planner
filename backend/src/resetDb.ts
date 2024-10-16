@@ -81,25 +81,7 @@ export default async function main() {
   });
   await userNina.save();
 
-  const firstAdminGroup = new Group();
-  Object.assign(firstAdminGroup, {
-    name: "My best family group",
-    owner: admin,
-  });
-  const secondAdminGroup = new Group();
-  Object.assign(secondAdminGroup, {
-    name: "Perceval group",
-    owner: admin,
-  });
-
-  const tertiaryAdminGroup = new Group();
-  Object.assign(tertiaryAdminGroup, {
-    name: "My best friends group",
-    owner: admin,
-  });
-
-  firstAdminGroup.members = [userJonas, userMateo, userEnola];
-
+  // Creating groups by Jonas
   const firstJonasGroup = new Group();
   Object.assign(firstJonasGroup, {
     name: "Gifty group",
@@ -111,58 +93,74 @@ export default async function main() {
     owner: userJonas,
   });
 
-  firstJonasGroup.members = [admin, userMateo];
+  // Creating groups by Mateo
 
-  await firstAdminGroup.save();
-  await secondAdminGroup.save();
-  await tertiaryAdminGroup.save();
+  firstJonasGroup.members = [userValentina, userMateo];
+  const firstMateoGroup = new Group();
+  Object.assign(firstMateoGroup, {
+    name: "My best family group",
+    owner: userMateo,
+  });
+  const secondMateoGroup = new Group();
+  Object.assign(secondMateoGroup, {
+    name: "Le Perceval est une ordure",
+    owner: userMateo,
+  });
+
+  firstMateoGroup.members = [userJonas, userValentina, userEnola];
 
   await firstJonasGroup.save();
   await secondJonasGroup.save();
 
-  const jonasChannel = new Channel();
-  Object.assign(jonasChannel, {
-    name: "Jonas's channel",
-    receiver: 2,
-    group: firstAdminGroup,
-  });
-  await jonasChannel.save();
+  await firstMateoGroup.save();
+  await secondMateoGroup.save();
+
+  // Creating channels
 
   const mateoChannel = new Channel();
   Object.assign(mateoChannel, {
     name: "Mateo's channel",
     receiver: 3,
-    group: firstAdminGroup,
+    group: firstJonasGroup,
   });
   await mateoChannel.save();
+
+  const valentinaChannel2 = new Channel();
+  Object.assign(valentinaChannel2, {
+    name: "Valentina's channel",
+    receiver: 5,
+    group: firstJonasGroup,
+  });
+  await valentinaChannel2.save();
+
+  const jonasChannel = new Channel();
+  Object.assign(jonasChannel, {
+    name: "Jonas's channel",
+    receiver: 2,
+    group: firstMateoGroup,
+  });
+  await jonasChannel.save();
 
   const enolaChannel = new Channel();
   Object.assign(enolaChannel, {
     name: "Enola's channel",
     receiver: 4,
-    group: firstAdminGroup,
+    group: firstMateoGroup,
   });
   await enolaChannel.save();
 
-  const adminChannel = new Channel();
-  Object.assign(adminChannel, {
-    name: "Admin's channel",
-    receiver: 1,
-    group: firstJonasGroup,
+  const valentinaChannel = new Channel();
+  Object.assign(valentinaChannel, {
+    name: "Valentina's channel",
+    receiver: 5,
+    group: firstMateoGroup,
   });
-  await adminChannel.save();
-
-  const mateoChannel2 = new Channel();
-  Object.assign(mateoChannel2, {
-    name: "Mateo's channel",
-    receiver: 3,
-    group: firstJonasGroup,
-  });
-  await mateoChannel2.save();
+  await valentinaChannel.save();
 
   const message01 = new Message();
   Object.assign(message01, {
-    content: "Hello Mateo, i tought about an amazing gift for pierre! a fish!",
+    content:
+      "Hello Valentina, i tought about an amazing gift for Mateo! a fish!",
     sent_at: "2024-07-03 18:10:31",
     channelId: 1,
     groupId: 1,
@@ -174,24 +172,24 @@ export default async function main() {
 
   const message02 = new Message();
   Object.assign(message02, {
-    content: "lol, Jonas!",
+    content: "lol, Jonas! That's a unique idea. I think he will love it!",
     sent_at: "2024-07-03 18:11:02",
     channelId: 1,
     groupId: 1,
     writtenBy: {
-      id: 3,
+      id: 5,
     },
   });
   await message02.save();
 
   const message03 = new Message();
   Object.assign(message03, {
-    content: "message03",
+    content: "I'm in for the fish! Let's do it!",
     sent_at: "2024-07-03 18:11:02",
     channelId: 1,
     groupId: 1,
     writtenBy: {
-      id: 3,
+      id: 2,
     },
   });
   await message03.save();
