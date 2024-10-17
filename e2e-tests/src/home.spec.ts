@@ -8,7 +8,6 @@ test.beforeEach(clearDB);
 test.afterAll(disconnect);
 
 test("can view users in db", async ({ page }) => {
-  // Annonces Récentes
   const admin = new User();
   Object.assign(admin, {
     firstName: "admin",

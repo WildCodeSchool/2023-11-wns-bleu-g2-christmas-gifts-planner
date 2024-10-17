@@ -11,4 +11,7 @@ export class NewLikeType {
 
   @Field(() => ObjectId)
   channelId: ObjectId;
+
+  @Field(() => ObjectId)
+  groupId: ObjectId;
 }

@@ -1,11 +1,12 @@
-import client from "@/graphql/client";
-import { useProfileQuery, useUpdateUserMutation } from "@/graphql/generated/schema";
+import { useDeleteUserMutation, useUpdateUserMutation } from "@/graphql/generated/schema";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import isDefined from "@/types/isDefined";
 import isValidNotEmptyString from "@/types/isValidNotEmptyString";
-import { Box, Button, Center, Flex, FormControl, FormLabel, IconButton, Input, InputGroup, InputRightElement, Link, Spacer, Text, Tooltip, useToast } from "@chakra-ui/react";
+import { useApolloClient } from "@apollo/client";
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Center, Flex, FormControl, FormLabel, IconButton, Input, InputGroup, InputRightElement, Link, Spacer, Text, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
 import { ArrowLeft, Eye, EyeOff, InfoIcon, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 
@@ -15,6 +16,10 @@ const UserProfile = () => {
     const [showOld, setShowOld] = useState<boolean>(false);
     const [showNew, setShowNew] = useState<boolean>(false);
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const cancelRef = useRef<HTMLButtonElement>(null);
+    
+    const client = useApolloClient()
     const [updateUser] = useUpdateUserMutation();
     const toast = useToast();
     const router = useRouter()
@@ -32,10 +37,8 @@ const UserProfile = () => {
         errors.push(t("password-number"));
       return errors;
     }
-
-    const { data: currentUser } = useProfileQuery({
-      errorPolicy: "ignore",
-    });
+    const { currentUser } = useAuthRedirect();
+    const [deleteUser] = useDeleteUserMutation();
 
     const [formData, setFormData] = useState({
       email: "",
@@ -173,6 +176,23 @@ const UserProfile = () => {
       }
     };
 
+  const handleDelete = async() => {
+    try {
+      isDefined(currentUser?.profile?.id) ? 
+      await deleteUser({
+        variables: {
+          userId:parseInt(currentUser!.profile!.id)
+        }
+      })  : ""
+      onClose();
+    } catch (error) {
+    console.warn("FAILED TO DELETE", error)
+  } finally {
+    client.resetStore();
+    router.push("/login")
+  }
+  };
+
     return(
         <>
         <Link href='/dashboard'>
@@ -183,12 +203,10 @@ const UserProfile = () => {
                 <form onSubmit={handleSubmitProfile}>
                   <Text fontWeight="bold">{t("modify-profile")}</Text>
                     <FormControl mt={6}>
-                        {/* Firstname and lastname */}
                                 <FormLabel >{t("lastname")}</FormLabel>
                                 <Input type="text" name="lastName" id="lastName" variant="goldenInput" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.lastName)? currentUser!.profile.lastName! : t("lastname")} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.lastName}/>                        
                         <FormLabel mt={4} >{t("firstname")} </FormLabel>
                                 <Input type="text" name="firstName" id="firstName" variant="goldenInput" fontSize={14} minLength={2} maxLength={30} placeholder={isValidNotEmptyString(currentUser?.profile.firstName)? currentUser!.profile.firstName! : t("firstname")} width="100%" borderRadius={20} borderColor="green.600" onChange={handleChange} value={formData.firstName}/>
-                                {/* Email */}
                         {error === 2 &&
                                 <Text position="absolute" fontSize={14} fontWeight="bold" color="red.700">{t("email-already-existing")}</Text>
                                 }
@@ -203,7 +221,6 @@ const UserProfile = () => {
                 </form>
                 </Box>
                 </Center>
-                         {/* Old Password */}
                          <Center>
                          <Box mx="24px" mt="8px" p={4} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
                          <form onSubmit={handleSubmitPassword}>
@@ -225,7 +242,6 @@ const UserProfile = () => {
                                 <Text position="absolute" mt={10} fontSize={14} fontWeight="bold" color="red.700">{t("modify-password-is-different")}</Text>
                                 }
                         </InputGroup>
-                        {/* New Password and confirm Password */}
                         <FormLabel mt={6}>{t("new-password")} </FormLabel>
                         <InputGroup size='md' >
                             <Input name="newPassword" id="newPassword" fontSize={14} type={showNew ? "text":'password'} variant="goldenInput" placeholder={t("new-password")} borderRadius={15} borderColor={error === 1 || error === 4 ? "red.700" : "green.600"} onChange={handleChange}/>
@@ -271,15 +287,38 @@ const UserProfile = () => {
                 </form>
             </Box>
             </Center>
-            <Center>
-            <Box mx="24px" mt="8px" mb={20} maxW="500px" w="90%" data-testid="card" bgColor="Background" border="1px solid lightgray" borderRadius="12px" boxShadow="2px 2px 2px lightgray">
-              <Center p={2}>
-                <Button variant="deleteButton" leftIcon={<Trash2 />}>{t("delete-account")}</Button>
+              <Center p={2} mt={4}>
+                <Button variant="redButton" leftIcon={<Trash2 />} onClick={onOpen}>{t("delete-account")}</Button>
               </Center>
-            </Box>
-        </Center>
               <Spacer h={4}/>
+              <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              {t("delete-account")}
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              {t("delete-account-confirm-message")}
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                {t("return")}
+              </Button>
+              <Button colorScheme="red" onClick={handleDelete} ml={3}>
+                {t("yes-delete-it")}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
         </>
+        
     )
 }
 export default UserProfile;

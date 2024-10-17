@@ -10,6 +10,7 @@ import {
 import User from "./User";
 import Channel from "./Channel";
 import Message from "./Message";
+import Group from "./Group";
 
 @Entity()
 @ObjectType()
@@ -34,6 +35,12 @@ export default class Like extends BaseEntity {
   @ManyToOne(() => Channel, (channel) => channel.id, {
     onDelete: "CASCADE",
   })
-  @Field(() => Message, { nullable: true })
-  channelId: Message;
+  @Field(() => Channel, { nullable: true })
+  channelId: Channel;
+
+  @ManyToOne(() => Group, (group) => group.id, {
+    onDelete: "CASCADE",
+  })
+  @Field(() => Group, { nullable: true })
+  groupId: Group;
 }

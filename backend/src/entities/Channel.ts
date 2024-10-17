@@ -25,9 +25,9 @@ export default class Channel extends BaseEntity {
   name: string;
 
   @Field(() => Group)
-  @ManyToOne(() => Group, (group) => group.channels)
+  @ManyToOne(() => Group, (group) => group.channels, { onDelete: 'CASCADE' })
   group: Group;
-
+  
   @OneToMany(() => Message, (message) => message, { cascade: true })
   messages: Message[];
 

@@ -17,6 +17,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { ApolloError } from "@apollo/client";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { useTranslation } from "react-i18next";
+import router from "next/router";
 
 type FormCreateGroupProps = {
   onClose: () => void;
@@ -189,6 +190,9 @@ export default function FormCreateGroup({
         status: "success",
         variant: "success",
       });
+      if (router.pathname !== "/dashboard") {
+        router.push("/dashboard");
+      }
     } catch (error) {
       if (error instanceof ApolloError) {
         console.error("GraphQL Error:", error.graphQLErrors);

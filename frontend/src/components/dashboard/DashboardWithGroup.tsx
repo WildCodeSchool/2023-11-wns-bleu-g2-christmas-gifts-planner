@@ -6,14 +6,11 @@ import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import SearchBar from "../SearchBar";
 import { group } from "console";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 
 export default function DashboardWhithGroup() {
   const { t } = useTranslation();
-
-  // Fetches the current user's profile and groups
-  const { data: currentUser } = useProfileQuery({
-    errorPolicy: "ignore",
-  });
+  const { currentUser } = useAuthRedirect();
   const [searchGroup, setSearchGroup] = useState("");
 
   const listOfGroups = [

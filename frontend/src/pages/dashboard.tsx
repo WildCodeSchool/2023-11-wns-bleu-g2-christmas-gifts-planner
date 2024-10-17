@@ -20,9 +20,6 @@ import { useTranslation } from "react-i18next";
 import { useErrorContext } from "@/contexts/ErrorContext";
 
 export default function Dashboard({ pageTitle }: { pageTitle: string }) {
-  useEffect(() => {
-    document.title = pageTitle;
-  }, [pageTitle]);
   const { t } = useTranslation();
   const {
     data: currentUser,

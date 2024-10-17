@@ -28,6 +28,7 @@ import { useTranslation } from "react-i18next";
 import { useGroupContext } from "@/contexts/GroupContext";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { ApolloError } from "@apollo/client";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 
 export default function Channels() {
   const router = useRouter();
@@ -48,9 +49,7 @@ export default function Channels() {
   const [error, setError] = useState("");
   const { setGroupData } = useGroupContext();
   const { validateGroupName } = useFormValidation();
-  const { data: currentUser } = useProfileQuery({
-    errorPolicy: "ignore",
-  });
+  const { currentUser } = useAuthRedirect();
   const isOwner = groupId?.groupById.owner.id === currentUser?.profile.id;
 
   useEffect(() => {

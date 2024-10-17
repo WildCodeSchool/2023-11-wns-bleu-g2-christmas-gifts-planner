@@ -1,0 +1,15 @@
+query Channel($channelId: Float!, $groupId: Float!) {
+  channel(channelId: $channelId, groupId: $groupId) {
+    id
+    group {
+      members {
+        id
+        firstName
+        lastName
+      }
+    }
+    receiver {
+      id
+    }
+  }
+}

@@ -10,5 +10,8 @@ mutation CreateDelteLike($data: NewLikeType!) {
     channelId {
       id
     }
+    groupId {
+      id
+    }
   }
 }
