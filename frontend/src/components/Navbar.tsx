@@ -1,31 +1,31 @@
+import CreateGroupModal from "@/components/group/CreateGroupModal";
+import { useGroupContext } from "@/contexts/GroupContext";
 import {
-  Box,
-  Flex,
-  Image,
-  Button,
-  IconButton,
-  useColorMode,
+  useDeleteGroupMutation,
+  useLogoutMutation
+} from "@/graphql/generated/schema";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import {
   Avatar,
+  Box,
+  Button,
+  Flex,
+  IconButton,
+  Image,
   Menu,
   MenuButton,
-  MenuList,
-  MenuItem,
   MenuDivider,
+  MenuItem,
+  MenuList,
+  useColorMode,
   useToast,
 } from "@chakra-ui/react";
-import { SunIcon, MoonIcon } from "@chakra-ui/icons";
-import { useRouter } from "next/router";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
-import {
-  useProfileQuery,
-  useLogoutMutation,
-  useDeleteGroupMutation,
-  useGroupByIdQuery,
-} from "@/graphql/generated/schema";
-import i18n from "../i18n";
 import { useTranslation } from "react-i18next";
-import { useGroupContext } from "@/contexts/GroupContext";
+import i18n from "../i18n";
 import ConfirmModal from "./ConfirmModal";
 
 export default function Navbar({
@@ -37,9 +37,7 @@ export default function Navbar({
   const router = useRouter();
   const [language, setLanguage] = useState("FR");
   const { t } = useTranslation();
-  const { data: currentUser } = useProfileQuery({
-    errorPolicy: "ignore",
-  });
+  const { currentUser, client, refetch } = useAuthRedirect();
   const { groupId, ownerId, groupName } = useGroupContext();
 
   const isOwner =
@@ -68,6 +66,7 @@ export default function Navbar({
   const handleLogout = async () => {
     try {
       await logout();
+      await client.resetStore();
       router.push("/login");
     } catch (error) {
       console.error("Failed to logout", error);
@@ -104,13 +103,24 @@ export default function Navbar({
   };
 
   return (
-    <Box as="nav" bg="primary.high" color="white" padding="4">
-      <Flex justifyContent="space-between" alignItems="center">
+    <Box
+      as="nav"
+      bg="primary.high"
+      color="white"
+      padding="4"
+      mb={32}
+      position="fixed"  
+      top={0} 
+      left={0}  
+      right={0}  
+      zIndex="1000"
+    >      
+    <Flex justifyContent="space-between" alignItems="center">
         <Link href="/" passHref>
           <Image
             src="/Gifty-logo-white.svg"
             alt="Gifty Logo"
-            height="40px"
+            height="50px"
             className="logo"
             css={{
               transition: "filter 0.2s ease",
@@ -126,6 +136,7 @@ export default function Navbar({
             <MenuButton
               as={Button}
               variant="outline"
+              h={"40px"}
               colorScheme="white"
               mr="4"
               _hover={{
@@ -161,7 +172,7 @@ export default function Navbar({
             onClick={toggleColorMode}
             mr="4"
           />
-
+          
           {!currentUser ? (
             <Button
               colorScheme="white"
@@ -212,13 +223,8 @@ export default function Navbar({
                 <MenuDivider />
                 <Box textAlign="center" p={4}>
                   <Flex flexDirection="column" gap={4}>
-                    <Button
-                      variant="goldenButton"
-                      onClick={() => router.push("/create-group")}
-                    >
-                      {t("create-group")}
-                    </Button>
-                    {isOwner &&
+                  <CreateGroupModal refetch={refetch} />
+                  {isOwner &&
                       router.query.id?.toString() === groupId?.toString() && (
                         <ConfirmModal
                           handleClick={handleDeleteGroup}

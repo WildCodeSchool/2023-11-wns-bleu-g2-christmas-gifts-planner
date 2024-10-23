@@ -11,6 +11,7 @@ import {
 import User from "./User";
 import Channel from "./Channel";
 import Like from "./Like";
+import Group from "./Group";
 
 @Entity()
 @ObjectType()
@@ -34,6 +35,13 @@ export default class Message extends BaseEntity {
   })
   @Field(() => User)
   writtenBy: User;
+
+  @ManyToOne(() => Group, (group) => group.id, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
+  @Field(() => User)
+  groupId: User;
 
   @ManyToOne(() => Channel, (channel) => channel.id, {
     onDelete: "CASCADE",

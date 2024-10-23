@@ -17,7 +17,7 @@ export default function AboutUs() {
       description:
         "Alon a implémenté le système de messagerie instantanée, permettant une communication fluide entre les membres du groupe.",
       color: "tertiary.low",
-      link: "https://github.com/alon-bendavid",
+      link: "https://github.com/mistral-nw",
     },
     {
       name: "Robin Kolasinski",

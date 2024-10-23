@@ -1,5 +1,5 @@
-query Messages($channelId: Int) {
-  messages(channelId: $channelId) {
+query Messages($channelId: Int, $groupId: Float) {
+  messages(channelId: $channelId, groupId: $groupId) {
     id
     content
     sent_at
@@ -12,6 +12,9 @@ query Messages($channelId: Int) {
       id
     }
     likes {
+      id
+    }
+    groupId {
       id
     }
   }
