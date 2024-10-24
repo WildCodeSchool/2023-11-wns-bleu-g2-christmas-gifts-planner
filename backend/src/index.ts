@@ -22,7 +22,7 @@ const wsServer = new WebSocketServer({
   server: httpServer,
   // Pass a different path here if app.use
   // serves expressMiddleware at a different path
-  path: "/subscriptions",
+  path: "/",
 });
 
 // Hand in the schema we just created and have the
