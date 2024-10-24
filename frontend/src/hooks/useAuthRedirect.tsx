@@ -10,13 +10,13 @@ export function useAuthRedirect() {
   });
   const client = useApolloClient();
 
-  useEffect(() => {
-    if (!currentUser?.profile?.id) {
-      if (router.pathname !== "/signup" && router.pathname !== "/dashboard") {
-        router.push("/login");
-      }
-    }
-  }, [currentUser, router]);
+  // useEffect(() => {
+  //   if (!currentUser?.profile?.id) {
+  //     if (router.pathname !== "/signup" && router.pathname !== "/dashboard") {
+  //       router.push("/login");
+  //     }
+  //   }
+  // }, [currentUser, router]);
 
   return { currentUser, refetch, client };
 }
