@@ -169,15 +169,15 @@ export default function FormCreateGroup({
         variables: { data: formJson },
       });
 
-    const groupId = result?.data?.createGroup?.id;
+      const groupId = result?.data?.createGroup?.id;
 
-    if (groupId) {
-      console.log("groupId", groupId);
-      // Create the channels for the group
-      await createChannels({
-        variables: { groupId },
-      });
-    }
+      if (groupId) {
+        console.log("groupId", groupId);
+        // Create the channels for the group
+        await createChannels({
+          variables: { groupId },
+        });
+      }
 
       // Refresh the list of groups after creating the new group.
       refetch();
