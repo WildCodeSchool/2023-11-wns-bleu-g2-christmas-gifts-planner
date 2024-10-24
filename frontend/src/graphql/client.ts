@@ -13,7 +13,7 @@ const httpLink = new HttpLink({
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: "ws://1123-bleu-2.wns.wilders.dev/subscriptions",
+    url: "ws://localhost:4001/subscriptions",
   })
 );
 
