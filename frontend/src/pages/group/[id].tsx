@@ -28,11 +28,8 @@ import { useTranslation } from "react-i18next";
 import { useGroupContext } from "@/contexts/GroupContext";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { ApolloError } from "@apollo/client";
-<<<<<<< HEAD
 import SearchBar from "@/components/SearchBar";
-=======
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
->>>>>>> 5209f30e982c80cb73f5967ee9ba7a9cf3b2dc33
 
 export default function Channels() {
   const router = useRouter();
