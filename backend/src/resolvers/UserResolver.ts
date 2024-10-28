@@ -172,18 +172,14 @@ export default class UserResolver {
   }
 
   @Mutation(() => Boolean)
-  async deleteUser(@Arg("userId") userId: number, @Ctx() ctx: ContextType): Promise<boolean> {
-    try {
-      const existingUser = await User.findOneBy({ id: userId });
-      if (!existingUser) {
-        throw new GraphQLError("USER_NOT_FOUND");
-      }      
-      if (ctx.currentUser) {
-        if(ctx.currentUser.id !== existingUser.id) {
-          throw new GraphQLError("You can't delete a different user")
-        }
-      }
+async deleteUser(@Arg("userId") userId: number): Promise<boolean> {
+  try {
+    const existingUser = await User.findOneBy({ id: userId });
+    if (!existingUser) {
+      throw new GraphQLError("USER_NOT_FOUND");
+    }
 
+    // Delete the user
     await User.remove(existingUser);
 
     return true;

@@ -35,7 +35,7 @@ export default class Channel extends BaseEntity {
   likes: Like[];
 
   @Field(() => User)
-  @ManyToOne(() => User, (user) => user.channels, { cascade: true, onDelete: "CASCADE" })
+  @ManyToOne(() => User, (user) => user, { cascade: true })
   receiver: User;
 
 
