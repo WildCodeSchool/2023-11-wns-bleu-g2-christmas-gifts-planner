@@ -105,7 +105,9 @@
       "create-group": "Une erreur est survenue lors de la création du groupe",
       "generic-description": "Une erreur est survenue",
       "generic-title": "Erreur",
-      "validate-profile": "Une erreur est survenue lors de la validation du profil"
+      "validate-profile": "Une erreur est survenue lors de la validation du profil",
+      "delete-wrong-user": "Non autorisé",
+      "delete-wrong-user-description": "Vous ne pouvez pas supprimer un autre utilisateur!"
     },
     "success": {
       "add-member-description": "Les membres ont bien été ajoutés avec succès.",
