@@ -175,6 +175,7 @@ export default function Navbar({
             <Button
               colorScheme="white"
               variant="outline"
+              color={"white"}
               _hover={{
                 textDecoration: "none",
                 color: "secondary.medium",
