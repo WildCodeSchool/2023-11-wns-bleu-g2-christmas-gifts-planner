@@ -47,64 +47,100 @@ export default class ChannelResolver {
   @Query(() => Channel, { nullable: true })
   async channel(
     @Arg("groupId") groupId: number,
-    @Arg("channelId") channelId: number
-  ) {
-    return Channel.findOne({
-      where: { id: channelId, group: { id: groupId } },
-      relations: { group: true, receiver: true },
-    });
-  }
-
-  @Authorized()
-  @Mutation(() => [Channel])
-  async createChannels(
-    @Arg("groupId") groupId: number,
+    @Arg("channelId") channelId: number,
     @Ctx() ctx: ContextType
-  ): Promise<Channel[]> {
-    // Checking if the user is logged in
+  ) {
     if (!ctx.currentUser) {
       throw new GraphQLError("You need to be logged in!");
     }
-
-    // Get group by ID ant its members
-    const group = await Group.findOne({
-      where: { id: groupId },
-      relations: { members: true, owner: true },
+  
+    const channel = await Channel.findOne({
+      where: { id: channelId, group: { id: groupId } },
+      relations: { group: true, receiver: true },
     });
-
-    if (!group) {
-      throw new GraphQLError("Group not found");
+  
+    if (!channel) {
+      throw new GraphQLError("Channel not found");
     }
-
-    // Check if the current user is a member of the group or an owner
-    const isMember = group.members.some(
-      (member) => member.id === ctx.currentUser?.id
-    );
-    const isOwner = group.owner.id === ctx.currentUser?.id;
-
-    if (!isMember && !isOwner) {
-      throw new GraphQLError("You are not a member of this group");
+  
+    // Check if the current user is the receiver of this channel
+    if (channel.receiver.id === ctx.currentUser.id) {
+      throw new GraphQLError("You cannot access your own channel");
     }
-
-    const channels: Channel[] = [];
-    // Creation of a channel for each member of the group
-    for (const member of group.members) {
-      const newChannel = Channel.create({
-        name: `Channel for ${member.firstName} ${member.lastName}`,
-        group: group,
-        receiver: member,
+  
+    return channel;
+  }
+      @Authorized()
+    @Mutation(() => [Channel])
+    async createChannels(
+      @Arg("groupId") groupId: number,
+      @Ctx() ctx: ContextType
+    ): Promise<Channel[]> {
+      // Checking if the user is logged in
+      if (!ctx.currentUser) {
+        throw new GraphQLError("You need to be logged in!");
+      }
+  
+      // Get group by ID ant its members
+      const group = await Group.findOne({
+        where: { id: groupId },
+        relations: { members: true, owner: true },
       });
+  
+      if (!group) {
+        throw new GraphQLError("Group not found");
+      }
+  
+      // Check if the current user is a member of the group or an owner
+      const isMember = group.members.some(
+        (member) => member.id === ctx.currentUser?.id
+      );
+      const isOwner = group.owner.id === ctx.currentUser?.id;
+  
+      if (!isMember && !isOwner) {
+        throw new GraphQLError("You are not a member of this group");
+      }
+  
+      const channels: Channel[] = [];
+      // Creation of a channel for each member of the group
+      for (const member of group.members) {
+        // Check if a channel already exists for this member in the group
+        const existingChannel = await Channel.findOne({
+          where: {
+            receiver: { id: member.id },
+            group: { id: groupId },
+          },
+        });
+    
+        // If the channel already exists, skip the creation
+        if (existingChannel) {
+          continue;
+        }
+        const newChannel = Channel.create({
+          name: `Channel for ${member.firstName} ${member.lastName}`,
+          group: group, 
+          receiver: member, 
+        });
+  
+        // Save the channel in the database
+        await newChannel.save();
+        channels.push(newChannel); 
+      }
 
-      // Save the channel in the database
-      await newChannel.save();
-      channels.push(newChannel);
-    }
-
-    const ownerChannel = Channel.create({
-      name: `Channel for ${group.owner.firstName} ${group.owner.lastName}`,
-      group: group,
-      receiver: group.owner,
-    });
+      const existingOwnerChannel = await Channel.findOne({
+        where: {
+          receiver: { id: group.owner.id },
+          group: { id: groupId },
+        },
+      });
+    
+      // Si le canal du propriétaire n'existe pas, le créer
+      if (!existingOwnerChannel) {
+        const ownerChannel = Channel.create({
+          name: `Channel for ${group.owner.firstName} ${group.owner.lastName}`,
+          group: group,
+          receiver: group.owner,
+        });
 
     // Save the channel of the owner in the database
     await ownerChannel.save();
@@ -112,4 +148,8 @@ export default class ChannelResolver {
     // return the created channels
     return channels;
   }
+
+  // Return an empty array if no channels were created
+  return [];
+}
 }

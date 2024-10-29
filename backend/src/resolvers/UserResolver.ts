@@ -170,4 +170,27 @@ export default class UserResolver {
     ctx.res.clearCookie("token");
     return "ok";
   }
+
+  @Mutation(() => Boolean)
+  async deleteUser(@Arg("userId") userId: number, @Ctx() ctx: ContextType): Promise<boolean> {
+    try {
+      const existingUser = await User.findOneBy({ id: userId });
+      if (!existingUser) {
+        throw new GraphQLError("USER_NOT_FOUND");
+      }      
+      if (ctx.currentUser) {
+        if(ctx.currentUser.id !== existingUser.id) {
+          throw new GraphQLError("You can't delete a different user")
+        }
+      }
+
+    await User.remove(existingUser);
+
+    return true;
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    throw new GraphQLError("Error deleting user: " + error);
+  }
+}
+
 }

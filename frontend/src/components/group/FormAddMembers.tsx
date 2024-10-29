@@ -1,4 +1,4 @@
-import { useAddMemberToGroupMutation } from "@/graphql/generated/schema";
+import { useAddMemberToGroupMutation, useCreateChannelsMutation } from "@/graphql/generated/schema";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { ApolloError } from "@apollo/client";
 import {
@@ -22,6 +22,8 @@ type FormAddMembersProps = {
   refetch: () => void;
   initialRef?: React.MutableRefObject<null>;
   id: string;
+  setChannels: React.Dispatch<React.SetStateAction<{ email: string; color?: string }[]>>; // Ajoutez cette ligne
+  channels: { email: string; color?: string }[];
 };
 export default function FormAddMembers({
   onClose,
@@ -30,10 +32,13 @@ export default function FormAddMembers({
   id,
 }: FormAddMembersProps) {
   const [addMembers] = useAddMemberToGroupMutation();
+  const [createChannels] = useCreateChannelsMutation();
+  
   const [memberEmail, setMemberEmail] = React.useState("");
   const [members, setMembers] = useState<{ email: string; color?: string }[]>(
     []
   );
+  const [channels, setChannels] = useState<{ email: string; color?: string }[]>([]);
   // These functions are used to validate the user input in the form.
   const { validateEmail } = useFormValidation();
   const { t } = useTranslation();
@@ -143,6 +148,19 @@ export default function FormAddMembers({
         variables: {
           groupId: Number(id),
           data: formJson,
+        },
+      });
+
+      const newChannels = members.map(member => ({
+        email: member.email,
+        color: member.color,
+      }));
+      
+      setChannels(prevChannels => [...prevChannels, ...newChannels]);
+      await createChannels({
+        variables: {
+          groupId: Number(id),
+
         },
       });
       refetch();

@@ -1,9 +1,9 @@
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
+import { Box } from "@chakra-ui/react";
 import Head from "next/head";
 import { ReactNode } from "react";
-import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { Box } from "@chakra-ui/react";
-import { useProfileQuery } from "@/graphql/generated/schema";
+import Navbar from "./Navbar";
 
 export default function Layout({
   children,
@@ -11,9 +11,7 @@ export default function Layout({
   children: ReactNode;
   pageTitle: string;
 }) {
-  const { data: currentUser, refetch } = useProfileQuery({
-    errorPolicy: "ignore",
-  });
+  const { refetch } = useAuthRedirect();
   return (
     <>
       <Head>

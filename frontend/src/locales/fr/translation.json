@@ -34,6 +34,7 @@
   "create-new-group-to-start": "Créez un nouveau groupe pour commencer à échanger des idées cadeaux avec vos proches",
   "current-password": "Mot de passe actuel",
   "delete-account": "Supprimer mon compte",
+  "delete-account-confirm-message": "Voulez-vous vraiment supprimer votre compte ? Cette action est irréversible",
   "description-success-password-modified": "Votre mot de passe a bien été modifié",
   "description-success-profile-modified": "Votre profil a bien été modifié",
   "description-success-signed-up": "Votre inscription a bien été prise en compte",
@@ -42,11 +43,11 @@
   "email-already-added": "Cet email est déjà ajouté.",
   "email-already-existing": "Cette adresse mail existe déjà",
   "error-messages": {
-    "not-found": "Oups, la page demandée n'a pas été trouvée",
+    "generic": "Une erreur s'est produite. Veuillez réessayer plus tard",
     "not-exist": "Cette page n'existe pas",
-    "unauthorized": "Vous n'êtes pas autorisé a consulter la page demandée",
+    "not-found": "Oups, la page demandée n'a pas été trouvée",
     "result": "Oups, il semble qu'il n'y ait pas de résultats",
-    "generic": "Une erreur s'est produite. Veuillez réessayer plus tard"
+    "unauthorized": "Vous n'êtes pas autorisé a consulter la page demandée"
   },
   "firstname": "Prénom",
   "forgot-password": "Mot de passe oublié ?",
@@ -87,17 +88,18 @@
   "password-number": "Le mot de passe doit contenir un chiffre",
   "password-uppercase": "Le mot de passe doit contenir une majuscule",
   "passwords-are-not-equals": "Les mots de passe ne correspondent pas !",
-  "placeholder-add-member-email": "Saisissez l'email d'un membre à ajouter",
-  "placeholder-add-members-to-group": "Ajoutez des membres à votre groupe",
-  "placeholder-find-thread": "Trouver un fil de discussion",
-  "placeholder-name-your-group": "Donnez un nom à votre groupe",
   "placeholder": {
     "firstname": "Votre prénom",
     "lastname": "Votre nom",
     "password": "Votre mot de passe",
     "search-group": "Rechercher un groupe"
   },
+  "placeholder-add-member-email": "Saisissez l'email d'un membre à ajouter",
+  "placeholder-add-members-to-group": "Ajoutez des membres à votre groupe",
+  "placeholder-find-thread": "Trouver un fil de discussion",
+  "placeholder-name-your-group": "Donnez un nom à votre groupe",
   "present-ideas": "Idées cadeaux pour",
+  "return": "Retour",
   "show-password": "Afficher le mot de passe",
   "sign-in": "Se connecter",
   "sign-out": "Se déconnecter",
@@ -119,9 +121,11 @@
       "add-member-provided": "Veuillez renseigner au moins un membre",
       "add-member-title": "Erreur d'ajout de membre",
       "create-group": "Une erreur est survenue lors de la création du groupe",
-      "generic-title": "Erreur",
       "generic-description": "Une erreur est survenue",
-      "validate-profile": "Une erreur est survenue lors de la validation du profil"
+      "generic-title": "Erreur",
+      "validate-profile": "Une erreur est survenue lors de la validation du profil",
+      "delete-wrong-user": "Non autorisé",
+      "delete-wrong-user-description": "Vous ne pouvez pas supprimer un autre utilisateur!"
     },
     "success": {
       "add-member-description": "Les membres ont bien été ajoutés avec succès.",
@@ -130,8 +134,8 @@
       "delete-group-title": "Groupe supprimé",
       "group-created-description": "Votre groupe {{groupName}} a été créé avec succès.",
       "group-created-title": "Groupe créé",
-      "validate-profile-title": "Profil validé",
-      "validate-profile-description": "Votre profil a été validé avec succès."
+      "validate-profile-description": "Votre profil a été validé avec succès.",
+      "validate-profile-title": "Profil validé"
     }
   },
   "unauthorized-password": "Ce mot de passe n'est pas autorisé",
@@ -153,5 +157,6 @@
     "password-special": "Le mot de passe doit contenir un caractère spécial",
     "password-uppercase": "Le mot de passe doit contenir une majuscule"
   },
-  "welcome-back": "Bon retour"
+  "welcome-back": "Bon retour",
+  "yes-delete-it": "Oui, supprimer"
 }

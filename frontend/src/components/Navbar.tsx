@@ -1,32 +1,32 @@
+import CreateGroupModal from "@/components/group/CreateGroupModal";
+import { useGroupContext } from "@/contexts/GroupContext";
 import {
-  Box,
-  Flex,
-  Image,
-  Button,
-  IconButton,
-  useColorMode,
+  useDeleteGroupMutation,
+  useLogoutMutation,
+} from "@/graphql/generated/schema";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import {
   Avatar,
+  Box,
+  Button,
+  Flex,
+  IconButton,
+  Image,
   Menu,
   MenuButton,
-  MenuList,
-  MenuItem,
   MenuDivider,
+  MenuItem,
+  MenuList,
+  useColorMode,
   useToast,
 } from "@chakra-ui/react";
-import { SunIcon, MoonIcon } from "@chakra-ui/icons";
-import { useRouter } from "next/router";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
-import {
-  useProfileQuery,
-  useLogoutMutation,
-  useDeleteGroupMutation,
-} from "@/graphql/generated/schema";
-import i18n from "../i18n";
 import { useTranslation } from "react-i18next";
-import { useGroupContext } from "@/contexts/GroupContext";
+import i18n from "../i18n";
 import ConfirmModal from "./ConfirmModal";
-import CreateGroupModal from "@/components/group/CreateGroupModal";
 
 export default function Navbar({
   onGroupDeleted,
@@ -37,13 +37,7 @@ export default function Navbar({
   const router = useRouter();
   const [language, setLanguage] = useState("FR");
   const { t } = useTranslation();
-  const {
-    data: currentUser,
-    refetch,
-    client,
-  } = useProfileQuery({
-    errorPolicy: "ignore",
-  });
+  const { currentUser, client, refetch } = useAuthRedirect();
   const { groupId, ownerId, groupName } = useGroupContext();
 
   const isOwner =

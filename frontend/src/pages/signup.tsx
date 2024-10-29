@@ -1,7 +1,7 @@
 import client from "@/graphql/client";
 import { useLoginMutation, useSignupMutation } from "@/graphql/generated/schema";
-import { Box, Button, Card, Center, FormControl, Grid, GridItem, Heading, IconButton, Image, Input, InputGroup, Link, Show, Text, Tooltip, useToast } from '@chakra-ui/react';
-import { ArrowLeft, InfoIcon } from "lucide-react";
+import { Box, Button, Card, Center, FormControl, Grid, GridItem, Heading, IconButton, Image, Input, InputGroup, InputRightElement, Link, Show, Text, Tooltip, useToast } from '@chakra-ui/react';
+import { Eye, EyeOff, InfoIcon } from "lucide-react";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,9 @@ import { useTranslation } from "react-i18next";
 export default function Signup() {
   const [arrayOfErrors, setArrayOfErrors] = useState<string[]>([])
   const [error, setError] = useState<string | number>(0);
+  
+  const [showPwd, setShowPwd] = useState<boolean>(false);
+  const [showConfirmPwd, setShowConfirmPwd] = useState<boolean>(false);
   const [createUser] = useSignupMutation();
   const [login]= useLoginMutation();
   const toast = useToast();
@@ -187,10 +190,19 @@ export default function Signup() {
                                     name="password"
                                     id="password"
                                     isRequired
-                                    type='password'
+                                    type={showPwd ? "text" : 'password'}
                                     variant="goldenInput"
                                     placeholder={t("password")}
                                 />
+                                  <InputRightElement>
+                              <IconButton
+                                aria-label={showPwd ? t("hide-password") : t("show-password")}
+                                variant="ghost"
+                                boxShadow="none"
+                                icon={showPwd ? <EyeOff /> : <Eye />}
+                                onClick={() => setShowPwd(!showPwd)}
+                                />
+                              </InputRightElement>
                             </InputGroup>
 
                             <InputGroup size='md' mt={6} zIndex={0}>
@@ -199,9 +211,18 @@ export default function Signup() {
                                     id="passwordConfirmation"
                                     isRequired
                                     variant="goldenInput"
-                                    type='password'
+                                    type={showConfirmPwd ? "text" : 'password'}
                                     placeholder={t("confirm-password")}
-                                />
+                                />         
+                                <InputRightElement>
+                                <IconButton
+                                  aria-label={showConfirmPwd ? t("hide-password") : t("show-password")}
+                                  variant="ghost"
+                                  boxShadow="none"
+                                  icon={showConfirmPwd ? <EyeOff /> : <Eye />}
+                                  onClick={() => setShowConfirmPwd(!showConfirmPwd)}
+                                  />
+                                </InputRightElement>
                             </InputGroup>
                             <Center>
                                 <Button variant="goldenButton" type="submit" mt={4} px={6}>

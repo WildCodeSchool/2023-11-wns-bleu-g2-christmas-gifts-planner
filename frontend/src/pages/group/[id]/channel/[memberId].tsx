@@ -35,7 +35,6 @@ const Message = () => {
       groupId: parseInt(GroupId),
     },
   });
-  // console.log("memebers", getMembers);
   const { data: currentUser, client } = useProfileQuery({
     errorPolicy: "ignore",
   });
@@ -196,13 +195,13 @@ const Message = () => {
     });
   };
 
-  const sortedMessages = [...oldMessages]; // Create a copy of the array
+  const sortedMessages = [...oldMessages];
 
   sortedMessages.sort((a, b) => {
     const dateA = a.sent_at ? new Date(a.sent_at).getTime() : 0; // Handle null/undefined
     const dateB = b.sent_at ? new Date(b.sent_at).getTime() : 0;
 
-    return dateA - dateB; // Sort by date
+    return dateA - dateB;
   });
   // in caase that user is not authorized or recive any kind if error in the chat, he will be redirected aoutmaticlly
   if (messagesErr) {

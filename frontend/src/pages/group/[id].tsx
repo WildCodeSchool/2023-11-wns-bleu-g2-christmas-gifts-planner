@@ -17,23 +17,25 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  Stack,
   Text,
   useMediaQuery,
   FormControl,
   FormErrorMessage,
+  Grid,
 } from "@chakra-ui/react";
 import { X, Check, Pen, SearchIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useGroupContext } from "@/contexts/GroupContext";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { ApolloError } from "@apollo/client";
+import SearchBar from "@/components/SearchBar";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 
 export default function Channels() {
   const router = useRouter();
   const { t } = useTranslation();
   const id = router.query?.id as string;
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
+  const [isMobile] = useMediaQuery("(max-width: 500px)");
   const { data: groupId, refetch } = useGroupByIdQuery({
     variables: { groupId: Number(id) },
   });
@@ -48,9 +50,7 @@ export default function Channels() {
   const [error, setError] = useState("");
   const { setGroupData } = useGroupContext();
   const { validateGroupName } = useFormValidation();
-  const { data: currentUser } = useProfileQuery({
-    errorPolicy: "ignore",
-  });
+  const { currentUser } = useAuthRedirect();
   const isOwner = groupId?.groupById.owner.id === currentUser?.profile.id;
 
   useEffect(() => {
@@ -121,7 +121,7 @@ export default function Channels() {
   return (
     <>
       <Box
-        p="4"
+        p={isMobile ? "4" : "32"}
         mx="2"
         bg={"white"}
         height={isMobile ? "690px" : "780px"}
@@ -169,7 +169,7 @@ export default function Channels() {
                 </FormControl>
               </Box>
             ) : (
-              <Heading size="lg" my={4}>
+              <Heading as={"h1"} size="xl" my={4}>
                 {groupId?.groupById.name}
                 <Box
                   as="button"
@@ -181,109 +181,66 @@ export default function Channels() {
               </Heading>
             )
           ) : (
-            <Heading size="lg" my={4}>
+            <Heading size="xl" my={4}>
               {groupId?.groupById.name}
             </Heading>
           )}
         </Box>
-        <Flex justifyContent="center" my={8}>
-          <Stack direction="row" spacing={4}>
-            {channels?.channels?.map((channel, index) => (
-              <Avatar
-                key={channel.id}
-                name={
-                  channel.receiver.firstName + " " + channel.receiver.lastName
-                }
-                bg={avatarColors[index % avatarColors.length]}
-                color="white"
-              />
-            ))}
-            <AddMembersModal refetch={refetch} id={id} />
-          </Stack>
+        <SearchBar
+          getter={searchMember}
+          setter={setSearchMember}
+          placeholder="placeholder-find-thread"
+        />
+        <Flex justifyContent="center" my={16}>
+          {isOwner && <AddMembersModal refetch={refetch} id={id} />}
         </Flex>
-        <InputGroup
-          my={8}
-          width={{ base: "95%", md: "48rem" }}
-          m="auto"
-          bg="white"
-          border="1px"
-          borderColor="gray.300"
-          borderRadius="full"
-          height="50px"
-          boxShadow="2px 2px #00000025"
+
+        <Grid
+          templateColumns={{
+            base: "1fr",
+            sm: "repeat(auto-fit, minmax(280px, 1fr))",
+          }}
+          gap={isMobile ? 8 : 32}
+          justifyItems="center"
         >
-          <InputLeftElement pointerEvents="none" height="full">
-            <SearchIcon color="primary.medium" />
-          </InputLeftElement>
-          <Input
-            type="text"
-            placeholder={t("placeholder-find-thread")}
-            height="full"
-            borderRadius="full"
-            value={searchMember}
-            onChange={(e) => setSearchMember(e.target.value)}
-          />
-        </InputGroup>
-        <Box justifyContent={"center"}>
           {filteredMembers?.map((member, index) => (
             <Link
               key={member.id}
               href={`/group/${groupId?.groupById.id}/channel/${member.id}`}
             >
               <Card
-                className="items-center"
-                key={member.id}
-                align="center"
-                width={{ base: "95%", md: "48rem" }}
-                m="auto"
-                h={isMobile ? "190px" : "315px"}
-                marginBlock="3rem"
+                justify={"center"}
+                align={"center"}
                 bg="white"
-                boxShadow={"lg"}
-                borderRadius={"lg"}
-                position={"relative"}
+                borderRadius="lg"
+                p={4}
+                boxShadow="md"
+                textAlign="center"
+                transition="transform 0.2s ease"
+                _hover={{ transform: "scale(1.05)" }}
+                maxW="100%"
+                minW={isMobile ? "330px" : "380px"}
+                minH="250px"
+                h="full"
               >
-                <Flex justify={"center"} width={"fit-content"} mb={16}>
-                  <Avatar
-                    size="lg"
-                    name={
-                      member.receiver.firstName + " " + member.receiver.lastName
-                    }
-                    bg={avatarColors[index % avatarColors.length]}
-                    color="white"
-                    mr="4"
-                    position="absolute"
-                    top="-10%"
-                    left="50%"
-                    transform="translateX(-50%)"
-                  />
-                </Flex>
-                <Flex align="center" pr={2} mb={16}>
-                  <Box>
-                    <Text
-                      as="b"
-                      size="md"
-                      flexWrap="wrap"
-                      color={"primary.medium"}
-                    >
-                      {t("present-ideas")}{" "}
-                      {member.receiver.firstName +
-                        " " +
-                        member.receiver.lastName}
-                    </Text>
-                  </Box>
-                </Flex>
-                <Flex align="end" pr={2}>
-                  <Box>
-                    <Text size="sm" flexWrap="wrap" color={"primary.medium"}>
-                      {member.receiver.email}
-                    </Text>
-                  </Box>
-                </Flex>
+                <Avatar
+                  size="xl"
+                  name={
+                    member.receiver.firstName + " " + member.receiver.lastName
+                  }
+                  bg={avatarColors[index % avatarColors.length]}
+                  color={"white"}
+                  mb={4}
+                />
+                <Text fontWeight="bold" color="primary.medium" fontSize="lg">
+                  {t("present-ideas")}{" "}
+                  {member.receiver.firstName + " " + member.receiver.lastName}
+                </Text>
+                <Text color="gray.500">{member.receiver.email}</Text>
               </Card>
             </Link>
           ))}
-        </Box>
+        </Grid>
       </Box>
     </>
   );

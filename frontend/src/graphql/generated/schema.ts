@@ -91,6 +91,7 @@ export type Mutation = {
   createMessage: Message;
   createUser: User;
   deleteGroup: Scalars['String'];
+  deleteUser: Scalars['Boolean'];
   login: Scalars['String'];
   logout: Scalars['String'];
   updateUser: User;
@@ -142,6 +143,11 @@ export type MutationCreateUserArgs = {
 
 export type MutationDeleteGroupArgs = {
   groupId: Scalars['Int'];
+};
+
+
+export type MutationDeleteUserArgs = {
+  userId: Scalars['Float'];
 };
 
 
@@ -389,6 +395,13 @@ export type CompleteProfileMutationVariables = Exact<{
 
 
 export type CompleteProfileMutation = { __typename?: 'Mutation', completeProfile: string };
+
+export type DeleteUserMutationVariables = Exact<{
+  userId: Scalars['Float'];
+}>;
+
+
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: boolean };
 
 export type LoginMutationVariables = Exact<{
   data: LoginInputType;
@@ -1053,6 +1066,37 @@ export function useCompleteProfileMutation(baseOptions?: Apollo.MutationHookOpti
 export type CompleteProfileMutationHookResult = ReturnType<typeof useCompleteProfileMutation>;
 export type CompleteProfileMutationResult = Apollo.MutationResult<CompleteProfileMutation>;
 export type CompleteProfileMutationOptions = Apollo.BaseMutationOptions<CompleteProfileMutation, CompleteProfileMutationVariables>;
+export const DeleteUserDocument = gql`
+    mutation deleteUser($userId: Float!) {
+  deleteUser(userId: $userId)
+}
+    `;
+export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
+
+/**
+ * __useDeleteUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserMutation, { data, loading, error }] = useDeleteUserMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, options);
+      }
+export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
+export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
+export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($data: LoginInputType!) {
   login(data: $data)
