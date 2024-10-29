@@ -1,35 +1,33 @@
 import AddMembersModal from "@/components/group/AddMembersModal";
+import SearchBar from "@/components/SearchBar";
+import { useGroupContext } from "@/contexts/GroupContext";
 import {
   useChangeGroupNameMutation,
-  useGroupByIdQuery,
-  useProfileQuery,
   useChannelsQuery,
+  useGroupByIdQuery,
 } from "@/graphql/generated/schema";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
+import { useFormValidation } from "@/hooks/useFormValidation";
+import { ApolloError } from "@apollo/client";
 import {
-  Card,
   Avatar,
   Box,
+  Card,
   Flex,
-  Heading,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Text,
-  useMediaQuery,
   FormControl,
   FormErrorMessage,
   Grid,
+  Heading,
+  Input,
+  Text,
+  useColorMode,
+  useMediaQuery,
 } from "@chakra-ui/react";
-import { X, Check, Pen, SearchIcon } from "lucide-react";
+import { Check, Pen, X } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useGroupContext } from "@/contexts/GroupContext";
-import { useFormValidation } from "@/hooks/useFormValidation";
-import { ApolloError } from "@apollo/client";
-import SearchBar from "@/components/SearchBar";
-import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 
 export default function Channels() {
   const router = useRouter();
@@ -51,6 +49,8 @@ export default function Channels() {
   const { setGroupData } = useGroupContext();
   const { validateGroupName } = useFormValidation();
   const { currentUser } = useAuthRedirect();
+  const { colorMode } = useColorMode();
+
   const isOwner = groupId?.groupById.owner.id === currentUser?.profile.id;
 
   useEffect(() => {
@@ -129,6 +129,7 @@ export default function Channels() {
         borderRadius={"xl"}
         overflowY="auto"
         maxHeight={isMobile ? "690px" : "780px"}
+        _dark={{ bg: "dark.surface10" }}
       >
         <Box
           mb="4"
@@ -152,14 +153,23 @@ export default function Channels() {
 
                     <Box
                       as="button"
-                      className="genericButton"
+                      marginLeft={2}
+                      className={
+                        colorMode === "light"
+                          ? "genericButton"
+                          : "genericButtonDark"
+                      }
                       onClick={() => groupId && updateGroupName()}
                     >
                       <Check />
                     </Box>
                     <Box
                       as="button"
-                      className="genericButton"
+                      className={
+                        colorMode === "light"
+                          ? "genericButton"
+                          : "genericButtonDark"
+                      }
                       onClick={() => groupId && handleEdit()}
                     >
                       <X />
@@ -173,7 +183,12 @@ export default function Channels() {
                 {groupId?.groupById.name}
                 <Box
                   as="button"
-                  className="genericButton"
+                  marginLeft={2}
+                  className={
+                    colorMode === "light"
+                      ? "genericButton"
+                      : "genericButtonDark"
+                  }
                   onClick={() => groupId && handleEdit()}
                 >
                   <Pen size={18} />
@@ -222,6 +237,12 @@ export default function Channels() {
                 minW={isMobile ? "330px" : "380px"}
                 minH="250px"
                 h="full"
+                _dark={{
+                  border: "0.03rem solid",
+                  borderColor: "dark.surface20",
+                  bg: "dark.surface10",
+                  _hover: { bg: "dark.surface20" },
+                }}
               >
                 <Avatar
                   size="xl"
@@ -232,7 +253,12 @@ export default function Channels() {
                   color={"white"}
                   mb={4}
                 />
-                <Text fontWeight="bold" color="primary.medium" fontSize="lg">
+                <Text
+                  fontWeight="bold"
+                  color="primary.medium"
+                  fontSize="lg"
+                  _dark={{ color: "white" }}
+                >
                   {t("present-ideas")}{" "}
                   {member.receiver.firstName + " " + member.receiver.lastName}
                 </Text>

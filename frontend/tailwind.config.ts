@@ -37,6 +37,19 @@ const config: Config = {
           highter: "#600401",
           hightest: "#410301",
         },
+        generic: {
+          low: "#f0f0f0",
+          medium: "#c0c0c0",
+          high: "#787878",
+        },
+        background: {
+          default: "#F9F6F1",
+          dark: "#121714",
+        },
+        dark: {
+          surface10: "#282828",
+          surface20: "#3f3f3f",
+        },
       },
     },
   },

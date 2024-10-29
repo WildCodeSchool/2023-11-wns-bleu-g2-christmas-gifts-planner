@@ -50,10 +50,8 @@ const colors = {
   background: {
     default: "#F9F6F1",
     dark: "#121714",
-    darkCard: "#282828",
   },
   dark: {
-    background: "#121714",
     surface10: "#282828",
     surface20: "#3f3f3f",
   },
