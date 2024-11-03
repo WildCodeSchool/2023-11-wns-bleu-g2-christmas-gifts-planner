@@ -1,18 +1,12 @@
 import { describe, it, expect } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
-import DevCard from "@/components/home/DevCard";
+import Test from "../components/Test";
 
 describe("Test component", () => {
     it("renders correctly", () => {
         const view = render (
-        <DevCard 
-        name="testName"
-        link="testLink"
-        color="testColor"
-        role="testRole"
-        description="testDescription" 
-        />
-    );
+        <Test 
+        hello="Hello World" />);
         expect(view.baseElement).toMatchSnapshot();
     });
 });
