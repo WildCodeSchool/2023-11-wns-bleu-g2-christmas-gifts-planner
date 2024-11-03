@@ -1,35 +1,33 @@
 import AddMembersModal from "@/components/group/AddMembersModal";
+import SearchBar from "@/components/SearchBar";
+import { useGroupContext } from "@/contexts/GroupContext";
 import {
   useChangeGroupNameMutation,
-  useGroupByIdQuery,
-  useProfileQuery,
   useChannelsQuery,
+  useGroupByIdQuery,
 } from "@/graphql/generated/schema";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect";
+import { useFormValidation } from "@/hooks/useFormValidation";
+import { ApolloError } from "@apollo/client";
 import {
-  Card,
   Avatar,
   Box,
+  Card,
   Flex,
-  Heading,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Text,
-  useMediaQuery,
   FormControl,
   FormErrorMessage,
   Grid,
+  Heading,
+  Input,
+  Text,
+  useColorMode,
+  useMediaQuery,
 } from "@chakra-ui/react";
-import { X, Check, Pen, SearchIcon } from "lucide-react";
+import { Check, Pen, X } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useGroupContext } from "@/contexts/GroupContext";
-import { useFormValidation } from "@/hooks/useFormValidation";
-import { ApolloError } from "@apollo/client";
-import SearchBar from "@/components/SearchBar";
-import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 
 export default function Channels() {
   const router = useRouter();
@@ -51,6 +49,8 @@ export default function Channels() {
   const { setGroupData } = useGroupContext();
   const { validateGroupName } = useFormValidation();
   const { currentUser } = useAuthRedirect();
+  const { colorMode } = useColorMode();
+
   const isOwner = groupId?.groupById.owner.id === currentUser?.profile.id;
 
   useEffect(() => {
@@ -61,8 +61,12 @@ export default function Channels() {
 
   const filteredMembers = channels?.channels.filter(
     (member) =>
-      member.receiver.firstName?.toLowerCase().includes(searchMember.toLowerCase()) ||
-      member.receiver.lastName?.toLowerCase().includes(searchMember.toLowerCase())
+      member.receiver.firstName
+        ?.toLowerCase()
+        .includes(searchMember.toLowerCase()) ||
+      member.receiver.lastName
+        ?.toLowerCase()
+        .includes(searchMember.toLowerCase())
   );
   const avatarColors = [
     "primary.medium",
@@ -125,6 +129,7 @@ export default function Channels() {
         borderRadius={"xl"}
         overflowY="auto"
         maxHeight={isMobile ? "690px" : "780px"}
+        _dark={{ bg: "dark.surface10" }}
       >
         <Box
           mb="4"
@@ -148,22 +153,29 @@ export default function Channels() {
 
                     <Box
                       as="button"
-                      className="genericButton"
+                      marginLeft={2}
+                      className={
+                        colorMode === "light"
+                          ? "genericButton"
+                          : "genericButtonDark"
+                      }
                       onClick={() => groupId && updateGroupName()}
                     >
                       <Check />
                     </Box>
                     <Box
                       as="button"
-                      className="genericButton"
+                      className={
+                        colorMode === "light"
+                          ? "genericButton"
+                          : "genericButtonDark"
+                      }
                       onClick={() => groupId && handleEdit()}
                     >
                       <X />
                     </Box>
                   </Box>
-                  <FormErrorMessage color="tertiary.medium">
-                    {error}
-                  </FormErrorMessage>
+                  <FormErrorMessage>{error}</FormErrorMessage>
                 </FormControl>
               </Box>
             ) : (
@@ -171,7 +183,12 @@ export default function Channels() {
                 {groupId?.groupById.name}
                 <Box
                   as="button"
-                  className="genericButton"
+                  marginLeft={2}
+                  className={
+                    colorMode === "light"
+                      ? "genericButton"
+                      : "genericButtonDark"
+                  }
                   onClick={() => groupId && handleEdit()}
                 >
                   <Pen size={18} />
@@ -188,54 +205,68 @@ export default function Channels() {
           getter={searchMember}
           setter={setSearchMember}
           placeholder="placeholder-find-thread"
-        />        
+        />
         <Flex justifyContent="center" my={16}>
-          {isOwner && <AddMembersModal refetch={refetch} id={id} />}        
+          {isOwner && <AddMembersModal refetch={refetch} id={id} />}
         </Flex>
 
         <Grid
           templateColumns={{
-            base: "1fr",  
-            sm: "repeat(auto-fit, minmax(280px, 1fr))",  
+            base: "1fr",
+            sm: "repeat(auto-fit, minmax(280px, 1fr))",
           }}
-          gap={isMobile? 8: 32}
+          gap={isMobile ? 8 : 32}
           justifyItems="center"
         >
-        {filteredMembers?.map((member, index) => (
-          <Link
-            key={member.id}
-            href={`/group/${groupId?.groupById.id}/channel/${member.id}`}
-          >
-            <Card
-            justify={"center"}
-            align={"center"}
-              bg="white"
-              borderRadius="lg"
-              p={4}
-              boxShadow="md"
-              textAlign="center"
-              transition="transform 0.2s ease"
-              _hover={{ transform: "scale(1.05)" }}
-              maxW="100%"  
-              minW={isMobile ? "330px" : "380px"}
-              minH="250px"  
-              h="full"  
+          {filteredMembers?.map((member, index) => (
+            <Link
+              key={member.id}
+              href={`/group/${groupId?.groupById.id}/channel/${member.id}`}
             >
-              <Avatar
-                size="xl"
-                name={member.receiver.firstName + " " + member.receiver.lastName}
-                bg={avatarColors[index % avatarColors.length]}
-                color={"white"}
-                mb={4}
-              />
-              <Text fontWeight="bold" color="primary.medium" fontSize="lg">
-                {t("present-ideas")} {member.receiver.firstName + " " + member.receiver.lastName}
-              </Text>
-              <Text color="gray.500">{member.receiver.email}</Text>
-            </Card>
-          </Link>
-        ))}
-      </Grid>
+              <Card
+                justify={"center"}
+                align={"center"}
+                bg="white"
+                borderRadius="lg"
+                p={4}
+                boxShadow="md"
+                textAlign="center"
+                transition="transform 0.2s ease"
+                _hover={{ transform: "scale(1.05)" }}
+                maxW="100%"
+                minW={isMobile ? "330px" : "380px"}
+                minH="250px"
+                h="full"
+                _dark={{
+                  border: "0.03rem solid",
+                  borderColor: "dark.surface20",
+                  bg: "dark.surface10",
+                  _hover: { bg: "dark.surface20" },
+                }}
+              >
+                <Avatar
+                  size="xl"
+                  name={
+                    member.receiver.firstName + " " + member.receiver.lastName
+                  }
+                  bg={avatarColors[index % avatarColors.length]}
+                  color={"white"}
+                  mb={4}
+                />
+                <Text
+                  fontWeight="bold"
+                  color="primary.medium"
+                  fontSize="lg"
+                  _dark={{ color: "white" }}
+                >
+                  {t("present-ideas")}{" "}
+                  {member.receiver.firstName + " " + member.receiver.lastName}
+                </Text>
+                <Text color="gray.500">{member.receiver.email}</Text>
+              </Card>
+            </Link>
+          ))}
+        </Grid>
       </Box>
     </>
   );

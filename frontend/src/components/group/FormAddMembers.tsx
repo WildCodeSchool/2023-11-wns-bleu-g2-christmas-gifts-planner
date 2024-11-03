@@ -255,6 +255,14 @@ export default function FormAddMembers({
               size="md"
               p={0}
               ml={3}
+              _dark={
+                isHovered
+                  ? {
+                      background: "secondary.low",
+                      color: "white",
+                    }
+                  : { background: "dark.surface20" }
+              }
             >
               <Plus color={isHovered ? "#AA7124" : "#724421"} />
             </Button>
@@ -262,9 +270,7 @@ export default function FormAddMembers({
 
           {errors.email &&
             errors.email.map((error, index) => (
-              <FormErrorMessage key={index} color="tertiary.medium">
-                {error}
-              </FormErrorMessage>
+              <FormErrorMessage key={index}>{error}</FormErrorMessage>
             ))}
         </FormControl>
         <Box

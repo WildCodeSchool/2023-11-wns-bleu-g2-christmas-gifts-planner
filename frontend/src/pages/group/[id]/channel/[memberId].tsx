@@ -17,6 +17,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Avatar,
+  useColorMode,
 } from "@chakra-ui/react";
 import { Heart, SendHorizontal } from "lucide-react";
 import { useRouter } from "next/router";
@@ -24,6 +25,7 @@ import { FormEvent, useState } from "react";
 
 const Message = () => {
   const [messageInput, setMessageInput] = useState("");
+  const { colorMode } = useColorMode();
 
   const router = useRouter();
   const channelMemberId: any = router.query?.memberId;
@@ -249,7 +251,13 @@ const Message = () => {
       </div>
       <div className=" flex justify-center ">
         <div className="md:w-1/2">
-          <div className=" p-3 h-[60vh] overflow-y-auto bg-white" id="chatBox">
+          <div
+            className={
+              (colorMode === "light" ? " bg-white" : "bg-dark-surface10") +
+              " p-3 h-[60vh] overflow-y-auto"
+            }
+            id="chatBox"
+          >
             {sortedMessages.map((message: any) => (
               <div key={message.id} className="mt-6  ">
                 {message.writtenBy.firstName ==
@@ -278,7 +286,9 @@ const Message = () => {
                               className={
                                 message.likes.length !== 0
                                   ? "text-red-600"
-                                  : "text-black"
+                                  : colorMode === "light"
+                                    ? "text-black"
+                                    : "text-white"
                               }
                             />
                           </div>
@@ -308,9 +318,21 @@ const Message = () => {
                       />
                       <div
                         key={message.id}
-                        className="flex  bg-zinc-200 border-solid   p-2   rounded-tl-2xl rounded-tr-2xl rounded-br-2xl  "
+                        className={
+                          "flex border-solid   p-2   rounded-tl-2xl rounded-tr-2xl rounded-br-2xl  " +
+                          (colorMode === "light"
+                            ? " bg-zinc-200"
+                            : "bg-dark-surface20")
+                        }
                       >
-                        <p className="text-m font-normal py-2.5 text-gray-900 dark:text-white">
+                        <p
+                          className={
+                            "text-m font-normal py-2.5 " +
+                            (colorMode === "light"
+                              ? " text-gray-900"
+                              : "text-white")
+                          }
+                        >
                           {message.content}
                         </p>
                       </div>
@@ -335,7 +357,9 @@ const Message = () => {
                               className={
                                 message.likes.length !== 0
                                   ? "text-red-600"
-                                  : "text-black"
+                                  : colorMode === "light"
+                                    ? "text-black"
+                                    : "text-white"
                               }
                             />
                           </div>
@@ -379,7 +403,9 @@ const Message = () => {
               className="text-gray-900 absolute  right-3 bottom-1/4"
             >
               {" "}
-              <SendHorizontal />
+              <SendHorizontal
+                color={colorMode === "light" ? " black" : "white"}
+              />
             </button>
           </form>
         </div>

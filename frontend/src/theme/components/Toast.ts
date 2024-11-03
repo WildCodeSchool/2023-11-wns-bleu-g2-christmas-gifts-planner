@@ -10,13 +10,21 @@ const successVariant = definePartsStyle({
     borderTopWidth: "4px",
     background: "white",
     pt: "2",
-    color: "primary.highter",
+    _dark: {
+      background: "primary.high",
+    },
   },
   title: {
     color: "primary.medium",
+    _dark: {
+      color: "white",
+    },
   },
   icon: {
     color: "primary.medium",
+    _dark: {
+      color: "white",
+    },
   },
 });
 const errorVariant = definePartsStyle({
@@ -27,12 +35,22 @@ const errorVariant = definePartsStyle({
     pt: "2",
     color: "tertiary.highter",
     width: "24rem",
+    _dark: {
+      background: "tertiary.high",
+      color: "white",
+    },
   },
   title: {
     color: "tertiary.medium",
+    _dark: {
+      color: "white",
+    },
   },
   icon: {
     color: "tertiary.medium",
+    _dark: {
+      color: "white",
+    },
   },
 });
 
