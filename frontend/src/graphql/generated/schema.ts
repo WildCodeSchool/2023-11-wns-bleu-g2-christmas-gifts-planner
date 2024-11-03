@@ -197,7 +197,6 @@ export type Query = {
   Likes: Array<Like>;
   channel?: Maybe<Channel>;
   channels: Array<Channel>;
-  getMembersByGroupId: Array<User>;
   groupById: Group;
   groups: Array<Group>;
   messages: Array<Message>;
@@ -220,11 +219,6 @@ export type QueryChannelArgs = {
 
 
 export type QueryChannelsArgs = {
-  groupId: Scalars['Float'];
-};
-
-
-export type QueryGetMembersByGroupIdArgs = {
   groupId: Scalars['Float'];
 };
 
