@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test component renders correctly 1`] = `
+<body>
+  <div>
+    <div
+      class="chakra-card css-1g230f1"
+    >
+      <a
+        href="testLink"
+      >
+        <div
+          class="css-gmuwbf"
+        >
+          <span
+            class="chakra-avatar css-1ahe2zj"
+          >
+            <div
+              aria-label="testName"
+              class="chakra-avatar__initials css-0"
+              role="img"
+            >
+              t
+            </div>
+          </span>
+        </div>
+        <h2
+          class="chakra-heading css-wlea3r"
+        >
+          testName
+        </h2>
+        <p
+          class="chakra-text css-1lp9c1c"
+        >
+          testRole
+        </p>
+        <p
+          class="chakra-text css-130t7v7"
+        >
+          testDescription
+        </p>
+      </a>
+    </div>
+  </div>
+</body>
+`;
