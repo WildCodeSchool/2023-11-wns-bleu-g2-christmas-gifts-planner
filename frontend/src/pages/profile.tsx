@@ -2,7 +2,6 @@ import { useDeleteUserMutation, useUpdateUserMutation } from "@/graphql/generate
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import isDefined from "@/types/isDefined";
 import isValidNotEmptyString from "@/types/isValidNotEmptyString";
-import { useApolloClient } from "@apollo/client";
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Center, Flex, FormControl, FormLabel, IconButton, Input, InputGroup, InputRightElement, Link, Spacer, Text, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
 import { ArrowLeft, Eye, EyeOff, InfoIcon, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
@@ -19,7 +18,6 @@ const UserProfile = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const cancelRef = useRef<HTMLButtonElement>(null);
     
-    const client = useApolloClient()
     const [updateUser] = useUpdateUserMutation();
     const toast = useToast();
     const router = useRouter()
@@ -37,7 +35,7 @@ const UserProfile = () => {
         errors.push(t("password-number"));
       return errors;
     }
-    const { currentUser } = useAuthRedirect();
+    const { currentUser, client } = useAuthRedirect();
     const [deleteUser] = useDeleteUserMutation();
 
     const [formData, setFormData] = useState({
@@ -178,19 +176,39 @@ const UserProfile = () => {
 
   const handleDelete = async() => {
     try {
-      isDefined(currentUser?.profile?.id) ? 
-      await deleteUser({
-        variables: {
-          userId:parseInt(currentUser!.profile!.id)
+      if (isDefined(currentUser?.profile?.id)) {
+        const { data } = await deleteUser({
+          variables: {
+            userId: parseInt(currentUser!.profile!.id)
+          },
+        });
+  
+        if (data?.deleteUser) {
+          client.resetStore();
+          router.push("/login");
         }
-      })  : ""
-      onClose();
-    } catch (error) {
-    console.warn("FAILED TO DELETE", error)
-  } finally {
-    client.resetStore();
-    router.push("/login")
-  }
+  
+        onClose();
+      }
+    } catch (error: any) {
+      console.warn(error);
+      if (typeof error.message === "string" && error.message.includes("You can't delete a different user")) {
+        toast({
+          title: t("toast.error.delete-wrong-user"),
+          description: t("toast.error.delete-wrong-user-description"),
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: t("error-messages.generic"),
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    }
   };
 
     return(

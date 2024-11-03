@@ -1,4 +1,4 @@
-import { useAddMemberToGroupMutation } from "@/graphql/generated/schema";
+import { useAddMemberToGroupMutation, useCreateChannelsMutation } from "@/graphql/generated/schema";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { ApolloError } from "@apollo/client";
 import {
@@ -22,6 +22,8 @@ type FormAddMembersProps = {
   refetch: () => void;
   initialRef?: React.MutableRefObject<null>;
   id: string;
+  setChannels: React.Dispatch<React.SetStateAction<{ email: string; color?: string }[]>>; // Ajoutez cette ligne
+  channels: { email: string; color?: string }[];
 };
 export default function FormAddMembers({
   onClose,
@@ -30,10 +32,13 @@ export default function FormAddMembers({
   id,
 }: FormAddMembersProps) {
   const [addMembers] = useAddMemberToGroupMutation();
+  const [createChannels] = useCreateChannelsMutation();
+  
   const [memberEmail, setMemberEmail] = React.useState("");
   const [members, setMembers] = useState<{ email: string; color?: string }[]>(
     []
   );
+  const [channels, setChannels] = useState<{ email: string; color?: string }[]>([]);
   // These functions are used to validate the user input in the form.
   const { validateEmail } = useFormValidation();
   const { t } = useTranslation();
@@ -145,6 +150,19 @@ export default function FormAddMembers({
           data: formJson,
         },
       });
+
+      const newChannels = members.map(member => ({
+        email: member.email,
+        color: member.color,
+      }));
+      
+      setChannels(prevChannels => [...prevChannels, ...newChannels]);
+      await createChannels({
+        variables: {
+          groupId: Number(id),
+
+        },
+      });
       refetch();
       onClose();
       toast({
@@ -237,6 +255,14 @@ export default function FormAddMembers({
               size="md"
               p={0}
               ml={3}
+              _dark={
+                isHovered
+                  ? {
+                      background: "secondary.low",
+                      color: "white",
+                    }
+                  : { background: "dark.surface20" }
+              }
             >
               <Plus color={isHovered ? "#AA7124" : "#724421"} />
             </Button>
@@ -244,9 +270,7 @@ export default function FormAddMembers({
 
           {errors.email &&
             errors.email.map((error, index) => (
-              <FormErrorMessage key={index} color="tertiary.medium">
-                {error}
-              </FormErrorMessage>
+              <FormErrorMessage key={index}>{error}</FormErrorMessage>
             ))}
         </FormControl>
         <Box

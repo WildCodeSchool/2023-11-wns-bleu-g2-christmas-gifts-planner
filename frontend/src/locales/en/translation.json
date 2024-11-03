@@ -1,4 +1,15 @@
 {
+  "about": {
+    "alexandre-description": "Passionate about Frontend development, Alexandre designed the user interface and implemented the threads.",
+    "alon-description": "Alon implemented the instant messaging system, allowing smooth communication between group members.",
+    "description1": "Gifty is an application that facilitates gift organization between friends and family. This project is developed as part of our learning at the Wild Code School.",
+    "description2": "We would like to thank the Wild Code School for their support and for giving us the opportunity to carry out this project.",
+    "dev-role": "Full-Stack Developer",
+    "jasmine-description": "Jasmine designed the group creation feature, ensuring Gifty is user-friendly and enjoyable to use.",
+    "our-team": "Our team",
+    "robin-description": "Robin developed the registration, login, and user profile management, ensuring account security.",
+    "title": "About"
+  },
   "add-members": "Add members",
   "add-valid-email": "Please add a valid email adress.",
   "alert": {
@@ -39,6 +50,9 @@
     "unauthorized": "You're not authorized to see this page"
   },
   "firstname": "Firstname",
+  "footer": {
+    "copyright": "© 2024 Gifty. All rights reserved."
+  },
   "forgot-password": "Forgot your password ?",
   "group-name": "Group name",
   "heading-organize": "Organize your Christmas present in group with",
@@ -47,7 +61,11 @@
   "incorrect-password": "Incorrect password",
   "join-to-start": "Join an existing group or create a new one to start exchanging presents ideas with your friends !",
   "lastname": "Lastname",
-  "legal-notices": "Legal notices",
+  "legal-notices": {
+    "title": "Legal notices",
+    "content": "Gifty is an application developed by students from Wild Code School. The interfaces are created with Chakra UI, and the illustrations are provided by Storyset.",
+    "property": "All elements of the site, including images, texts and code, are the property of the developers and cannot be reused without their permission."
+  },
   "modify": "Modify",
   "modify-old-password-is-different": "The password isn't the same !",
   "modify-password": "Modify the password",
@@ -105,7 +123,9 @@
       "create-group": "An error occurred while creating the group",
       "generic-description": "An error occurred",
       "generic-title": "Error",
-      "validate-profile": "An error occurred during profile validation"
+      "validate-profile": "An error occurred during profile validation",
+      "delete-wrong-user": "Unauthorized",
+      "delete-wrong-user-description": "You can't delete another user!"
     },
     "success": {
       "add-member-description": "The members have been successfully added.",

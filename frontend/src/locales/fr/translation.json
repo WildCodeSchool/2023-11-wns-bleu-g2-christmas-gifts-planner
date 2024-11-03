@@ -1,4 +1,15 @@
 {
+  "about": {
+    "alexandre-description": "Passionné par le développement Frontend, Alexandre a conçu l'interface utilisateur et implémenté les fils de discussions.",
+    "alon-description": "Alon a implémenté le système de messagerie instantanée, permettant une communication fluide entre les membres du groupe.",
+    "description1": "Gifty est une application qui facilite l'organisation des cadeaux entre amis et en famille. Ce projet est développé dans le cadre de notre apprentissage à la Wild Code School.",
+    "description2": "Nous tenons à remercier la Wild Code School pour leur soutien et pour nous avoir donné l'opportunité de réaliser ce projet.",
+    "dev-role": "Développeur Full-Stack",
+    "jasmine-description": "Jasmine a conçu la fonctionnalité de création de groupes en veillant à ce que Gifty soit convivial et agréable à utiliser.",
+    "our-team": "Notre team",
+    "robin-description": "Robin a développé l'inscription, la connexion, et la gestion des profils utilisateurs, garantissant la sécurité des comptes.",
+    "title": "A propos"
+  },
   "add-members": "Ajouter des membres",
   "add-valid-email": "Veuillez entrer une adresse e-mail valide.",
   "alert": {
@@ -40,6 +51,9 @@
   },
   "firstname": "Prénom",
   "forgot-password": "Mot de passe oublié ?",
+  "footer": {
+    "copyright": "© 2024 Gifty. Tous droits réservés."
+  },
   "group-name": "Nom du groupe",
   "heading-organize": "Organisez vos cadeaux de Noël en groupe avec",
   "hello": "Bonjour",
@@ -47,7 +61,11 @@
   "incorrect-password": "Mot de passe incorrect",
   "join-to-start": "Rejoignez un groupe existant ou créez en un nouveau pour commencer à échanger des idées cadeaux avec vos amis !",
   "lastname": "Nom",
-  "legal-notices": "Mentions légales",
+  "legal-notices": {
+    "title": "Mentions légales",
+    "content": "Gifty est une application développée par des élèves de la Wild Code School. Les interfaces sont créées avec Chakra UI, et les illustrations sont fournies par Storyset.",
+    "property": "Tous les éléments du site, y compris les images, textes et code, sont la propriété des développeurs et ne peuvent être réutilisés sans leur autorisation."
+  },
   "modify": "Modifier",
   "modify-old-password-is-different": "Le mot de passe n'est pas le même !",
   "modify-password": "Modifier le mot de passe",
@@ -105,7 +123,9 @@
       "create-group": "Une erreur est survenue lors de la création du groupe",
       "generic-description": "Une erreur est survenue",
       "generic-title": "Erreur",
-      "validate-profile": "Une erreur est survenue lors de la validation du profil"
+      "validate-profile": "Une erreur est survenue lors de la validation du profil",
+      "delete-wrong-user": "Non autorisé",
+      "delete-wrong-user-description": "Vous ne pouvez pas supprimer un autre utilisateur!"
     },
     "success": {
       "add-member-description": "Les membres ont bien été ajoutés avec succès.",

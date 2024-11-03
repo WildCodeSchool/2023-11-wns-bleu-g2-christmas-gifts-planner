@@ -24,3 +24,12 @@ body {
 .genericButton:hover {
   background-color: #f0f0f0;
 }
+.genericButtonDark {
+  border: solid 1px transparent;
+  border-radius: 6px;
+  padding: 6px;
+  transition: all 0.2s;
+}
+.genericButtonDark:hover {
+  background-color: #3f3f3f;
+}

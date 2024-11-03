@@ -1,4 +1,11 @@
-import { Button, Center, Flex, Heading, Image } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  Flex,
+  Heading,
+  Image,
+  useColorMode,
+} from "@chakra-ui/react";
 import { Gift, TreePine, UsersRound } from "lucide-react";
 
 import AboutCard from "@/components/home/AboutCard";
@@ -10,6 +17,7 @@ import { useProfileQuery } from "@/graphql/generated/schema";
 
 export default function Home() {
   const { t } = useTranslation();
+  const { colorMode } = useColorMode();
   const router = useRouter();
   const { data: currentUser } = useProfileQuery({
     errorPolicy: "ignore",
@@ -47,7 +55,9 @@ export default function Home() {
         <Image
           m={"auto"}
           marginBlock={4}
-          src="/Gifty-logo.svg"
+          src={
+            colorMode === "light" ? "/Gifty-logo.svg" : "/Gifty-logo-light.svg"
+          }
           alt="Gifty"
           maxWidth={{ base: "40%", md: "16rem" }}
         />
@@ -70,6 +80,7 @@ export default function Home() {
             />
           ))}
         </Flex>
+        {!currentUser && (
         <Center>
           <Flex flexDirection="column" gap={4}>
             <Button variant={"whiteGoldenButton"}>
@@ -80,6 +91,7 @@ export default function Home() {
             </Button>
           </Flex>
         </Center>
+          )}
         <AboutUs />
       </Flex>
     </>

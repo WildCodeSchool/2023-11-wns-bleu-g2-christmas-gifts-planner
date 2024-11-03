@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { background, Box, Flex, Text } from "@chakra-ui/react";
 import React from "react";
 import { ChevronRight, Crown } from "lucide-react";
 
@@ -20,12 +20,17 @@ export default function GroupList({
         transition={
           "box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease-in-out"
         }
+        _dark={{
+          border: "0.03rem solid",
+          borderColor: "dark.surface20",
+          _hover: { borderColor: "primary.lowest" },
+        }}
         _hover={{
           boxShadow:
             "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
           border: "0.03rem solid",
           borderColor: "primary.lowest",
-          transform: "translateY(-2px)",
+          transform: "translateY(-3px)",
         }}
       >
         <Flex justifyContent="space-between">
