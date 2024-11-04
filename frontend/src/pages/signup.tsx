@@ -135,7 +135,7 @@ export default function Signup() {
                                         minLength={2}
                                         maxLength={30}
                                         isRequired
-                                        placeholder={t("lastname")}
+                                        placeholder={t("firstname")}
                                         width="100%"
                                     />
                                 </GridItem>
@@ -148,7 +148,7 @@ export default function Signup() {
                                         minLength={2}
                                         maxLength={30}
                                         isRequired
-                                        placeholder={t("firstname")}
+                                        placeholder={t("lastname")}
                                         width="100%"
                                     />
                                 </GridItem>
